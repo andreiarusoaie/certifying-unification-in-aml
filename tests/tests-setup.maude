@@ -44,5 +44,71 @@ mod PRETTY is
     eq prettyTermPattern(\symb(7)) = h' .
 
 endm
+***(
+mod 2AML is
+  protecting META-LEVEL .
+  protecting SYNTAX .
 
+  sort SymbolTable .
+  op `(_`,_`) : Qid TermPattern -> SymbolTable [ctor] .
+  op _;_ : SymbolTable SymbolTable -> SymbolTable [ctor assoc comm] .
+  op fst : SymbolTable -> Qid .
+  op snd : SymbolTable -> TermPattern .
 
+  
+  var F VN CN : Qid .
+  var S : String .
+  vars T T1 T2 : Term .
+  var TL TL' OVL OVL' : TermList .
+  vars C C' : Constant .
+  vars V V' : Variable .
+  var ST : SymbolTable .
+  vars PT PT' PT1 PT2 : TermPattern .
+
+  eq fst((F, PT)) = F .
+  eq snd((F, PT)) = PT .
+  
+  op st : -> SymbolTable .
+  eq st = ('f, \symb(100)) ; ('aa, \symb(10)) ; ('xx, \evar(1)) ; ('g, \symb(101)) .
+
+  op 2aml : Term -> Term .
+  op 2amlVar : String Type -> Variable .
+  op 2amlConst : String Type -> Constant .
+  
+  ceq 2aml(V) = upTerm(PT)
+   if (VN, PT) ; ST := st
+   /\ VN == getName(V) .
+ ceq 2aml(C) =  upTerm(PT)
+  if (CN, PT) ; ST := st
+   /\ CN == getName(C) .
+ ceq 2aml(F[T]) = '\app[upTerm(PT), 2aml(T)]
+  if (F, PT) ; ST := st .
+  eq 2aml(F[TL, T]) = '\app[2aml(F[TL]), 2aml(T)] .
+
+  sort s .
+  op aa : -> s .
+  op f : s -> s .
+  op g : s s -> s . 
+  vars xx X : s .
+
+  op 2aml : s -> TermPattern .
+  eq 2aml(X) =  downTerm(2aml(upTerm(X)), \bot) .
+ 
+endm
+
+red 2aml(aa) . 
+red 2aml(xx) .
+red 2aml(f(xx)) .
+red 2aml(f(f(aa))).
+red 2aml(g(aa, xx)).
+red 2aml(g(f(aa), xx)).
+
+mod TEST is
+  pr PRETTY .
+  pr 2AML .
+  var xx : s .
+endm
+
+*** symbol clash: f(a) = g(xx, aa)
+rew in TEST : pretty(gen-proof1(2aml(f(aa)), 2aml(g(xx, aa)))) .
+***)
