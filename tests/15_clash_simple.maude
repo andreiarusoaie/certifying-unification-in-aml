@@ -1,0 +1,9 @@
+load tests-setup.maude
+
+
+*** symbol clash: a = b
+rew in PRETTY : pretty(gen-proof1(\symb(10), \symb(11))) .
+rew in PROOF-GENERATION : check(gen-proof1(\symb(10), \symb(11))) .
+rew in PRETTY : pretty(gen-proof2(\symb(10), \symb(11))) .
+rew in PROOF-GENERATION : check(gen-proof2(\symb(10), \symb(11))) .
+q

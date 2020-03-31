@@ -1,0 +1,20 @@
+load tests-setup
+
+*** elimination: f(x, y) === f(y, g(a))
+rew in PRETTY : pretty(gen-proof1(
+  \app(\app(\symb(100), \evar(1)), \evar(2)),
+  \app(\app(\symb(100), \evar(2)), \app(\symb(101), \symb(10)))
+)) .
+rew in PROOF-GENERATION : check(gen-proof1(
+  \app(\app(\symb(100), \evar(1)), \evar(2)),
+  \app(\app(\symb(100), \evar(2)), \app(\symb(101), \symb(10)))
+)) .
+rew in PRETTY : pretty(gen-proof2(
+  \app(\app(\symb(100), \evar(1)), \evar(2)),
+  \app(\app(\symb(100), \evar(2)), \app(\symb(101), \symb(10)))
+)) .
+rew in PROOF-GENERATION : check(gen-proof2(
+  \app(\app(\symb(100), \evar(1)), \evar(2)),
+  \app(\app(\symb(100), \evar(2)), \app(\symb(101), \symb(10)))
+)) .
+q

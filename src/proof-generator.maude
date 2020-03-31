@@ -1,0 +1,357 @@
+load checker
+
+mod SETUP is
+    pr CHECKER .
+
+    sorts UnificationPair UnificationProblem .
+    subsort UnificationPair < UnificationProblem .
+    op _=?_ : TermPattern TermPattern              -> UnificationPair [prec 97] .
+    ops .U bot :                                   -> UnificationProblem .
+    op _,_ : UnificationProblem UnificationProblem ->
+        UnificationProblem [comm assoc prec 100 id: .U] .
+
+    vars U U' : UnificationProblem .
+    vars X : EVar .
+    vars Tp Tp1 Tp2 Tp' : TermPattern .
+    eq bot, (Tp1 =? Tp2), U = bot, U .
+    op solved-form : UnificationProblem -> Bool .
+    eq solved-form(.U)                  = true .
+    eq solved-form(bot)                 = true .
+    eq solved-form(U)                   = solved-form-aux(U, U) .
+
+    op solved-form-aux : UnificationProblem UnificationProblem -> Bool .
+    eq solved-form-aux(((X =? Tp), U), ((X =? Tp), U')) =
+        solved-form-aux(U, ((X =? Tp), U')) and not(occurs-unif(X, U')) and not(X in vars(Tp)) .
+    eq solved-form-aux(.U, U')            = true .
+    eq solved-form-aux( ((Tp1 =? Tp2), U), U') = false [owise] .
+
+    op occurs-unif : EVar UnificationProblem -> Bool .
+    eq occurs-unif(X, .U)                = false .
+    eq occurs-unif(X, bot)               = false .
+    eq occurs-unif(X, ((Tp1 =? Tp2), U')) =
+        (X in vars(Tp1)) or (X in vars(Tp2)) or occurs-unif(X, U') .
+
+    op asPattern : UnificationProblem -> TermPattern .
+    eq asPattern(bot) = \bot .
+    eq asPattern(.U)  = \imp(\bot, \bot) . --- true
+    eq asPattern((Tp1 =? Tp2)) = \eq(Tp1, Tp2) .
+    eq asPattern(((Tp1 =? Tp2) , U)) = \eq(Tp1, Tp2) and asPattern(U) .
+
+
+    vars N N' : Nat .
+    op hasTopSymbol : TermPattern -> Bool .
+    eq hasTopSymbol(\symb(N)) = true .
+    eq hasTopSymbol(\app(\symb(N), Tp)) = true .
+    eq hasTopSymbol(Tp) = false .
+
+    
+    op subst-unif : EVar TermPattern UnificationProblem -> UnificationProblem .
+    eq subst-unif(X, Tp, bot) = bot .
+    eq subst-unif(X, Tp, .U)  = .U .
+    eq subst-unif(X, Tp, ((Tp1 =? Tp2) , U)) = (Tp1 [ Tp / X ] =? Tp2 [ Tp / X ]) , subst-unif(X, Tp, U) .
+
+    op clash : TermPattern TermPattern -> Bool .
+    eq clash(\symb(N), \symb(N')) = N =/= N' .
+    eq clash(\app(Tp, Tp1), \app(Tp', Tp2)) = clash(Tp, Tp') .
+    eq clash(\symb(N), \app(Tp', Tp2)) = true .
+    eq clash(\app(Tp, Tp1), \symb(N)) = true .
+
+
+    --- orientation for eq
+---    eq \eq(\app(\symb(N), Tp), X) = \eq(X, \app(\symb(N), Tp)) .
+---    eq \eq(\symb(N), X) = \eq(X, \symb(N)) .
+
+    --- decomposition rec
+    op decomposition-rec : UnificationPair -> UnificationProblem .
+    eq decomposition-rec((\app(\symb(N), Tp1) =? \app(\symb(N), Tp2))) = Tp1 =? Tp2 .
+    eq decomposition-rec((\app(Tp, Tp1) =? \app(Tp', Tp2))) =
+        decomposition-rec((Tp =? Tp')) , (Tp1 =? Tp2) .
+    eq decomposition-rec((Tp =? Tp')) = bot [owise] .
+endm
+
+mod UNIFICATION is
+    pr SETUP .
+
+    sorts TraceItem Trace .
+    subsort TraceItem < Trace .
+    op .Trace : -> Trace .
+    op _,,_ : Trace Trace -> Trace [assoc id: .Trace] .
+    op dec  : UnificationPair UnificationProblem UnificationProblem -> TraceItem .
+    op ori  : UnificationPair UnificationProblem -> TraceItem .
+    op elim : UnificationPair UnificationProblem UnificationProblem -> TraceItem .
+    op del  : UnificationPair UnificationProblem -> TraceItem .
+    op clh  : TermPattern TermPattern UnificationProblem  -> TraceItem .
+    op occ  : EVar TermPattern UnificationProblem -> TraceItem .
+
+    sort UnifWithTrace .
+    op <_|_> : UnificationProblem Trace -> UnifWithTrace .
+
+    vars P P' F F' : TermPattern .
+    vars N N1 N2 : Nat .
+    vars U U' : UnificationProblem .
+    vars Tr Tr' : Trace .
+    vars X : EVar .
+
+    crl [decomposition] :
+        < \app(F, P) =? \app(F', P') , U | Tr > =>
+        < U' , U | Tr ,, dec((\app(F, P) =? \app(F', P')), U', U) >
+      if U' := decomposition-rec((\app(F, P) =? \app(F', P'))) /\ U' =/= bot .
+
+    crl [orient] :
+        < P =? X , U | Tr > => < X =? P , U | Tr ,, ori( (P =? X),  U ) >
+      if hasTopSymbol(P) .
+
+    rl [delete] : < P =? P , U | Tr > => < U | Tr ,, del( (P =? P), U ) > .
+
+    crl [elimination] :
+        < X =? P , U | Tr > => < (X =? P) , U' | Tr ,, elim ((X =? P), U', U) >
+      if not(X in vars(P)) /\ occurs-unif(X, U) /\
+          hasTopSymbol(P) /\ U' := subst-unif(X, P, U) .
+
+    crl [symbol-clash] : < P =? P' , U | Tr > => < bot | Tr ,, clh(P, P', U) >
+      if clash(P, P') . 
+
+    crl [occurs-check] : < X =? P , U | Tr > => < bot | Tr ,, occ(X, P, U) >
+      if hasTopSymbol(P) /\ X in vars(P) .
+endm
+
+mod PROOF-GENERATION is 
+    inc UNIFICATION .
+    pr INT .
+
+    op gen-proof1 : TermPattern TermPattern -> Proof .
+    op gen-proof2 : TermPattern TermPattern -> Proof .
+
+    vars Tp Tp' T1 T2 F Phi PhiS Rest Phi' Before After : TermPattern .
+    vars N : Nat .
+    vars K : Int .
+    vars U U' U'' : UnificationProblem .
+    vars Tr : Trace .
+    vars TrI : TraceItem .
+    vars X : EVar .
+    vars Prf Prf' : Proof .
+    vars Pr : ProofRule .
+    vars Pl : ProofLine .
+
+
+    --- Stage 1
+    crl gen-proof1(Tp, Tp') =>
+        ((1) \imp(\eq(Tp, Tp'), \eq(Tp, Tp')) [tauto-imp-refl] ;
+          Prf
+          (K + 1) \imp(Tp and Phi, Tp and Phi') [tauto-context, K] ;
+          (K + 2) \imp(Tp and Tp', Tp and Phi)  [axiom] ;
+          (K + 3) \imp(Tp and Tp', Tp and Phi') [tauto-imp-tranz, K + 2, K + 1] ; )
+      if < Tp =? Tp' | .Trace > => < U | Tr > /\ solved-form(U)  /\
+          Prf  := gen-proof1-aux(Tr, 2, \eq(Tp, Tp')) /\
+          Pl   := last-proofline(Prf) /\
+          K    := get-line-no(Pl) /\
+          Phi  := get-line-imp-l(Pl) /\
+          Phi' := get-line-imp-r(Pl) .
+
+
+    op last-proofline : Proof -> ProofLine .
+    eq last-proofline((Prf Pl)) = Pl .
+
+    op get-line-no : ProofLine -> Nat .
+    eq get-line-no((K) Phi Pr ;) = K .
+
+    op get-line-imp-l : ProofLine -> TermPattern .
+    op get-line-imp-r : ProofLine -> TermPattern .
+    eq get-line-imp-l((K) \imp(Phi, Phi') Pr ;) = Phi .
+    eq get-line-imp-r((K) \imp(Phi, Phi') Pr ;) = Phi' .
+
+    op gen-proof1-aux : Trace NzNat TermPattern -> Proof .
+    rl [stage1-dec-basic] :
+        gen-proof1-aux(dec((Tp =? Tp'), U', .U) ,, Tr , K, Phi) =>
+        ( (K) \imp(\eq(Tp, Tp'), asPattern(U')) [axiom] ; 
+          gen-proof1-aux(Tr, K + 1, Phi) ) .
+
+    crl [stage1-dec-comp] :
+        gen-proof1-aux(dec((Tp =? Tp'), U', U) ,, Tr , K, Phi) =>
+        ( (K) \imp(\eq(Tp, Tp'), Phi') [axiom] ;
+          (K + 1) \imp(Rest and \eq(Tp, Tp'), Rest and Phi') [tauto-context, K] ;
+          (K + 2) \imp(Phi, Rest and Phi') [tauto-imp-tranz, K - 1, K + 1] ;
+          gen-proof1-aux(Tr, K + 3, Phi) )
+      if Phi' := asPattern(U') /\ Rest := asPattern(U) /\ Rest =/= \imp(\bot, \bot) .
+
+    crl [stage1-elim] :
+        gen-proof1-aux(elim((X =? Tp), U', U) ,, Tr , K, Phi) =>
+        ( (K) \imp(Before and \eq(X, Tp), After) [equality-elimination] ;
+          (K + 1) \imp(\eq(X, Tp) and Before and \eq(X, Tp), \eq(X, Tp) and After) [tauto-context, K] ;
+          (K + 2) \imp(\eq(X, Tp), \eq(X, Tp) and \eq(X, Tp)) [tauto-and-expand] ;
+          (K + 3) \imp(Before and \eq(X, Tp), Before and \eq(X, Tp) and \eq(X, Tp)) [tauto-context, K + 2] ;
+          (K + 4) \imp(Before and \eq(X, Tp), \eq(X, Tp) and After) [tauto-imp-tranz, K + 3, K + 1] ;
+          
+          (K + 5) \imp(Phi,  \eq(X, Tp) and After) [tauto-imp-tranz, K - 1, K + 4] ;
+          gen-proof1-aux(Tr, K + 6, Phi) )
+      if After := asPattern(U') /\ Before := asPattern(U) /\ U =/= bot .
+
+    crl [stage1-orient] :
+        gen-proof1-aux(ori((Tp =? X), U) ,, Tr , K, Phi) =>
+        ( (K) \imp(\eq(Tp, X), \eq(X, Tp)) [equality-symmetry] ;
+          (K + 1) \imp(Rest and \eq(Tp, X), Rest and \eq(X, Tp)) [tauto-context, K] ;
+          (K + 2) \imp(Phi, Rest and \eq(X, Tp)) [tauto-imp-tranz, K - 1, K + 1] ;
+          gen-proof1-aux(Tr, K + 3, Phi) )
+      if Rest := asPattern(U) /\ Rest =/= \imp(\bot, \bot) .
+
+    rl [stage1-orient-basic] :
+        gen-proof1-aux(ori((Tp =? X), .U) ,, Tr , K, Phi) =>
+        ( (K) \imp(\eq(Tp, X), \eq(X, Tp)) [equality-symmetry] ;
+          gen-proof1-aux(Tr, K + 1, \eq(Tp, X)) ) .
+
+    crl [stage1-delete] :
+        gen-proof1-aux(del((Tp =? Tp), U) ,, Tr , K, Phi) =>
+        ( (K) \imp(\eq(Tp, Tp), \imp(\bot, \bot)) [tauto-equality-id] ;
+          (K + 1) \imp(Rest and \eq(Tp, Tp), Rest and \imp(\bot, \bot)) [tauto-context, K] ;
+          (K + 2) \imp(Rest and \imp(\bot, \bot), Rest) [tauto-and-unit] ;
+          (K + 3) \imp(Rest and \eq(Tp, Tp), Rest) [tauto-imp-tranz, K + 1, K + 2] ;
+          (K + 4) \imp(Phi, Rest) [tauto-imp-tranz, K - 1, K + 3] ;
+          gen-proof1-aux(Tr, K + 5, Phi))
+      if Rest := asPattern(U) /\ U =/= .U .
+
+    rl [stage1-delete-basic] :
+        gen-proof1-aux(del((Tp =? Tp), .U) ,, Tr , K, Phi) =>
+        ( (K) \imp(\eq(Tp, Tp), \imp(\bot, \bot)) [tauto-equality-id] ;
+          gen-proof1-aux(Tr, K + 1, Phi)) .
+
+    rl [stage1-clash-basic] :
+        gen-proof1-aux(clh(Tp, Tp', .U) ,, Tr, K, Phi) =>
+        ( (K) \imp(\eq(Tp, Tp'), \bot) [axiom] ;
+          (K + 1) \imp(Phi, \bot) [tauto-imp-tranz, K - 1, K] ;
+          gen-proof1-aux(Tr, K + 2, Phi) ) .
+
+    crl [stage1-clash] :
+        gen-proof1-aux(clh(Tp, Tp', U) ,, Tr, K, Phi) =>
+        ( (K) \imp(\eq(Tp, Tp'), \bot) [axiom] ;
+          (K + 1) \imp(Rest and \eq(Tp, Tp'), Rest and \bot) [tauto-context, K] ;
+          (K + 2) \imp(Rest and \bot, \bot) [tauto-and-bot] ;
+          (K + 3) \imp(Rest and \eq(Tp, Tp'), \bot) [tauto-imp-tranz, K + 1, K + 2] ;
+          (K + 4) \imp(Phi, \bot) [tauto-imp-tranz, K - 1, K + 3] ;
+          gen-proof1-aux(Tr, K + 5, Phi) )
+      if Rest := asPattern(U) /\ U =/= .U .
+    
+    rl [stage1-oc-basic] :
+        gen-proof1-aux(occ(X, Tp, .U) ,, Tr, K, Phi) =>
+        ( (K) \imp(\eq(X, Tp), \bot) [occurs-check] ;
+          (K + 1) \imp(Phi, \bot) [tauto-imp-tranz, K - 1, K] ;
+          gen-proof1-aux(Tr, K + 2, Phi) ) .
+
+    crl [stage1-oc] :
+        gen-proof1-aux(occ(X, Tp, U) ,, Tr, K, Phi) =>
+        ( (K) \imp(\eq(X, Tp), \bot) [occurs-check] ;
+          (K + 1) \imp(Rest and \eq(X, Tp), Rest and \bot) [tauto-context, K] ;
+          (K + 2) \imp(Rest and \bot, \bot) [tauto-and-bot] ;
+          (K + 3) \imp(Rest and \eq(X, Tp), \bot) [tauto-imp-tranz, K + 1, K + 2] ;
+          (K + 4) \imp(Phi, \bot) [tauto-imp-tranz, K - 1, K + 3] ;
+          gen-proof1-aux(Tr, K + 5, Phi) )
+      if Rest := asPattern(U) /\ U =/= .U .
+
+    rl gen-proof1-aux(.Trace, K, Phi) => .Proof .
+
+    --- Stage 2
+    crl gen-proof2(Tp, Tp') =>
+        ( (1) \imp(PhiS, PhiS) [tauto-imp-refl] ;
+          Prf
+          (K + 1) \imp(Tp and Phi, Tp and Phi') [tauto-context, K] ;
+          (K + 2) \imp(Tp and Phi', Tp and Tp')  [axiom] ;
+          (K + 3) \imp(Tp and Phi, Tp and Tp') [tauto-imp-tranz, K + 1, K + 2] ; )
+      if < Tp =? Tp' | .Trace > => < U | Tr > /\ solved-form(U) /\
+          PhiS := asPattern(U) /\
+          Prf := gen-proof2-aux(reverse-trace(Tr), 2, PhiS) /\
+          Pl   := last-proofline(Prf) /\
+          K    := get-line-no(Pl) /\
+          Phi  := get-line-imp-l(Pl) /\
+          Phi' := get-line-imp-r(Pl) .
+    
+    op gen-proof2-aux : Trace NzNat TermPattern -> Proof .
+    op gen-proof2-aux' : Trace NzNat TermPattern -> Proof .
+    
+
+    op reverse-trace : Trace -> Trace .
+    eq reverse-trace(.Trace) = .Trace .
+    eq reverse-trace((TrI ,, Tr)) = reverse-trace(Tr) ,, TrI .
+
+    rl [stage2-dec-basic] :
+        gen-proof2-aux(dec((Tp =? Tp'), U', .U) ,, Tr , K, PhiS) =>
+        ( (K) \imp(asPattern(U'), \eq(Tp, Tp')) [axiom] ;
+          (K + 1) \imp(PhiS, \eq(Tp, Tp')) [tauto-imp-tranz, K - 1, K] ;
+          gen-proof2-aux(Tr, K + 2, PhiS) ) .
+
+    crl [stage2-dec] :
+        gen-proof2-aux(dec((Tp =? Tp'), U', U) ,, Tr , K, PhiS) =>
+        ( (K) \imp(Phi', \eq(Tp, Tp')) [axiom] ;
+          (K + 1) \imp(Rest and Phi', Rest and \eq(Tp, Tp')) [tauto-context, K] ;
+          (K + 2) \imp(PhiS, Rest and \eq(Tp, Tp')) [tauto-imp-tranz, K - 1, K + 1] ;
+          gen-proof2-aux(Tr, K + 3, PhiS) )
+      if Phi' := asPattern(U') /\ Rest := asPattern(U) /\ U =/= .U .
+
+
+    crl [stage2-orient] :
+        gen-proof2-aux(ori((Tp =? X), U) ,, Tr , K, PhiS) =>
+        ( (K) \imp(\eq(X, Tp), \eq(Tp, X)) [equality-symmetry] ;
+          (K + 1) \imp(Rest and \eq(X, Tp), Rest and \eq(Tp, X)) [tauto-context, K] ;
+          (K + 2) \imp(PhiS, Rest and \eq(Tp, X)) [tauto-imp-tranz, K - 1, K + 1] ;
+          gen-proof2-aux(Tr, K + 3, PhiS) )
+      if Rest := asPattern(U) /\ U =/= .U .
+
+    rl [stage1-orient-basic] :
+        gen-proof2-aux(ori((Tp =? X), .U) ,, Tr , K, PhiS) =>
+        ( (K) \imp(\eq(X, Tp), \eq(Tp, X)) [equality-symmetry] ;
+          gen-proof2-aux(Tr, K + 1, PhiS) ) .
+
+
+    crl [stage2-elim] :
+        gen-proof2-aux(elim((X =? Tp), U', U) ,, Tr , K, PhiS) =>
+        ( (K) \imp(After, Before and \eq(X, Tp)) [equality-introduction1] ;
+          (K + 1) \imp(\eq(X, Tp) and After, \eq(X, Tp) and Before and \eq(X, Tp)) [tauto-context, K] ;
+          (K + 2) \imp(\eq(X, Tp) and \eq(X, Tp), \eq(X, Tp)) [tauto-and-simpl] ;
+          (K + 3) \imp(Before and \eq(X, Tp) and \eq(X, Tp), Before and \eq(X, Tp)) [tauto-context, K + 2] ;
+          (K + 4) \imp(\eq(X, Tp) and After, Before and \eq(X, Tp)) [tauto-imp-tranz, K + 1, K + 3] ;
+
+          (K + 5) \imp(PhiS,  Before and \eq(X, Tp)) [tauto-imp-tranz, K - 1, K + 4] ;
+          gen-proof2-aux(Tr, K + 6, PhiS) )
+      if After := asPattern(U') /\ Before := asPattern(U) /\ U =/= bot .
+
+    crl [stage2-delete] :
+        gen-proof2-aux(del((Tp =? Tp), U) ,, Tr , K, PhiS) =>
+        ( (K) \imp(\imp(\bot, \bot), \eq(Tp, Tp)) [tauto-equality-refl] ;
+          (K + 1) \imp(Rest and \imp(\bot, \bot), Rest and \eq(Tp, Tp)) [tauto-context, K] ;
+          (K + 2) \imp(Rest, Rest and \imp(\bot, \bot)) [tauto-and-exp-unit] ;
+          (K + 3) \imp(Rest, Rest and \eq(Tp, Tp)) [tauto-imp-tranz, K + 2, K + 1] ;
+          (K + 4) \imp(PhiS, Rest and \eq(Tp, Tp)) [tauto-imp-tranz, K - 1, K + 3] ;
+          gen-proof2-aux(Tr, K + 5, PhiS))
+      if Rest := asPattern(U) /\ U =/= .U .
+
+    rl [stage2-delete-basic] :
+        gen-proof2-aux(del((Tp =? Tp), .U) ,, Tr , K, PhiS) =>
+        ( (K) \imp(\imp(\bot, \bot), \eq(Tp, Tp)) [tauto-equality-refl] ;
+          gen-proof1-aux(Tr, K + 1, PhiS)) .
+
+    crl [stage2-clash] :
+        gen-proof2-aux(clh(Tp, Tp', U) ,, Tr, K, PhiS) =>
+        ( (K) \imp(\bot, \eq(Tp, Tp') and asPattern(U)) [tauto-bot-elim] ;
+          (K + 1) \imp(PhiS, \eq(Tp, Tp') and asPattern(U)) [tauto-imp-tranz, K - 1, K] ;
+          gen-proof2-aux(Tr, K + 2, PhiS))
+      if U =/= .U .
+
+    rl [stage2-clash-basic] :
+        gen-proof2-aux(clh(Tp, Tp', .U) ,, Tr, K, PhiS) =>
+        ( (K) \imp(\bot, \eq(Tp, Tp')) [tauto-bot-elim] ;
+          (K + 1) \imp(PhiS, \eq(Tp, Tp')) [tauto-imp-tranz, K - 1, K] ;
+          gen-proof2-aux(Tr, K + 2, PhiS) ) .
+
+    crl [stage1-oc] :
+        gen-proof2-aux(occ(X, Tp, U) ,, Tr, K, PhiS) =>
+        ( (K) \imp(\bot, \eq(X, Tp) and asPattern(U) ) [tauto-bot-elim] ;
+          (K + 1) \imp(PhiS, \eq(X, Tp) and asPattern(U)) [tauto-imp-tranz, K - 1, K] ;
+          gen-proof2-aux(Tr, K + 2, PhiS) )
+      if U =/= .U .
+
+    rl [stage1-oc-basic] :
+        gen-proof2-aux(occ(X, Tp, .U) ,, Tr, K, PhiS) =>
+        ( (K) \imp(\bot, \eq(X, Tp) ) [tauto-bot-elim] ;
+          (K + 1) \imp(PhiS, \eq(X, Tp) ) [tauto-imp-tranz, K - 1, K] ;
+          gen-proof2-aux(Tr, K + 2, PhiS) ) .
+
+    rl gen-proof2-aux(.Trace, K, Phi) => .Proof .
+endm

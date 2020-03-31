@@ -1,0 +1,20 @@
+load tests-setup.maude
+
+*** symbol clash: f(a) = g(a)
+rew in PRETTY : pretty(gen-proof1(
+\app(\symb(100), \symb(10)),
+\app(\symb(101), \symb(10))
+)) .
+rew in PROOF-GENERATION : check(gen-proof1(
+\app(\symb(100), \symb(10)),
+\app(\symb(101), \symb(10))
+)) .
+rew in PRETTY : pretty(gen-proof2(
+\app(\symb(100), \symb(10)),
+\app(\symb(101), \symb(10))
+)) .
+rew in PROOF-GENERATION : check(gen-proof2(
+\app(\symb(100), \symb(10)),
+\app(\symb(101), \symb(10))
+)) .
+q

@@ -1,0 +1,9 @@
+load tests-setup.maude
+
+*** orientation: a = x
+rew in PRETTY : pretty(gen-proof1(\symb(10), \evar(1))) .
+rew in PROOF-GENERATION : check(gen-proof1(\symb(10), \evar(1))) .
+rew in PRETTY : pretty(gen-proof2(\symb(10), \evar(1))) .
+rew in PROOF-GENERATION : check(gen-proof2(\symb(10), \evar(1))) .
+
+q

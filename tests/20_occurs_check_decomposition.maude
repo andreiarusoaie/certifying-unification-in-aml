@@ -1,0 +1,21 @@
+load tests-setup.maude
+
+
+*** occurs check: g(x, a) = g(f(x), y)
+rew in PRETTY : pretty(gen-proof1(
+\app(\app(\symb(101), \evar(1)), \symb(10)),
+\app(\app(\symb(101), \app(\symb(100), \evar(1))), \symb(10))
+)) .
+rew in PROOF-GENERATION : check(gen-proof1(
+\app(\app(\symb(101), \evar(1)), \symb(10)),
+\app(\app(\symb(101), \app(\symb(100), \evar(1))), \symb(10))
+)) .
+rew in PRETTY : pretty(gen-proof2(
+\app(\app(\symb(101), \evar(1)), \symb(10)),
+\app(\app(\symb(101), \app(\symb(100), \evar(1))), \symb(10))
+)) .
+rew in PROOF-GENERATION : check(gen-proof2(
+\app(\app(\symb(101), \evar(1)), \symb(10)),
+\app(\app(\symb(101), \app(\symb(100), \evar(1))), \symb(10))
+)) .
+q

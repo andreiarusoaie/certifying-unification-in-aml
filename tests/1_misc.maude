@@ -1,0 +1,21 @@
+load tests-setup.maude
+
+rew in PROOF-GENERATION : decomposition-rec(
+  (\app(\app(\symb(100), \evar(1)), \symb(10)) =?
+    \app(\app(\symb(100), \evar(2)), \evar(2)))
+) .
+
+rew in PROOF-GENERATION : decomposition-rec(
+(\app(\app(\symb(101), \evar(1)), \symb(10)) =?
+\app(\app(\symb(100), \evar(2)), \evar(2)))
+) .
+    
+rew in PROOF-GENERATION : <
+  (\app(\app(\symb(101), \evar(1)), \symb(10)) =? \app(\app(\symb(100), \evar(2)), \evar(2)))
+| .Trace > .
+
+rew in PROOF-GENERATION : <
+  (\app(\app(\symb(100), \evar(1)), \symb(10)) =? \app(\app(\symb(100), \evar(2)), \evar(2)))
+| .Trace > .
+q
+    

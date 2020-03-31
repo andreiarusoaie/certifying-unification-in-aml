@@ -1,0 +1,21 @@
+load tests-setup.maude
+
+*** delete: f(x, y) = f(x, a)
+rew in PRETTY : pretty(gen-proof1(
+\app(\app(\symb(100), \evar(1)), \evar(2)),
+\app(\app(\symb(100), \evar(1)), \symb(10))
+)) .
+rew in PROOF-GENERATION : check(gen-proof1(
+\app(\app(\symb(100), \evar(1)), \evar(2)),
+\app(\app(\symb(100), \evar(1)), \symb(10))
+)) .
+rew in PRETTY : pretty(gen-proof2(
+\app(\app(\symb(100), \evar(1)), \evar(2)),
+\app(\app(\symb(100), \evar(1)), \symb(10))
+)) .
+rew in PROOF-GENERATION : check(gen-proof2(
+\app(\app(\symb(100), \evar(1)), \evar(2)),
+\app(\app(\symb(100), \evar(1)), \symb(10))
+)) .
+
+q

@@ -1,0 +1,212 @@
+mod SYNTAX is
+    pr NAT .
+
+    sorts TermPattern EVar .
+    subsort EVar < TermPattern .
+    op \evar : NzNat                    -> EVar .
+    op \symb : NzNat                    -> TermPattern .
+    op \app  : TermPattern TermPattern  -> TermPattern .
+    op \imp  : TermPattern TermPattern  -> TermPattern .
+    op \bot  :                          -> TermPattern .
+
+    --- derived syntax
+    op _and_ : TermPattern TermPattern -> TermPattern [assoc comm prec 30] .
+    op \not  : TermPattern             -> TermPattern .
+    op \eq   : TermPattern TermPattern -> TermPattern .
+
+    --- utils
+    vars X Y     : EVar .
+    vars N K     : NzNat .
+    vars T T1 T2 : TermPattern .
+
+    --- substitution
+    op _`[_/_`] : TermPattern TermPattern EVar -> TermPattern .
+    eq X[T / X]                = T .
+    ceq \evar(N)[T / \evar(K)] = \evar(N) if N =/= K .
+    eq \symb(N)[T / X]         = \symb(N) .
+    eq \bot[T / X]             = \bot .
+    eq \app(T1, T2)[T / X]     = \app(T1[T / X], T2[T / X]) .
+    eq \imp(T1, T2)[T / X]     = \imp(T1[T / X], T2[T / X]) .
+    eq \eq(T1, T2)[T / X]      = \eq(T1[T / X], T2[T / X]) .
+    eq (T1 and T2)[T / X]      = (T1[T / X]) and (T2[T / X]) .
+    eq \not(T1) [T / X]        = \not(T1[T / X]) .
+
+    --- free vars
+    sort Vars .
+    subsort EVar < Vars .
+    op .Vars :            -> Vars [ctor] .
+    op _;_ : Vars Vars    -> Vars [ctor assoc comm id: .Vars prec 121] .
+
+    op vars : TermPattern -> Vars .
+    eq vars(\evar(N))     = \evar(N) .
+    eq vars(\symb(N))     = .Vars .
+    eq vars(\bot)         = .Vars .
+    eq vars(\app(T1, T2)) = vars(T1) ; vars(T2) .
+    eq vars(\imp(T1, T2)) = vars(T1) ; vars(T2) .
+    eq vars(T1 and T2)    = vars(T1) ; vars(T2) .
+    eq vars(\eq(T1, T2))  = vars(T1) ; vars(T2) .
+    eq vars(\not(T))      = vars(T) .
+
+    vars A B : Vars .
+    op _in_ :         EVar Vars -> Bool .
+    eq (\evar(N)) in (\evar(N))  = true .
+    ceq (\evar(N)) in (\evar(K)) = false if N =/= K .
+    eq X in .Vars                = false .
+    eq X in (A ; B)              = (X in A) or (X in B) .
+
+    op isCompound : TermPattern -> Bool .
+    eq isCompound(\app(\symb(N), T)) = true .
+    eq isCompound(T) = false [owise] .
+endm
+
+mod PROOF is
+    pr SYNTAX .
+
+    sort Proof .
+    op .Proof :         -> Proof .
+    op __ : Proof Proof -> Proof [assoc id: .Proof prec 45 format(d n d)] .
+
+    sort ProofLine .
+    subsort ProofLine < Proof .
+    op `(_`)__; : NzNat TermPattern ProofRule -> ProofLine [prec 40] .
+
+    sort ProofRule .
+    op `[_,_,_`] : RuleName NzNat NzNat -> ProofRule .
+    op `[_,_`]   : RuleName NzNat       -> ProofRule .
+    op `[_`]     : RuleName             -> ProofRule .
+
+    sort RuleName .
+
+    op tauto-context          : -> RuleName . --- if phi -> phi' then psi and phi -> psi and phi'
+    op tauto-imp-refl         : -> RuleName . --- phi -> phi
+    op tauto-imp-tranz        : -> RuleName . --- if (t1 -> t) (t -> t2) then (t1 -> t2)
+    op tauto-and-simpl        : -> RuleName . --- t and t -> t 
+    op tauto-and-expand       : -> RuleName . --- t -> t and t
+    op tauto-and-unit         : -> RuleName . --- phi and true -> phi 
+    op tauto-and-exp-unit     : -> RuleName . --- phi -> phi and true
+    op tauto-and-bot          : -> RuleName . --- phi and false -> false
+    op tauto-bot-elim         : -> RuleName . --- bot -> phi
+    op tauto-equality-id      : -> RuleName . --- t = t -> true 
+    op tauto-equality-refl    : -> RuleName . --- true -> t = t
+    op equality-symmetry      : -> RuleName . --- t = t' -> t' = t
+    op equality-elimination   : -> RuleName . --- x = t and phi -> phi[t/x]
+    op equality-introduction1 : -> RuleName . --- phi[t/x] -> x = t and phi
+    op equality-introduction2 : -> RuleName . --- t = t -> true
+    op axiom                  : -> RuleName . --- no confusion I and II, function, ctor, t1 and t2 <-> t1 and (t1 = t2) 
+    op modus-ponens           : -> RuleName . --- if phi1 -> phi2 and phi1 then phi2 
+    op occurs-check           : -> RuleName . --- x =/= f(..., x, ...)
+endm
+
+mod CHECKER is
+    pr SYNTAX .
+    pr PROOF .
+
+    op check : Proof -> Bool .
+    op _step-marker_ : Proof Proof -> Bool [format(g bn nr o)] .
+    vars Pi Pi' P P' P1 P2 P3 P4 : Proof .
+    var L : ProofLine .
+    eq check(Pi) = (.Proof step-marker Pi) .
+    eq Pi step-marker .Proof = true .
+    ceq Pi step-marker (L Pi') = (Pi L) step-marker Pi' if Pi |- L .
+
+    var X : EVar .
+    vars I I1 I2 N : NzNat .
+    vars Tp Tp' Tp1 Tp2 T : TermPattern .
+    vars Pr Pr' : ProofRule .
+    op _|-_ : Proof ProofLine -> Bool .
+
+    eq  [axiom] : Pi |- (N) Tp [axiom] ;   = true .
+
+    ceq [tauto-context] :
+        Pi |- (N) \imp(T and Tp1, T and Tp2) [tauto-context, I] ; = true
+      if I < N /\ I \imp(Tp1, Tp2) in Pi .
+
+    eq [tauto-and-simpl] :
+        Pi |- (N) \imp(T and T, T) [tauto-and-simpl] ; = true .
+
+    eq [tauto-and-expand] :
+        Pi |- (N) \imp(T, T and T) [tauto-and-expand] ; = true .
+
+    eq [tauto-imp-refl] : Pi |- (N) \imp(Tp, Tp) [tauto-imp-refl] ; = true .
+
+    eq [tauto-equality-id] :
+        Pi |- (N) \imp(\eq(Tp, Tp), \imp(\bot, \bot)) [tauto-equality-id] ; = true .
+
+    eq [tauto-equality-refl] :
+        Pi |- (N) \imp(\imp(\bot, \bot), \eq(Tp, Tp)) [tauto-equality-refl] ; = true .
+
+    eq [tauto-and-unit] :
+        Pi |- (N) \imp(Tp and \imp(\bot, \bot), Tp) [tauto-and-unit] ; = true .
+
+    eq [tauto-and-exp-unit] :
+        Pi |- (N) \imp(Tp, Tp and \imp(\bot, \bot)) [tauto-and-exp-unit] ; = true .
+
+    eq [tauto-and-bot] :
+        Pi |- (N) \imp(Tp and \bot, \bot) [tauto-and-bot] ; = true .
+
+    eq [tauto-and-bot] :
+        Pi |- (N) \imp(\bot, Tp) [tauto-bot-elim] ; = true .
+
+    eq [symmetry] : Pi |- (N) \imp(\eq(Tp, Tp'), \eq(Tp', Tp)) [equality-symmetry] ; = true .
+
+    ceq [equality-elimination] :
+        Pi |- (N) \imp((\eq(X,T)) and Tp, Tp') [equality-elimination] ; = true
+      if Tp' ==  Tp[T / X] .
+
+    ceq [equality-introduction1] :
+        Pi |- (N) \imp(Tp', (\eq(X,T)) and Tp) [equality-introduction1] ; = true
+      if Tp' ==  Tp[T / X] .
+
+    eq [equality-introduction2] :
+        Pi |- (N) \eq(Tp, Tp) [equality-introduction2] ; = true .
+
+    ceq [oc] : Pi |- (N) \imp(\eq(X, Tp), \bot) [occurs-check] ; = true
+      if X in vars(Tp) /\ isCompound(Tp) .
+
+    ceq [mp] :
+        Pi |- (N) Tp [modus-ponens, I1, I2] ; = true
+      if I1 < N /\ I2 < N /\ check-impl(I1, I2, Tp, Pi) .
+    ceq [tauto-imp-tranz] :
+        Pi |- (N) \imp(Tp1, Tp2) [tauto-imp-tranz, I1, I2] ; = true
+      if I1 < N /\ I2 < N /\
+         (P1 ((I1) \imp(Tp1, T) Pr  ;) P2) := Pi /\ 
+         (P3 ((I2) \imp(T, Tp2) Pr' ;) P4) := Pi .
+
+    --- helpers
+    op __in_ : NzNat TermPattern Proof -> Bool .
+    eq N Tp in (P ((N) Tp Pr ;) P') = true .
+    eq N Tp in Pi = false [owise] .
+
+    op check-impl : NzNat NzNat TermPattern Proof -> Bool .
+    ceq check-impl(I1, I2, Tp, Pi) = (Tp1 == \imp(Tp2, Tp))
+      if (P1 ((I1) Tp1 Pr  ;) P2) := Pi /\ (P3 ((I2) Tp2 Pr' ;) P4) := Pi .
+endm
+
+
+    ------------------------------------------------------------------------------------*
+    --- ceq [symmetry] : Pi |- (N) \eq(Tp1, Tp2) [symmetry, I] ; = true               ---
+    ---   if I < N /\ I (\eq(Tp2, Tp1)) in Pi .                                       ---
+    --- ceq [and-intro] : Pi |- (N) Tp and Tp' [and-introduction, I1, I2] ; = true    ---
+    ---   if I1 < N /\ I2 < N /\ I1 Tp in Pi /\ I2 Tp' in Pi .                        ---
+    --- ceq [and-elim] : Pi |- (N) Tp [and-elimination, I] ; = true                   ---
+    ---   if I < N /\ I Tp in-conj Pi .                                               ---
+    --- ceq [mp] : Pi |- (N) Tp [modus-ponens, I1, I2] ; = true                       ---
+    ---   if I1 < N /\ I2 < N /\ check-impl(I1, I2, Tp, Pi) .                         ---
+    --- ceq [subst] : Pi |- (N) Tp1 [substitution, I1, I2] ; = true                   ---
+    ---   if I1 < N /\ I2 < N /\ check-subst(I1, I2, Tp1, Pi) .                       ---
+    --- ceq [oc] : Pi |- (N) \bot [occurs-check, I] ; = true                          ---
+    ---   if P ((I) \eq(X, Tp) Pr ;)  P' := Pi /\ X in vars(Tp) .                     ---
+    ---                                                                               ---
+    ---                                                                               ---
+    --- op __in-conj_ : NzNat TermPattern Proof -> Bool .                             ---
+    --- eq N Tp in-conj (P ((N) (Tp and Tp') Pr ;) P') = true .                       ---
+    --- eq N Tp in-conj Pi = false [owise] .                                          ---
+    ---                                                                               ---
+    --- op check-impl : NzNat NzNat TermPattern Proof -> Bool .                       ---
+    --- ceq check-impl(I1, I2, Tp, Pi) = (Tp1 == \imp(Tp2, Tp))  --- atentie: ==      ---
+    ---   if (P1 ((I1) Tp1 Pr  ;) P2) := Pi /\ (P3 ((I2) Tp2 Pr' ;) P4) := Pi .       ---
+    ---                                                                               ---
+    --- op check-subst : NzNat NzNat TermPattern Proof -> Bool .                      ---
+    --- ceq check-subst(I1, I2, Tp, Pi) = (Tp == Tp1[T / X])                          ---
+    ---   if (P1 ((I1) Tp1 Pr ;) P2) := Pi /\ (P3 ((I2) (\eq(X,T)) Pr' ;) P4) := Pi . ---
+    ------------------------------------------------------------------------------------*
