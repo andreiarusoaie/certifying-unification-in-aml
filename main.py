@@ -60,28 +60,30 @@ def run_tests():
         file = os.path.join(tests, test)
         file_log_out = os.path.join(tests, log_dir,
                                     test.replace('.maude', ".out"))
-        print("[TESTING]", file)
+        print(BOLD + "[TESTING]" + ENDC, file)
         (out, err, ex, tm) = system_call(MAUDE + " -no-banner " + file)
         if (ex == 0):
             out_decoded = out.decode('utf-8')
             n = open(file_log_out, 'wb')
             n.write(out)
             if ('step-marker' in out_decoded):
-                print('[FAILURE] proof failed, output saved in ', file_log_out)
+                print(FAIL + '[FAILURE]' + ENDC, 'proof failed, output saved in ',
+                      file_log_out)
                 failed = failed + 1
                 failed_list.append(test)
             else:
-                print('[SEEMS OK]', 'check output saved in ', file_log_out)
+                print(OKGREEN + '[OK]' + ENDC, 'check output saved in ',
+                      file_log_out)
                 passed = passed + 1
         else:
-            print('[FAILURE]', err.decode('uft-8'))
+            print(WARNING + '[MAUDE FAILURE]' + ENDC, err.decode('uft-8'))
             failed = failed + 1
             failed_list.append(test)
-    print(HEADER + "[TOTAL TESTS]:", passed + failed, ENDC)
+    print(BOLD + HEADER + "[TOTAL TESTS]:", passed + failed, ENDC)
     print(OKGREEN + "[PASSED]:", passed, ENDC)
     print(FAIL + "[FAILED]:", failed, ENDC)
     if (failed > 0):
-        print(BOLD + FAIL, "[FAILED TESTS]:", failed_list, ENDC)
+        print(BOLD + FAIL + "[FAILED TESTS]:", failed_list, ENDC)
 
 def main():
     check_maude_installation();
