@@ -158,12 +158,12 @@ mod PROOF-GENERATION is
     op gen-proof1-aux : Trace NzNat TermPattern -> Proof .
     rl [stage1-dec-basic] :
         gen-proof1-aux(dec((Tp =? Tp'), U', .U) ,, Tr , K, Phi) =>
-        ( (K) \imp(\eq(Tp, Tp'), asPattern(U')) [axiom] ; 
+        ( (K) \imp(\eq(Tp, Tp'), asPattern(U')) [axiom-no-confusion-II] ; 
           gen-proof1-aux(Tr, K + 1, Phi) ) .
 
     crl [stage1-dec-comp] :
         gen-proof1-aux(dec((Tp =? Tp'), U', U) ,, Tr , K, Phi) =>
-        ( (K) \imp(\eq(Tp, Tp'), Phi') [axiom] ;
+        ( (K) \imp(\eq(Tp, Tp'), Phi') [axiom-no-confusion-II] ;
           (K + 1) \imp(Rest and \eq(Tp, Tp'), Rest and Phi') [tauto-context, K] ;
           (K + 2) \imp(Phi, Rest and Phi') [tauto-imp-tranz, K - 1, K + 1] ;
           gen-proof1-aux(Tr, K + 3, Phi) )
