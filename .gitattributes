@@ -1,0 +1,3 @@
+*.maude linguist-language=Maude
+*.py linguist-language=Python
+*.maude linguist-detectable
