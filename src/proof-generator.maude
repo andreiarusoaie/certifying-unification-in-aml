@@ -1,7 +1,7 @@
 load checker
 
 mod SETUP is
-    pr CHECKER .
+    pr PROOF .
 
     sorts UnificationPair UnificationProblem .
     subsort UnificationPair < UnificationProblem .
@@ -37,13 +37,11 @@ mod SETUP is
     eq asPattern((Tp1 =? Tp2)) = \eq(Tp1, Tp2) .
     eq asPattern(((Tp1 =? Tp2) , U)) = \eq(Tp1, Tp2) and asPattern(U) .
 
-
     vars N N' : Nat .
     op hasTopSymbol : TermPattern -> Bool .
     eq hasTopSymbol(\symb(N)) = true .
     eq hasTopSymbol(\app(\symb(N), Tp)) = true .
     eq hasTopSymbol(Tp) = false .
-
     
     op subst-unif : EVar TermPattern UnificationProblem -> UnificationProblem .
     eq subst-unif(X, Tp, bot) = bot .
@@ -55,11 +53,6 @@ mod SETUP is
     eq clash(\app(Tp, Tp1), \app(Tp', Tp2)) = clash(Tp, Tp') .
     eq clash(\symb(N), \app(Tp', Tp2)) = true .
     eq clash(\app(Tp, Tp1), \symb(N)) = true .
-
-
-    --- orientation for eq
----    eq \eq(\app(\symb(N), Tp), X) = \eq(X, \app(\symb(N), Tp)) .
----    eq \eq(\symb(N), X) = \eq(X, \symb(N)) .
 
     --- decomposition rec
     op decomposition-rec : UnificationPair -> UnificationProblem .
@@ -92,6 +85,7 @@ mod UNIFICATION is
     vars Tr Tr' : Trace .
     vars X : EVar .
 
+
     crl [decomposition] :
         < \app(F, P) =? \app(F', P') , U | Tr > =>
         < U' , U | Tr ,, dec((\app(F, P) =? \app(F', P')), U', U) >
@@ -117,6 +111,7 @@ endm
 
 mod PROOF-GENERATION is 
     inc UNIFICATION .
+    pr CHECKER .
     pr INT .
 
     op gen-proof1 : TermPattern TermPattern -> Proof .
@@ -273,13 +268,13 @@ mod PROOF-GENERATION is
 
     rl [stage2-dec-basic] :
         gen-proof2-aux(dec((Tp =? Tp'), U', .U) ,, Tr , K, PhiS) =>
-        ( (K) \imp(asPattern(U'), \eq(Tp, Tp')) [axiom] ;
+        ( (K) \imp(asPattern(U'), \eq(Tp, Tp')) [axiom-functional] ;
           (K + 1) \imp(PhiS, \eq(Tp, Tp')) [tauto-imp-tranz, K - 1, K] ;
           gen-proof2-aux(Tr, K + 2, PhiS) ) .
 
     crl [stage2-dec] :
         gen-proof2-aux(dec((Tp =? Tp'), U', U) ,, Tr , K, PhiS) =>
-        ( (K) \imp(Phi', \eq(Tp, Tp')) [axiom] ;
+        ( (K) \imp(Phi', \eq(Tp, Tp')) [axiom-functional] ;
           (K + 1) \imp(Rest and Phi', Rest and \eq(Tp, Tp')) [tauto-context, K] ;
           (K + 2) \imp(PhiS, Rest and \eq(Tp, Tp')) [tauto-imp-tranz, K - 1, K + 1] ;
           gen-proof2-aux(Tr, K + 3, PhiS) )
