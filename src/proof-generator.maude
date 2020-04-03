@@ -211,13 +211,13 @@ mod PROOF-GENERATION is
 
     rl [stage1-clash-basic] :
         gen-proof1-aux(clh(Tp, Tp', .U) ,, Tr, K, Phi) =>
-        ( (K) \imp(\eq(Tp, Tp'), \bot) [axiom] ;
+        ( (K) \imp(\eq(Tp, Tp'), \bot) [axiom-no-confusion-I] ;
           (K + 1) \imp(Phi, \bot) [tauto-imp-tranz, K - 1, K] ;
           gen-proof1-aux(Tr, K + 2, Phi) ) .
 
     crl [stage1-clash] :
         gen-proof1-aux(clh(Tp, Tp', U) ,, Tr, K, Phi) =>
-        ( (K) \imp(\eq(Tp, Tp'), \bot) [axiom] ;
+        ( (K) \imp(\eq(Tp, Tp'), \bot) [axiom-no-confusion-I] ;
           (K + 1) \imp(Rest and \eq(Tp, Tp'), Rest and \bot) [tauto-context, K] ;
           (K + 2) \imp(Rest and \bot, \bot) [tauto-and-bot] ;
           (K + 3) \imp(Rest and \eq(Tp, Tp'), \bot) [tauto-imp-tranz, K + 1, K + 2] ;

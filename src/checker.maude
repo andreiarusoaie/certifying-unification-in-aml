@@ -55,7 +55,7 @@ mod SYNTAX is
     eq X in (A ; B)              = (X in A) or (X in B) .
 
     op isCompound : TermPattern -> Bool .
-    eq isCompound(\app(\symb(N), T)) = true .
+    eq isCompound(\app(F, T)) = true .
     eq isCompound(T) = false [owise] .
 
     op isFunctional : TermPattern -> Bool .
@@ -69,6 +69,10 @@ mod SYNTAX is
         check-functional-rec(\imp(Phi, \eq(F, F'))) and isFunctional(F) and isFunctional(F')  .
     eq check-functional-rec(\imp(\eq(T1, T2), \eq(\app(F, T1), \app(F, T2)))) = isFunctional(F) .
     eq check-functional-rec(F) = false [owise] .
+
+    op get-top-symbol : TermPattern -> TermPattern .
+    eq get-top-symbol(\app(\symb(N), T)) = \symb(N) . 
+    eq get-top-symbol(\app(F, T)) = get-top-symbol(F) .
 endm
 
 mod PROOF is
@@ -179,6 +183,10 @@ mod CHECKER is
         Pi |- (N) \imp(Tp1, Tp2) [axiom-no-confusion-II] ; = true
       if check-functional-rec(\imp(Tp2, Tp1)) .
 
+    ceq [axiom-no-confusion-I] :
+        Pi |- (N) \imp(\eq(Tp1, Tp2), \bot) [axiom-no-confusion-I] ; = true
+      if isFunctional(Tp1) /\ isFunctional(Tp2) /\ not(get-top-symbol(Tp1) == get-top-symbol(Tp2)) .
+    
     ceq [oc] : Pi |- (N) \imp(\eq(X, Tp), \bot) [occurs-check] ; = true
       if X in vars(Tp) /\ isCompound(Tp) .
 
