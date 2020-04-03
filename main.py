@@ -6,7 +6,15 @@ import os
 # setup
 MAUDE        = 'maude' # modify this with the full path of the maude executable
 TESTS        = 'tests' # tests folder
-EXPECTED_OUT = 'out'
+EXPECTED_OUT = 'out'   # the outputs are saved in the out folder under TESTS
+
+HEADER = '\033[95m'
+OKBLUE = '\033[94m'
+OKGREEN = '\033[92m'
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+BOLD = '\033[1m'
 
 # simply run a system command and return the needed info
 def system_call(cmd, dir=".", verbose=False):
@@ -43,6 +51,9 @@ def run_tests():
     dir = os.path.dirname(os.path.realpath(__file__))
     tests = os.path.join(dir, TESTS)
     log_dir = os.path.join(tests, EXPECTED_OUT)
+    passed = 0
+    failed = 0
+    failed_list = []
     for test in os.listdir(tests):
         if (test == 'tests-setup.maude' or test == "out"):
             continue
@@ -56,11 +67,21 @@ def run_tests():
             n = open(file_log_out, 'wb')
             n.write(out)
             if ('step-marker' in out_decoded):
-                print('[FAILURE]', 'proof failed,', 'output saved in ', file_log_out)
+                print('[FAILURE] proof failed, output saved in ', file_log_out)
+                failed = failed + 1
+                failed_list.append(test)
             else:
                 print('[SEEMS OK]', 'check output saved in ', file_log_out)
+                passed = passed + 1
         else:
             print('[FAILURE]', err.decode('uft-8'))
+            failed = failed + 1
+            failed_list.append(test)
+    print(HEADER + "[TOTAL TESTS]:", passed + failed, ENDC)
+    print(OKGREEN + "[PASSED]:", passed, ENDC)
+    print(FAIL + "[FAILED]:", failed, ENDC)
+    if (failed > 0):
+        print(BOLD + FAIL, "[FAILED TESTS]:", failed_list, ENDC)
 
 def main():
     check_maude_installation();
