@@ -107,13 +107,12 @@ mod PROOF is
     op equality-symmetry      : -> RuleName . --- phi = phi' -> phi' = phi
     op equality-elimination   : -> RuleName . --- x = t and phi -> phi[t/x]
     op equality-introduction1 : -> RuleName . --- functional(t) /\ phi[t/x] -> x = t and phi
-    op axiom                  : -> RuleName . --- no confusion I and II, function, ctor, 
-    op axiom-no-confusion-I   : -> RuleName .
+    op axiom-no-confusion-I   : -> RuleName . --- f == g -> \bot 
     op axiom-no-confusion-II  : -> RuleName . --- f(t) = f(t') -> f = t'
     op axiom-5.24.3-1         : -> RuleName . --- t1 and t2 -> t1 and (t1 = t2) 
     op axiom-5.24.3-2         : -> RuleName . --- t1 and (t1 = t2) -> t1 and t2
     op axiom-functional       : -> RuleName . --- isFunctional(phi)
-    op occurs-check           : -> RuleName . --- x =/= f(..., x, ...)
+    op occurs-check           : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
 endm
 
 
@@ -133,8 +132,6 @@ mod CHECKER is
     vars Tp Tp' Tp1 Tp2 T F F' Phi : TermPattern .
     vars Pr Pr' : ProofRule .
     op _|-_ : Proof ProofLine -> Bool .
-
-    eq  [axiom] : Pi |- (N) Tp [axiom] ;   = true .
 
     ceq [tauto-context] :
         Pi |- (N) \imp(T and Tp1, T and Tp2) [tauto-context, I] ; = true
@@ -183,10 +180,15 @@ mod CHECKER is
         Pi |- (N) \imp(Tp1, Tp2) [axiom-no-confusion-II] ; = true
       if check-functional-rec(\imp(Tp2, Tp1)) .
 
-    ceq [axiom-no-confusion-I] :
+    ceq [axiom-no-confusion-I] : 
         Pi |- (N) \imp(\eq(Tp1, Tp2), \bot) [axiom-no-confusion-I] ; = true
       if isFunctional(Tp1) /\ isFunctional(Tp2) /\ not(get-top-symbol(Tp1) == get-top-symbol(Tp2)) .
-    
+
+    eq [axiom-5.24.3-1] :
+        Pi |- (N) \imp(Tp1 and Tp2, Tp1 and \eq(Tp1, Tp2)) [axiom-5.24.3-1] ; = true .
+    eq [axiom-5.24.3-2] :
+        Pi |- (N) \imp(Tp1 and \eq(Tp1, Tp2), Tp1 and Tp2) [axiom-5.24.3-2] ; = true .
+
     ceq [oc] : Pi |- (N) \imp(\eq(X, Tp), \bot) [occurs-check] ; = true
       if X in vars(Tp) /\ isCompound(Tp) .
 

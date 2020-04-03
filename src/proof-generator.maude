@@ -134,7 +134,7 @@ mod PROOF-GENERATION is
         ((1) \imp(\eq(Tp, Tp'), \eq(Tp, Tp')) [tauto-imp-refl] ;
           Prf
           (K + 1) \imp(Tp and Phi, Tp and Phi') [tauto-context, K] ;
-          (K + 2) \imp(Tp and Tp', Tp and Phi)  [axiom] ;
+          (K + 2) \imp(Tp and Tp', Tp and Phi)  [axiom-5.24.3-1] ;
           (K + 3) \imp(Tp and Tp', Tp and Phi') [tauto-imp-tranz, K + 2, K + 1] ; )
       if < Tp =? Tp' | .Trace > => < U | Tr > /\ solved-form(U)  /\
           Prf  := gen-proof1-aux(Tr, 2, \eq(Tp, Tp')) /\
@@ -156,10 +156,12 @@ mod PROOF-GENERATION is
     eq get-line-imp-r((K) \imp(Phi, Phi') Pr ;) = Phi' .
 
     op gen-proof1-aux : Trace NzNat TermPattern -> Proof .
-    rl [stage1-dec-basic] :
+    crl [stage1-dec-basic] :
         gen-proof1-aux(dec((Tp =? Tp'), U', .U) ,, Tr , K, Phi) =>
-        ( (K) \imp(\eq(Tp, Tp'), asPattern(U')) [axiom-no-confusion-II] ; 
-          gen-proof1-aux(Tr, K + 1, Phi) ) .
+        ( (K) \imp(\eq(Tp, Tp'), Phi') [axiom-no-confusion-II] ;
+          (K + 1) \imp(Phi, Phi') [tauto-imp-tranz, K - 1, K] ;
+            gen-proof1-aux(Tr, K + 2, Phi) )
+    if Phi' := asPattern(U') .
 
     crl [stage1-dec-comp] :
         gen-proof1-aux(dec((Tp =? Tp'), U', U) ,, Tr , K, Phi) =>
@@ -167,7 +169,7 @@ mod PROOF-GENERATION is
           (K + 1) \imp(Rest and \eq(Tp, Tp'), Rest and Phi') [tauto-context, K] ;
           (K + 2) \imp(Phi, Rest and Phi') [tauto-imp-tranz, K - 1, K + 1] ;
           gen-proof1-aux(Tr, K + 3, Phi) )
-      if Phi' := asPattern(U') /\ Rest := asPattern(U) /\ Rest =/= \imp(\bot, \bot) .
+      if Phi' := asPattern(U') /\ Rest := asPattern(U) /\ U =/= .U .
 
     crl [stage1-elim] :
         gen-proof1-aux(elim((X =? Tp), U', U) ,, Tr , K, Phi) =>
@@ -176,7 +178,6 @@ mod PROOF-GENERATION is
           (K + 2) \imp(\eq(X, Tp), \eq(X, Tp) and \eq(X, Tp)) [tauto-and-expand] ;
           (K + 3) \imp(Before and \eq(X, Tp), Before and \eq(X, Tp) and \eq(X, Tp)) [tauto-context, K + 2] ;
           (K + 4) \imp(Before and \eq(X, Tp), \eq(X, Tp) and After) [tauto-imp-tranz, K + 3, K + 1] ;
-          
           (K + 5) \imp(Phi,  \eq(X, Tp) and After) [tauto-imp-tranz, K - 1, K + 4] ;
           gen-proof1-aux(Tr, K + 6, Phi) )
       if After := asPattern(U') /\ Before := asPattern(U) /\ U =/= bot .
@@ -187,12 +188,13 @@ mod PROOF-GENERATION is
           (K + 1) \imp(Rest and \eq(Tp, X), Rest and \eq(X, Tp)) [tauto-context, K] ;
           (K + 2) \imp(Phi, Rest and \eq(X, Tp)) [tauto-imp-tranz, K - 1, K + 1] ;
           gen-proof1-aux(Tr, K + 3, Phi) )
-      if Rest := asPattern(U) /\ Rest =/= \imp(\bot, \bot) .
+      if Rest := asPattern(U) /\ U =/= .U .
 
     rl [stage1-orient-basic] :
         gen-proof1-aux(ori((Tp =? X), .U) ,, Tr , K, Phi) =>
         ( (K) \imp(\eq(Tp, X), \eq(X, Tp)) [equality-symmetry] ;
-          gen-proof1-aux(Tr, K + 1, \eq(Tp, X)) ) .
+          (K + 1) \imp(Phi, \eq(X, Tp)) [tauto-imp-tranz, K - 1, K] ;
+          gen-proof1-aux(Tr, K + 2, Phi) ) .
 
     crl [stage1-delete] :
         gen-proof1-aux(del((Tp =? Tp), U) ,, Tr , K, Phi) =>
@@ -248,7 +250,7 @@ mod PROOF-GENERATION is
         ( (1) \imp(PhiS, PhiS) [tauto-imp-refl] ;
           Prf
           (K + 1) \imp(Tp and Phi, Tp and Phi') [tauto-context, K] ;
-          (K + 2) \imp(Tp and Phi', Tp and Tp')  [axiom] ;
+          (K + 2) \imp(Tp and Phi', Tp and Tp')  [axiom-5.24.3-2] ;
           (K + 3) \imp(Tp and Phi, Tp and Tp') [tauto-imp-tranz, K + 1, K + 2] ; )
       if < Tp =? Tp' | .Trace > => < U | Tr > /\ solved-form(U) /\
           PhiS := asPattern(U) /\
