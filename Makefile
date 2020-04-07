@@ -1,2 +1,4 @@
-all:
-				python3 main.py
+all: test
+
+test:
+				python3 tests.py

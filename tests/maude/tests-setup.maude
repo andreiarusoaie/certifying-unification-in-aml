@@ -1,4 +1,4 @@
-load ../src/proof-generator.maude
+load ../../src/proof-generator.maude
 
 mod PRETTY is
     pr PROOF-GENERATION .
