@@ -1,0 +1,3 @@
+variables: x, z
+symbols: f, g , u, t
+problem: f(x, g(z, x)) =? f(x, g(u, t))

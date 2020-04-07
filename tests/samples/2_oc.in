@@ -1,0 +1,3 @@
+variables: x
+symbols: f
+problem: x =? f(x)
