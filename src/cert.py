@@ -29,6 +29,11 @@ def check_variables(vars, t1, t2):
         if not search(var, t1) and not search(var, t2):
             u.err("variable", var, "is not used")
 
+def check_symbols(symbols, t1, t2):
+    for symbol in symbols:
+        if not search(symbol, t1) and not search(symbol, t2):
+            u.err("symbol", symbol, "is not used")
+
 def get_arity_map(symbols, t1, t2):
     symb_arity = {}
     for symbol in symbols:
@@ -87,6 +92,7 @@ def certify(args):
     input = get_file_as_string(input_filename)
     (variables, symbols, t1, t2) = parser.parse(input)
     check_variables(variables, t1, t2)
+    check_symbols(symbols, t1, t2)
 
     dir = os.path.dirname(os.path.realpath(__file__))
     template_text = generate_maude(t1, t2, symbols, variables, dir)
