@@ -17,11 +17,12 @@ def get_file_as_string(filename):
         u.err(str(e))
 
 def search(tag, term):
-    rest = []
+    rest = set()
     if (tag == term.tag):
-        rest.append(int(len(term.subterms)))
+        ar = int(len(term.subterms))
+        rest.add(ar)
     for subterm in term.subterms:
-        rest = rest + search(tag, subterm)
+        rest = set.union(rest, search(tag, subterm))
     return rest
 
 def check_variables(vars, t1, t2):
@@ -37,8 +38,8 @@ def check_symbols(symbols, t1, t2):
 def get_arity_map(symbols, t1, t2):
     symb_arity = {}
     for symbol in symbols:
-        o1 = search(symbol, t1)
-        o2 = search(symbol, t2)
+        o1 = list(search(symbol, t1))
+        o2 = list(search(symbol, t2))
         if (len(o1) == 0 and len(o2) == 0):
             u.err("cannot determine arity of symbol", symbol,
                   "from your list of symbols", symbols)
