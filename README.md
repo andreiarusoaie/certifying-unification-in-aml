@@ -52,7 +52,7 @@ If the above specification is in `problem.in`, then `main.py` is invoked like th
 -$ python3 main.py problem.in 
 Found Maude version: 3.0beta1
 
-Stage 1: 
+Proof of: (f(x, g(u, t)) and f(x, g(z, x)) --> f(x, g(z, x)) and (x === t) and (z === u))
 (1)((f(x, g(z, x)) === f(x, g(u, t))) --> (f(x, g(z, x)) === f(x, g(u, t)))) [tauto-imp-refl] ;
 (2)((f(x, g(z, x)) === f(x, g(u, t))) --> (x === x) and (g(z, x) === g(u, t))) [axiom-no-confusion-II] ;
 (3)((f(x, g(z, x)) === f(x, g(u, t))) --> (x === x) and (g(z, x) === g(u, t))) [tauto-imp-tranz,1,2] ;
@@ -69,7 +69,7 @@ Stage 1:
 (14)(f(x, g(u, t)) and f(x, g(z, x)) --> f(x, g(z, x)) and (x === t) and (z === u)) [tauto-imp-tranz,13,12] ;
 Checked:   true
 
-Stage 2: 
+Proof of: (f(x, g(z, x)) and (x === t) and (z === u) --> f(x, g(u, t)) and f(x, g(z, x)))
 (1)((x === t) and (z === u) --> (x === t) and (z === u)) [tauto-imp-refl] ;
 (2)((ff --> ff) --> (x === x)) [tauto-equality-refl] ;
 (3)((ff --> ff) and (x === t) and (z === u) --> (x === t) and (x === x) and (z === u)) [tauto-context,2] ;
