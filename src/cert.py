@@ -83,6 +83,33 @@ def flagcolor(s):
     else:
         return u.BOLD + u.FAIL + s + u.ENDC
 
+def get_goal(proofline):
+    regex_pl = re.compile(r'\([0-9]+\)([^\[]*)\[.*\]')
+    match = regex_pl.match(proofline)
+    if match:
+        return match.group(1)
+    else:
+        return "cannot extract proof goal; the goal is the last line in this proof"
+    
+def extract_maude(out):
+    regex_prf = re.compile(r'Proof:(.*?)(====|Bye)', re.DOTALL)
+    regex_chk = re.compile(r'Bool:(.*?)(====|Bye)', re.DOTALL)
+    output = out.decode("utf-8")
+    proofs = [p.groups() for p in regex_prf.finditer(output)]
+    checks = [c.groups() for c in regex_chk.finditer(output)]
+    if len(proofs) != 2 or len(checks) != 2:
+        print("cannot extract proofs and checks from maude output")
+        print("please run `maude", log,'`` to find out what is wrong')
+        exit(1)
+    i = 1
+    for proof in proofs:
+        lastline = proof[0].strip().splitlines()[-1];
+        print(u.BOLD + u.HEADER + "Proof of:" + u.OKBLUE, get_goal(lastline), u.ENDC)
+        print(proof[0].strip())
+        print(u.OKBLUE + "Checked:", u.ENDC, flagcolor(checks[i - 1][0]))
+        i = i + 1
+    
+    
 def certify(args):
     # handle input args
     if (len(args) <= 1):
@@ -108,20 +135,6 @@ def certify(args):
 
     # extract maude output
     if ex == 0:
-        regex_prf = re.compile(r'Proof:(.*?)(====|Bye)', re.DOTALL)
-        regex_chk = re.compile(r'Bool:(.*?)(====|Bye)', re.DOTALL)
-        output = out.decode("utf-8")
-        proofs = [p.groups() for p in regex_prf.finditer(output)]
-        checks = [c.groups() for c in regex_chk.finditer(output)]
-        if len(proofs) != 2 or len(checks) != 2:
-            print("cannot extract proofs and checks from maude output")
-            print("please run `maude", log,'`` to find out what is wrong')
-            exit(1)
-        i = 1
-        for proof in proofs:
-            print(u.HEADER + "Stage", str(i) + ":", u.ENDC)
-            print(proof[0].strip())
-            print(u.OKBLUE + "Checked:", u.ENDC, flagcolor(checks[i - 1][0]))
-            i = i + 1
+        extract_maude(out)
     else:
         u.err("cannot execute", MAUDE, "\nERROR")
