@@ -4,7 +4,7 @@ This repo contains a series of Maude scripts for generating and checking proof c
 ### Prerequisites
 
 > Software 
-  * We recommend [Python 3](https://www.python.org/downloads/) needed to execute `main.py`; Python 2.7 also works, but the output looks a bit odd.
+  * We recommend [Python 3](https://www.python.org/downloads/) needed to execute `ml-unify.py`; Python 2.7 also works, but the output looks a bit odd.
   * The proof checker and the proof generator are written in [Maude 3](http://maude.cs.illinois.edu/w/index.php/Maude_download_and_installation).
 
 > Literature
@@ -12,7 +12,7 @@ This repo contains a series of Maude scripts for generating and checking proof c
   * [Applicative Matching Logic](http://fsl.cs.illinois.edu/index.php/Applicative_Matching_Logic)
 
 ### Organisation
-The `main.py` script (Python 3) checks if `Maude` is installed and processes an input file with a specific format. This is explained in detail in the subsection **main.py** below.
+The `ml-unify.py` script (Python 3) checks if `Maude` is installed and processes an input file with a specific format. This is explained in detail in the subsection **ml-unify.py** below.
 
 The `tests.py` script (Python 3) checks if `Maude` is installed and runs automatically all the tests.
 
@@ -31,9 +31,9 @@ Open a terminal, `cd` into your working dir and type:
 ```
 This will run all the tests in the `tests\maude` folder. Initally, all tests pass. If you want to add more tests in the `tests\maude` directory, please follow the same naming convention as in the **Guidelines** section above. You can inspect the output in the corresponding file in the `tests/out/` directory.
 
-### main.py
+### ml-unify.py
 
-The `main.py` script takes as input files that specify unification problems. Here's an example:
+The `ml-unify.py` script takes as input files that specify unification problems. Here's an example:
 
 ```
 variables: x, z
@@ -41,15 +41,15 @@ symbols: f, g , u, t
 problem: f(x, g(z, x)) =? f(x, g(u, t))
 ```
 
-The `variables:` and `symbols:` sections contain the syntax to be used for terms. `problem:` is the unification problem to be solved. `main.py` parses this content and calls Maude which:
+The `variables:` and `symbols:` sections contain the syntax to be used for terms. `problem:` is the unification problem to be solved. `ml-unify.py` parses this content and calls Maude which:
   * solves the unification problem,
   * generates a proof in (Applicative) Matching Logic, and
   * checks the generated proof (and thus, it outputs a proof certificate).
 
-If the above specification is in `problem.in`, then `main.py` is invoked like this:
+If the above specification is in `problem.in`, then `ml-unify.py` is invoked like this:
 
 ```
--$ python3 main.py problem.in 
+-$ python3 ml-unify.py problem.in 
 Found Maude version: 3.0beta1
 
 Proof of: (f(x, g(u, t)) and f(x, g(z, x)) --> f(x, g(z, x)) and (x === t) and (z === u))
@@ -89,7 +89,7 @@ Checked:   true
 
 The output contains two proofs (one for each stage - check [Unification in Matching Logic](https://link.springer.com/chapter/10.1007/978-3-030-30942-8_30) for details). If the `Checked` flags are both `true` then the proofs have been checked successfully.
 
-`main.py` can also throw errors if the input is not correct. For instance:
+`ml-unify.py` can also throw errors if the input is not correct. For instance:
 
 > Example 1: a declared variable is not used
 ```
@@ -97,7 +97,7 @@ The output contains two proofs (one for each stage - check [Unification in Match
 variables: x, z
 symbols: f, g , k, u, t
 problem: f =? f(x, g(u, t))
--$ python3 main.py err_not_used.in
+-$ python3 ml-unify.py err_not_used.in
 Found Maude version: 3.0beta1
 
 ERROR: variable z is not used 
@@ -110,7 +110,7 @@ Exit with non-zero code: 1
 variables: x
 symbols: f, g , k, u, t
 problem: f =? f(x, g(u, t))
--$ python3 main.py err_ambiguous_arity.in
+-$ python3 ml-unify.py err_ambiguous_arity.in
 Found Maude version: 3.0beta1
 
 ERROR: ambiguous arity of symbol f in f f(x,g(u,t)) 
@@ -123,7 +123,7 @@ Exit with non-zero code: 1
 variables: x, z
 symbols: f, g , k, u, t
 problem: f(x)x) =? f(x, g(u, t))
--$ python3 main.py err_parsing_bad_term.in
+-$ python3 ml-unify.py err_parsing_bad_term.in
 Found Maude version: 3.0beta1
 
 ERROR: cannot parse f(x)x), stopped here x) 
@@ -137,7 +137,7 @@ Exit with non-zero code: 4
 variables: x, z
 symbols: f, g , k, u, t
 problem: x(x) =? f(x, g(u, t))
--$ python3 main.py err_parsing_bad_symb.in
+-$ python3 ml-unify.py err_parsing_bad_symb.in
 Found Maude version: 3.0beta1
 
 ERROR: bad symbol x, expecting one of ['f', 'g', 'k', 'u', 't'] 
