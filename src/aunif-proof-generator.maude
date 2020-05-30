@@ -1,0 +1,95 @@
+load checker
+
+mod SETUP is
+    pr PROOF .
+
+    sorts SubstPair SubstList .
+    op subst-pair : EVar TermPattern -> SubstPair .
+    op subst-cons : SubstPair SubstList -> SubstList .
+    op subst-nil : -> SubstList .
+
+    op collapse : SubstList -> SubstPair .
+    vars X Y : EVar .
+    vars Phi Phi' : TermPattern .
+    var PR : SubstPair .
+    var PL : SubstList .
+    eq collapse(subst-cons(PR, subst-nil)) = PR .
+
+    eq collapse(subst-cons(subst-pair(Y, Phi), subst-cons(subst-pair(X, Phi'), PL))) =
+        collapse(subst-cons(subst-pair(X, (Phi' [ Phi / Y ])), PL)) .
+
+    sorts Equation Equations .
+    subsort Equation < Equations .
+    op .Equations : -> Equations .
+    op _=_@_ : TermPattern EVar TermPattern -> Equation .
+    op __ : Equations Equations -> Equations [assoc prec 120 id: .Equations] .
+
+    sort AUnifProblem .
+    *** op anti-unif : AUnifProblem -> AUnifProblem .
+    op <_|_> : SubstList Equations -> AUnifProblem .
+
+    var Eqs : Equations .
+    vars N : Nat .
+    ceq [decompose]:
+        < PL | \app(\symb(N), Phi) = X @ \app(\symb(N), Phi') Eqs > =
+        < subst-cons(subst-pair(X, \app(\symb(N), Y)), PL) | Phi = Y @ Phi' Eqs >
+      if Y := fresh(X) .
+
+    op extract-lgg : AUnifProblem -> TermPattern .
+    ceq extract-lgg(< PL | Eqs >) = Phi
+       if subst-pair(X, Phi) := collapse(PL) .
+
+    op extract-sigma-1 : AUnifProblem -> SubstList .
+    eq extract-sigma-1(< PL | Eqs >) = extract-left(Eqs) .
+    op extract-sigma-2 : AUnifProblem -> SubstList .
+    eq extract-sigma-2(< PL | Eqs >) = extract-right(Eqs) .
+
+    var E : Equation .
+    vars Es : Equations .
+    var Sigma : SubstPair .
+    var Sigmas : SubstList .
+    op extract-left : Equations -> SubstList .
+    eq extract-left(.Equations) = subst-nil .
+    eq extract-left((Phi = X @ Phi')) = subst-cons(subst-pair(X, Phi), subst-nil) .
+    ceq extract-left(((Phi = X @ Phi') Es)) = subst-cons(subst-pair(X, Phi), Sigmas)
+      if Sigmas := extract-left(Es) .
+    op extract-right : Equations -> SubstList .
+    eq extract-right(.Equations) = subst-nil .
+    eq extract-right((Phi = X @ Phi')) = subst-cons(subst-pair(X, Phi'), subst-nil) .
+    ceq extract-right(((Phi = X @ Phi') Es)) = subst-cons(subst-pair(X, Phi'), Sigmas)
+      if Sigmas := extract-right(Es) .
+
+    op fresh : EVar -> EVar .
+    eq fresh(\evar(N)) = \evar(N + 1) .
+endm
+
+mod ANTI-UNIFICATION is
+    pr SETUP .
+
+endm
+
+
+rew in ANTI-UNIFICATION : < subst-nil | \app(\symb(1), \app(\symb(2), \symb(3))) = \evar(5) @ \app(\symb(1), \app(\symb(2), \evar(4))) > .
+
+rew in ANTI-UNIFICATION : extract-lgg(< subst-nil | \app(\symb(1), \app(\symb(2), \symb(3))) = \evar(5) @ \app(\symb(1), \app(\symb(2), \evar(4))) >) .
+
+rew in ANTI-UNIFICATION : extract-sigma-1(< subst-nil | \app(\symb(1), \app(\symb(2), \symb(3))) = \evar(5) @ \app(\symb(1), \app(\symb(2), \evar(4))) >) .
+
+rew in ANTI-UNIFICATION : extract-sigma-2(< subst-nil | \app(\symb(1), \app(\symb(2), \symb(3))) = \evar(5) @ \app(\symb(1), \app(\symb(2), \evar(4))) >) .
+
+
+q
+
+mod PROOF-GENERATION is
+    inc ANTI-UNIFICATION .
+    pr CHECKER .
+    pr INT .
+
+
+    op gen-proof1 : TermPattern TermPattern -> Proof .
+    op gen-proof2 : TermPattern TermPattern -> Proof .
+
+    --- Stage 1
+    
+    
+endm

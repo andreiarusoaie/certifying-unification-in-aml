@@ -1,0 +1,56 @@
+load aunif-proof-generator.maude
+
+mod PRETTY is
+    pr PROOF-GENERATION .
+
+    op f : TermPattern -> TermPattern .
+    op g : TermPattern -> TermPattern .
+    op a :  -> TermPattern .
+    op y : -> EVar .
+
+    op _-->_ : TermPattern TermPattern -> TermPattern .
+    op _===_ : TermPattern TermPattern -> TermPattern .
+    op _`[_`] : TermPattern TermPattern -> TermPattern .
+
+    vars N : NzNat .
+    vars Tp Tp' F Tp1 Tp2 : TermPattern .
+    vars Pr : ProofRule .
+    vars P1 P2 : Proof .
+
+    op pretty : Proof -> Proof [format(nm d)] .
+    ops tt ff : -> TermPattern . *** true and false
+    eq pretty(.Proof) = .Proof .
+    ceq pretty((P1 P2)) = pretty(P1) pretty(P2) if (P1 =/= .Proof) /\ (P2 =/= .Proof) .
+    eq pretty((N) Tp Pr ;) = (N) prettyTermPattern(Tp) Pr ; .
+
+    op prettyTermPattern : TermPattern -> TermPattern .
+    --- eq prettyTermPattern(\imp(\bot, \bot)) = tt .  
+    eq prettyTermPattern(\bot) = ff .
+    eq prettyTermPattern(\imp(Tp1, Tp2)) = prettyTermPattern(Tp1) --> prettyTermPattern(Tp2) .
+    eq prettyTermPattern(\eq(Tp1, Tp2)) = prettyTermPattern(Tp1) === prettyTermPattern(Tp2) .
+    eq prettyTermPattern(Tp1 and Tp2) = prettyTermPattern(Tp1) and prettyTermPattern(Tp2) .
+
+    vars T1 : TermPattern .
+    eq prettyTermPattern(\app(\symb(1), T1)) = f(prettyTermPattern(T1)) .
+    eq prettyTermPattern(\app(\symb(2), T1)) = g(prettyTermPattern(T1)) .
+    eq prettyTermPattern(\symb(3)) = a .
+    eq prettyTermPattern(\evar(4)) = y .
+
+endm
+rew in PRETTY : pretty(gen-proof1(
+    \app(\symb(1), \app(\symb(2), \symb(3))),
+    \app(\symb(1), \app(\symb(2), \evar(4)))
+    )) .
+rew in PRETTY : pretty(gen-proof2(
+    \app(\symb(1), \app(\symb(2), \symb(3))),
+    \app(\symb(1), \app(\symb(2), \evar(4)))
+    )) .
+rew in PRETTY : check(gen-proof1(
+    \app(\symb(1), \app(\symb(2), \symb(3))),
+    \app(\symb(1), \app(\symb(2), \evar(4)))
+    )) .
+rew in PRETTY : check(gen-proof2(
+    \app(\symb(1), \app(\symb(2), \symb(3))),
+    \app(\symb(1), \app(\symb(2), \evar(4)))
+    )) .
+q
