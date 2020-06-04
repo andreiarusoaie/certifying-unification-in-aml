@@ -8,9 +8,11 @@ mod SYNTAX is
     op \app  : TermPattern TermPattern  -> TermPattern .
     op \imp  : TermPattern TermPattern  -> TermPattern .
     op \bot  :                          -> TermPattern .
+    op \exists : EVar TermPattern       -> TermPattern . *** this is not a term pattern
 
     --- derived syntax
-    op _and_ : TermPattern TermPattern -> TermPattern [assoc comm prec 30] .
+    op _and_ : TermPattern TermPattern -> TermPattern [assoc comm prec 28] .
+    op _or_ : TermPattern TermPattern -> TermPattern [assoc comm prec 30] .
     op \not  : TermPattern             -> TermPattern .
     op \eq   : TermPattern TermPattern -> TermPattern .
 
@@ -29,13 +31,21 @@ mod SYNTAX is
     eq \imp(T1, T2)[T / X]     = \imp(T1[T / X], T2[T / X]) .
     eq \eq(T1, T2)[T / X]      = \eq(T1[T / X], T2[T / X]) .
     eq (T1 and T2)[T / X]      = (T1[T / X]) and (T2[T / X]) .
+    eq (T1 or T2)[T / X]       = (T1[T / X]) or (T2[T / X]) .
     eq \not(T1) [T / X]        = \not(T1[T / X]) .
+    eq \exists(X, T1) [T / X]  = \exists(X, T1) .
+    ceq \exists(Y, T1) [T / X] = \exists(Y, T1[T / X]) if not (X in fv(T)) .
 
     --- free vars
     sort Vars .
     subsort EVar < Vars .
     op .Vars :            -> Vars [ctor] .
     op _;_ : Vars Vars    -> Vars [ctor assoc comm id: .Vars prec 121] .
+
+    var Vs : Vars .
+    op rem : EVar Vars -> Vars .
+    eq rem(X, (X ; Vs)) = rem(X, Vs) .
+    eq rem(X, Vs) = Vs [owise] .
 
     op vars : TermPattern -> Vars .
     eq vars(\evar(N))     = \evar(N) .
@@ -44,8 +54,21 @@ mod SYNTAX is
     eq vars(\app(T1, T2)) = vars(T1) ; vars(T2) .
     eq vars(\imp(T1, T2)) = vars(T1) ; vars(T2) .
     eq vars(T1 and T2)    = vars(T1) ; vars(T2) .
+    eq vars(T1 or T2)     = vars(T1) ; vars(T2) .
     eq vars(\eq(T1, T2))  = vars(T1) ; vars(T2) .
     eq vars(\not(T))      = vars(T) .
+
+    op fv : TermPattern   -> Vars .
+    eq fv(\evar(N))       = \evar(N) .
+    eq fv(\symb(N))       = .Vars .
+    eq fv(\bot)           = .Vars .
+    eq fv(\app(T1, T2))   = fv(T1) ; fv(T2) .
+    eq fv(\imp(T1, T2))   = fv(T1) ; fv(T2) .
+    eq fv(T1 and T2)      = fv(T1) ; fv(T2) .
+    eq fv(T1 or T2)       = fv(T1) ; fv(T2) .
+    eq fv(\eq(T1, T2))    = fv(T1) ; fv(T2) .
+    eq fv(\not(T))        = fv(T) .
+    eq fv(\exists(X, T))  = rem(X, fv(T)) .
 
     vars A B : Vars .
     op _in_ :         EVar Vars -> Bool .
@@ -113,6 +136,11 @@ mod PROOF is
     op axiom-5.24.3-2         : -> RuleName . --- t1 and (t1 = t2) -> t1 and t2
     op axiom-functional       : -> RuleName . --- isFunctional(phi)
     op occurs-check           : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
+
+    op exists-intro           : -> RuleName . --- t1 or t2 = exists x.x and (x = t1 or x = t2)
+    op antiunification-dec    : -> RuleName . --- 
+    op exists-elim            : -> RuleName . --- 
+    op exists-equiv           : -> RuleName . --- 
 endm
 
 
@@ -197,6 +225,9 @@ mod CHECKER is
       if I1 < N /\ I2 < N /\
          (P1 ((I1) \imp(Tp1, T) Pr  ;) P2) := Pi /\ 
          (P3 ((I2) \imp(T, Tp2) Pr' ;) P4) := Pi .
+
+    eq [exists-intro] :
+        Pi |- (N) \eq(Tp1 or Tp2, \exists(X, X and (\eq(X, Tp1) or \eq(X, Tp2)))) [exists-intro] ; = true .
 
     --- helpers
     op __in_ : NzNat TermPattern Proof -> Bool .
