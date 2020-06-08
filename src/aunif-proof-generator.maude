@@ -26,7 +26,7 @@ mod SETUP is
     eq M ; nothing = nothing .
     eq just P ; just P' = just (P P') .
 
-    vars N N' : Nat .
+    vars N N' I J : Nat .
     vars T T' F F' : TermPattern .
     op dec-reverse : TermPattern TermPattern -> MaybePairs .
     ceq dec-reverse(\app(\symb(N), T), \app(\symb(N'), T')) = nothing if N =/= N' .
@@ -58,9 +58,12 @@ mod SETUP is
     op fresh : EVar -> EVar .
     eq fresh(\evar(N)) = \evar(N + 1) .
 
-    op generate-vars : EVar Int -> Vars .
-    eq generate-vars(X, 0) = .Vars .
-    ceq generate-vars(X, N) = Y ; generate-vars(Y, N - 1) if Y := fresh(X) .
+    sort GenVars .
+    vars Vs : Vars .
+    op (_,_) : Vars Nat -> GenVars .
+    op generate-vars : Nat Int -> GenVars .
+    eq generate-vars(I, 0) = (.Vars, I) .
+    ceq generate-vars(I, N) = ((\evar(I + 1) ; Vs), N') if (Vs, N') := generate-vars(I + 1, N - 1) .
 
     vars Eq : Equation .
     vars Eqs1 Eqs2 : Equations .
@@ -77,50 +80,82 @@ mod ANTI-UNIFICATION is
 
     sort AUnifProblem .
     *** op anti-unif : AUnifProblem -> AUnifProblem .
-    op <_|_|_|_> : SubstList Equations Proof Int -> AUnifProblem .
+    op <_|_|_> : SubstList Equations Nat -> AUnifProblem .
 
     vars Eqs Eqs' Eqs1 Eqs2 : Equations .
     vars N : Nat .
-    vars Prf Prf' : Proof .
+    vars Prf Prf' Wrap : Proof .
     vars SL SL' : SubstList .
-    vars Phi Phi' T1 T2 T T' Trm EQL EQR : TermPattern .
+    vars Phi Phi' T1 T2 T T' Trm EQL EQR EqE : TermPattern .
     vars X Y : EVar .
-    vars Vs : Vars .
+    vars Vs EVs EVs' : Vars .
     vars Ps : Pairs .
-    vars K : Int .
+    vars K NewK AvailId NextId : Int .
 
 
-    crl [decompose]:  < SL | (T1 ={ X } T2) Eqs | Prf | K > =>
-                     < SL' | Eqs' Eqs | Prf
-        (K) \eq(\exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) )),
-          arrange(X, \exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) )))) [exists-equiv];
-        (K + 1) \eq(\exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) )),
-          prec(Vs, \exists(X, T and \eq(X, Trm) and
-              ((Phi and EQL) or (Phi' and EQR)))) ) [antiunification-dec] ;
-        (K + 2) \eq(
-          prec(Vs, \exists(X, T and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR)))),
-          prec(Vs, (T  and  ((Phi and EQL) or (Phi' and EQR)))[ Trm / X ] )) [exists-elim];
-        | K + 3 >
-      if just Ps := dec-reverse(T1, T2) /\
-          Vs := generate-vars(X, size(Ps)) /\
-          Phi := phi-left(Eqs) /\
-          Phi' := phi-right(Eqs) /\
-          EQL := equalities-left(Vs, Ps) /\
-          EQR := equalities-right(Vs, Ps) /\
-          Eqs' := eqs-build(Vs, Ps) /\
-          Trm := generate-term(Vs,get-top-symbol(T1)) /\
-          subst-pair(Y, T) := collapse(SL) /\
-          SL' := subst-cons(subst-pair(X, Trm), SL) .
+    sort State .
+    op state : AUnifProblem Proof Nat Vars -> State .
+
+    crl state(< SL  | (T1 ={ X } T2) Eqs | AvailId >, Prf, K, EVs) =>
+        state(< SL' | Eqs' Eqs | NextId >, Prf
+          (
+            (K) \eq(\exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) )), EqE) [exists-equiv];
+            
+            (K + 1) \eq(\exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) )),
+              prec(Vs, \exists(X, T and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR)))) ) [antiunification-dec] ;
+            (K + 2) \eq( prec(Vs, \exists(X, T and \eq(X, Trm) and  ((Phi and EQL) or (Phi' and EQR)))),
+              arrange(X, prec(Vs, \exists(X, T and \eq(X, Trm) and  ((Phi and EQL) or (Phi' and EQR)))))) [exists-equiv] ;
+            (K + 3) \eq(arrange(X, prec(Vs, \exists(X, T and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR))))),
+              prec(Vs, (T  and  ((Phi and EQL) or (Phi' and EQR)))[ Trm / X ] )) [exists-elim];
+            (K + 4) \eq(\exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) )),
+              arrange(X, prec(Vs, \exists(X, T and \eq(X, Trm) and  ((Phi and EQL) or (Phi' and EQR)))))) [eq-tranz, K, K + 1];
+            (K + 5) \eq(\exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) )),
+              prec(Vs, (T  and  ((Phi and EQL) or (Phi' and EQR)))[ Trm / X ] )) [eq-tranz, K + 3, K + 2];
+            Prf'
+            ),
+          NewK, EVs')
+    if just Ps := dec-reverse(T1, T2) /\
+        (Vs, NextId) := generate-vars(AvailId, size(Ps)) /\
+        Eqs' := eqs-build(Vs, Ps) /\
+        Trm := generate-term(Vs,get-top-symbol(T1)) /\
+        subst-pair(Y, T) := collapse(SL) /\
+        SL' := subst-cons(subst-pair(X, Trm), SL) /\
+        Phi := phi-left(Eqs) /\
+        Phi' := phi-right(Eqs) /\
+        EQL := equalities-left(Vs, Ps) /\
+        EQR := equalities-right(Vs, Ps) /\
+        { EqE ; EVs' } := move-down(X, \exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) ))) /\
+          { NewK ; Prf' } := wrap(\exists(X, T and ( (Phi and (\eq(X, T1))) or (Phi' and (\eq(X, T2))) )),
+            prec(Vs, (T  and  ((Phi and EQL) or (Phi' and EQR)))[ Trm / X ] ), EVs, K + 6)
+    .
+
+    sort Wrap .
+    op {_;_} : Nat Proof -> Wrap .
+    op wrap : TermPattern TermPattern Vars Int -> Wrap .
+    eq wrap(Phi, Phi', .Vars, K) = { K ; .Proof } .
+    eq wrap(Phi, Phi', EVs, K) =
+        { K + 2 ;
+          (K) \imp((\eq(Phi, Phi') and prec(EVs, Phi)), prec(EVs, Phi')) [equality-elimination];
+          (K + 1) \imp(prec(EVs, Phi), prec(EVs, Phi')) [imp-and-elim, K - 1, K];
+          } .
+
+
+    sort PairUtil .
+    op {_;_} : TermPattern Vars -> PairUtil .
+    op move-down : EVar TermPattern -> PairUtil .
+    ceq move-down(X, T) = {Phi ; Vs} if {Vs, T'} := e-quantified(T) /\ X in Vs /\ Phi := prec( rem(X, Vs) , \exists(X, T')) .
+
+    op e-quantified : TermPattern -> FindResult .
+    ceq e-quantified(\exists(Y, T)) = { (Y ; Vs), T' } if { Vs , T' } := e-quantified(T) .
+    eq e-quantified(T) = { .Vars, T } [owise] .
+    
 
     op generate-term : Vars TermPattern -> TermPattern .
     eq generate-term(.Vars, T) = T .
     eq generate-term((X ; Vs), T) = generate-term(Vs, \app(T, X)) .
 
-    op get-proof : AUnifProblem -> Proof .
-    eq get-proof(< SL | Eqs | Prf | K >) = Prf .
-
     op get-eqs : AUnifProblem -> Equations .
-    eq get-eqs(< SL | Eqs | Prf | K >) = Eqs .
+    eq get-eqs(< SL | Eqs | K >) = Eqs .
 
     op phi-left : Equations -> TermPattern .
     eq phi-left(.Equations) =  \imp(\bot, \bot) .
@@ -177,11 +212,20 @@ mod PROOF-GENERATION is
     vars Eqs : Equations .
     vars Prf : Proof .
     var A : AUnifProblem .
+    vars K Id I : Int .
+    vars EVs : Vars .
 
     --- Stage 1
-    crl gen-proof1(T1, T2) => get-proof(A)
-      if < subst-cons(subst-pair(\evar(100), \evar(100)), subst-nil) | (T1 ={ \evar(100) } T2) | .Proof | 1 > => A /\ solved(get-eqs(A)) .
+    crl gen-proof1(T1, T2) => Prf
+      if Id := max((vars(T1) ; vars(T2)), 0) /\
+          state(< subst-cons(subst-pair(\evar(Id + 1), \evar(Id + 1)), subst-nil) | T1 ={ \evar(Id + 1) } T2 | Id + 2 > , .Proof, 1, .Vars) =>
+          state(A, Prf, K, EVs) /\
+          solved(get-eqs(A)) .
 
+    op max : Vars Int -> Int .
+    eq max(.Vars, Id) = Id .
+    ceq max((\evar(Id) ; EVs), I) = max(EVs, I) if I >= Id .
+    ceq max((\evar(Id) ; EVs), I) = max(EVs, Id) if I < Id .
 endm
 
 
@@ -232,39 +276,19 @@ mod PRETTY is
     eq prettyTermPattern(\evar(N)) = v(N) [owise] .
 
 endm
+
 rew in PRETTY : pretty(gen-proof1(
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
     )) .
+
+
+
+eof
 rew in PRETTY : check(gen-proof1(
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
 )) .
-
-rew in PRETTY : gen-proof1(
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
-    ) .
-
-rew in PRETTY :
-< subst-cons(subst-pair(\evar(100), \evar(100)), subst-nil) |
-(\app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2)))  ={ \evar(100) }
-\app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6))))
-| .Proof | 1 > .
-
-
-debug rew in PRETTY :
-    < subst-cons(subst-pair(\evar(100), \app(\app(\symb(1), \evar(101)), \evar(102))), subst-cons(subst-pair(\evar(100),
-    \evar(100)), subst-nil)) | \evar(2) ={\evar(101)}\evar(2) \app(\app(\symb(3), \evar(4)), \evar(2)) ={\evar(102)}\app(\app(\symb(3), \symb(
-5)), \symb(6)) | .Proof | 4 > .
-
-
-eof
-set trace on .
-q
-
-
-eof
 rew in PRETTY : pretty(gen-proof2(
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))

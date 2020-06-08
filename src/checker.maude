@@ -34,7 +34,7 @@ mod SYNTAX is
     eq (T1 or T2)[T / X]       = (T1[T / X]) or (T2[T / X]) .
     eq \not(T1) [T / X]        = \not(T1[T / X]) .
     eq \exists(X, T1) [T / X]  = \exists(X, T1) .
-    ceq \exists(Y, T1) [T / X] = \exists(Y, T1[T / X]) if not (X in fv(T)) .
+    ceq \exists(Y, T1) [T / X] = \exists(Y, T1[T / X]) if X =/= Y /\ not (Y in fv(T)) .
 
     --- free vars
     sort Vars .
@@ -140,7 +140,10 @@ mod PROOF is
     op exists-intro           : -> RuleName . --- t1 or t2 = exists x.x and (x = t1 or x = t2)
     op antiunification-dec    : -> RuleName . --- 
     op exists-elim            : -> RuleName . --- 
-    op exists-equiv           : -> RuleName . --- 
+    op exists-equiv           : -> RuleName . ---
+    op eq-tranz               : -> RuleName . ---
+    op eq-elim                : -> RuleName . --- phi1 = phi2 /\ psi[phi1/x] -> psi[phi2/x]
+    op imp-and-elim           : -> RuleName . --- phi -> phi' if |- psi and phi -> phi'   /\  |- psi
 endm
 
 
