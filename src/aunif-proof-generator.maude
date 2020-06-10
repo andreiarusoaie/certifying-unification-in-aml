@@ -114,13 +114,6 @@ mod ANTI-UNIFICATION is
 endm
 
 
-*** rew in ANTI-UNIFICATION : < subst-nil | 
-***      \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))) ={ \evar(10) }
-***      \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6))) |
-***      11 > ;; end .
-
-*** eof
-
 mod PROOF-GENERATION is
     pr SETUP .
     pr ANTI-UNIFICATION .
@@ -240,160 +233,51 @@ endm
 ***   1) .
 
 
-mod PRETTY is
-    pr PROOF-GENERATION .
+*** mod PRETTY is
+***     pr PROOF-GENERATION .
 
-    op f : TermPattern TermPattern -> TermPattern .
-    op g : TermPattern TermPattern -> TermPattern .
-    op u :  -> TermPattern .
-    op t :  -> TermPattern .
-    op x : -> EVar .
-    op z : -> EVar .
-    op v : NzNat -> EVar .
+***     op f : TermPattern TermPattern -> TermPattern .
+***     op g : TermPattern TermPattern -> TermPattern .
+***     op u :  -> TermPattern .
+***     op t :  -> TermPattern .
+***     op x : -> EVar .
+***     op z : -> EVar .
+***     op v : NzNat -> EVar .
 
-    op _-->_ : TermPattern TermPattern -> TermPattern .
-    op _===_ : TermPattern TermPattern -> TermPattern .
-    op _`[_`] : TermPattern TermPattern -> TermPattern .
-    op ∃_._ : EVar TermPattern -> TermPattern .
+***     op _-->_ : TermPattern TermPattern -> TermPattern .
+***     op _===_ : TermPattern TermPattern -> TermPattern .
+***     op _`[_`] : TermPattern TermPattern -> TermPattern .
+***     op ∃_._ : EVar TermPattern -> TermPattern .
 
-    vars N : NzNat .
-    vars Tp Tp' F Tp1 Tp2 : TermPattern .
-    vars Pr : ProofRule .
-    vars P1 P2 : Proof .
-    vars X : EVar .
+***     vars N : NzNat .
+***     vars Tp Tp' F Tp1 Tp2 : TermPattern .
+***     vars Pr : ProofRule .
+***     vars P1 P2 : Proof .
+***     vars X : EVar .
 
-    op pretty : Proof -> Proof [format(nm d)] .
-    ops tt ff : -> TermPattern . *** true and false
-    eq pretty(.Proof) = .Proof .
-    ceq pretty((P1 P2)) = pretty(P1) pretty(P2) if (P1 =/= .Proof) /\ (P2 =/= .Proof) .
-    eq pretty((N) Tp Pr ;) = (N) prettyTermPattern(Tp) Pr ; .
+***     op pretty : Proof -> Proof [format(nm d)] .
+***     ops tt ff : -> TermPattern . *** true and false
+***     eq pretty(.Proof) = .Proof .
+***     ceq pretty((P1 P2)) = pretty(P1) pretty(P2) if (P1 =/= .Proof) /\ (P2 =/= .Proof) .
+***     eq pretty((N) Tp Pr ;) = (N) prettyTermPattern(Tp) Pr ; .
 
-    op prettyTermPattern : TermPattern -> TermPattern .
-    --- eq prettyTermPattern(\imp(\bot, \bot)) = tt .  
-    eq prettyTermPattern(\bot) = ff .
-    eq prettyTermPattern(\imp(Tp1, Tp2)) = prettyTermPattern(Tp1) --> prettyTermPattern(Tp2) .
-    eq prettyTermPattern(\eq(Tp1, Tp2)) = prettyTermPattern(Tp1) === prettyTermPattern(Tp2) .
-    eq prettyTermPattern(Tp1 and Tp2) = prettyTermPattern(Tp1) and prettyTermPattern(Tp2) .
-    eq prettyTermPattern(Tp1 or Tp2) = prettyTermPattern(Tp1) or prettyTermPattern(Tp2) .
-    eq prettyTermPattern(\exists(X, Tp)) = ∃ prettyTermPattern(X) . prettyTermPattern(Tp) .
+***     op prettyTermPattern : TermPattern -> TermPattern .
+***     --- eq prettyTermPattern(\imp(\bot, \bot)) = tt .  
+***     eq prettyTermPattern(\bot) = ff .
+***     eq prettyTermPattern(\imp(Tp1, Tp2)) = prettyTermPattern(Tp1) --> prettyTermPattern(Tp2) .
+***     eq prettyTermPattern(\eq(Tp1, Tp2)) = prettyTermPattern(Tp1) === prettyTermPattern(Tp2) .
+***     eq prettyTermPattern(Tp1 and Tp2) = prettyTermPattern(Tp1) and prettyTermPattern(Tp2) .
+***     eq prettyTermPattern(Tp1 or Tp2) = prettyTermPattern(Tp1) or prettyTermPattern(Tp2) .
+***     eq prettyTermPattern(\exists(X, Tp)) = ∃ prettyTermPattern(X) . prettyTermPattern(Tp) .
 
-    vars T1 T2 : TermPattern .
-    eq prettyTermPattern(\app(\app(\symb(1), T1), T2)) = f(prettyTermPattern(T1),prettyTermPattern(T2)) .
-    eq prettyTermPattern(\app(\app(\symb(3), T1), T2)) = g(prettyTermPattern(T1),prettyTermPattern(T2)) .
-    eq prettyTermPattern(\symb(5)) = u .
-    eq prettyTermPattern(\symb(6)) = t .
-    eq prettyTermPattern(\evar(2)) = x .
-    eq prettyTermPattern(\evar(4)) = z .
-    eq prettyTermPattern(\evar(N)) = v(N) [owise] .
+***     vars T1 T2 : TermPattern .
+***     eq prettyTermPattern(\app(\app(\symb(1), T1), T2)) = f(prettyTermPattern(T1),prettyTermPattern(T2)) .
+***     eq prettyTermPattern(\app(\app(\symb(3), T1), T2)) = g(prettyTermPattern(T1),prettyTermPattern(T2)) .
+***     eq prettyTermPattern(\symb(5)) = u .
+***     eq prettyTermPattern(\symb(6)) = t .
+***     eq prettyTermPattern(\evar(2)) = x .
+***     eq prettyTermPattern(\evar(4)) = z .
+***     eq prettyTermPattern(\evar(N)) = v(N) [owise] .
 
-endm
-
-rew in PRETTY : pretty(gen-proof(
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
-    )) .
-rew in PRETTY : check(gen-proof(
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
-)) .
-eof
-
-rew in PRETTY : pretty(gen-proof2(
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
-    )) .
-rew in PRETTY : check(gen-proof2(
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
-    \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
-    )) .
-
-q
-
-red in SETUP : (\app(\symb(1), \evar(1))) ⊔ (\app(\symb(1), \evar(1))) .
-red in SETUP : dec-reverse(\app(\symb(1), \evar(1)), \app(\symb(1), \evar(1))) .
-
-*** f(a,x) , f(b,y)
-red in SETUP : dec-reverse(\app(\app(\symb(2), \symb(1)), \evar(1)),
-                           \app(\app(\symb(2), \symb(5)), \evar(2))) .
-
-*** g(a,x) , f(b,y)
-red in SETUP : dec-reverse(\app(\app(\symb(3), \symb(1)), \evar(1)),
-                           \app(\app(\symb(2), \symb(5)), \evar(2))) .
-
-*** f(g(a), x) , f(g(b), y)
-red in SETUP : dec-reverse(\app(\app(\symb(2), \app(\symb(3), \symb(1))), \evar(1)),
-                           \app(\app(\symb(2), \app(\symb(3), \symb(5))), \evar(2))) .
-
-*** g(g(a), x) , f(g(b), y)
-red in SETUP : dec-reverse(\app(\app(\symb(3), \app(\symb(3), \symb(1))), \evar(1)),
-                           \app(\app(\symb(2), \app(\symb(3), \symb(5))), \evar(2))) .
-
-q
-
-
-
-
-
-endm
-
-mod ANTI-UNIFICATION is
-    pr SETUP .
-
-endm
-
-
-rew in ANTI-UNIFICATION : < subst-nil | \app(\symb(1), \app(\symb(2), \symb(3))) = \evar(5) @ \app(\symb(1), \app(\symb(2), \evar(4))) > .
-
-rew in ANTI-UNIFICATION : extract-lgg(< subst-nil | \app(\symb(1), \app(\symb(2), \symb(3))) = \evar(5) @ \app(\symb(1), \app(\symb(2), \evar(4))) >) .
-
-rew in ANTI-UNIFICATION : extract-sigma-1(< subst-nil | \app(\symb(1), \app(\symb(2), \symb(3))) = \evar(5) @ \app(\symb(1), \app(\symb(2), \evar(4))) >) .
-
-rew in ANTI-UNIFICATION : extract-sigma-2(< subst-nil | \app(\symb(1), \app(\symb(2), \symb(3))) = \evar(5) @ \app(\symb(1), \app(\symb(2), \evar(4))) >) .
-
-
-
-
-mod PROOF-GENERATION is
-    inc ANTI-UNIFICATION .
-    pr CHECKER .
-    pr INT .
-
-
-    op gen-proof1 : TermPattern TermPattern -> Proof .
-    op gen-proof2 : TermPattern TermPattern -> Proof .
-
-    --- Stage 1
-    
-    
-endm
-
-
-
-
-
-
-        op extract-lgg : AUnifProblem -> TermPattern .
-    ceq extract-lgg(< PL | Eqs >) = Phi
-       if subst-pair(X, Phi) := collapse(PL) .
-
-    op extract-sigma-1 : AUnifProblem -> SubstList .
-    eq extract-sigma-1(< PL | Eqs >) = extract-left(Eqs) .
-    op extract-sigma-2 : AUnifProblem -> SubstList .
-    eq extract-sigma-2(< PL | Eqs >) = extract-right(Eqs) .
-
-    var E : Equation .
-    vars Es : Equations .
-    var Sigma : SubstPair .
-    var Sigmas : SubstList .
-    op extract-left : Equations -> SubstList .
-    eq extract-left(.Equations) = subst-nil .
-    eq extract-left((Phi = X @ Phi')) = subst-cons(subst-pair(X, Phi), subst-nil) .
-    ceq extract-left(((Phi = X @ Phi') Es)) = subst-cons(subst-pair(X, Phi), Sigmas)
-      if Sigmas := extract-left(Es) .
-    op extract-right : Equations -> SubstList .
-    eq extract-right(.Equations) = subst-nil .
-    eq extract-right((Phi = X @ Phi')) = subst-cons(subst-pair(X, Phi'), subst-nil) .
-    ceq extract-right(((Phi = X @ Phi') Es)) = subst-cons(subst-pair(X, Phi'), Sigmas)
-      if Sigmas := extract-right(Es) .
-
+*** endm
 
