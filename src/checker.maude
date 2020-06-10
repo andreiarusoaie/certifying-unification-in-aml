@@ -42,10 +42,14 @@ mod SYNTAX is
     op .Vars :            -> Vars [ctor] .
     op _;_ : Vars Vars    -> Vars [ctor assoc comm id: .Vars prec 121] .
 
-    var Vs : Vars .
+    var Vs Vs' : Vars .
     op rem : EVar Vars -> Vars .
     eq rem(X, (X ; Vs)) = rem(X, Vs) .
     eq rem(X, Vs) = Vs [owise] .
+
+    op diff : Vars Vars -> Vars .
+    eq diff(Vs, .Vars) = Vs .
+    eq diff(Vs, (X ; Vs')) = diff(rem(X, Vs), Vs') .
 
     op vars : TermPattern -> Vars .
     eq vars(\evar(N))     = \evar(N) .
@@ -69,6 +73,10 @@ mod SYNTAX is
     eq fv(\eq(T1, T2))    = fv(T1) ; fv(T2) .
     eq fv(\not(T))        = fv(T) .
     eq fv(\exists(X, T))  = rem(X, fv(T)) .
+
+    op sizeV : Vars -> Nat .
+    eq sizeV(.Vars) = 0 .
+    eq sizeV((X ; Vs)) = 1 + sizeV(Vs) .
 
     vars A B : Vars .
     op _in_ :         EVar Vars -> Bool .
@@ -116,6 +124,7 @@ mod PROOF is
 
     sort RuleName .
 
+    --- unification
     op tauto-context          : -> RuleName . --- if phi -> phi' then psi and phi -> psi and phi'
     op tauto-imp-refl         : -> RuleName . --- phi -> phi
     op tauto-imp-tranz        : -> RuleName . --- if (phi1 -> phi) (phi -> phi2) then (phi1 -> phi2)
@@ -137,13 +146,14 @@ mod PROOF is
     op axiom-functional       : -> RuleName . --- isFunctional(phi)
     op occurs-check           : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
 
+    --- antiunification
     op exists-intro           : -> RuleName . --- t1 or t2 = exists x.x and (x = t1 or x = t2)
-    op antiunification-dec    : -> RuleName . --- 
+    op antiunification-dec    : -> RuleName . --- antiunification decomposition rule
     op exists-elim            : -> RuleName . --- 
-    op exists-equiv           : -> RuleName . ---
-    op eq-tranz               : -> RuleName . ---
-    op eq-elim                : -> RuleName . --- phi1 = phi2 /\ psi[phi1/x] -> psi[phi2/x]
-    op imp-and-elim           : -> RuleName . --- phi -> phi' if |- psi and phi -> phi'   /\  |- psi
+    op exists-equiv           : -> RuleName . --- 
+    op eq-tranz               : -> RuleName . --- 
+---    op eq-elim                : -> RuleName . --- phi1 = phi2 /\ psi[phi1/x] -> psi[phi2/x]
+---    op imp-and-elim           : -> RuleName . --- phi -> phi' if |- psi and phi -> phi'   /\  |- psi
 endm
 
 
@@ -158,9 +168,9 @@ mod CHECKER is
     eq Pi step-marker .Proof = true .
     ceq Pi step-marker (L Pi') = (Pi L) step-marker Pi' if Pi |- L .
 
-    var X : EVar .
+    vars X Y Y' : EVar .
     vars I I1 I2 N : NzNat .
-    vars Tp Tp' Tp1 Tp2 T F F' Phi : TermPattern .
+    vars Tp Tp' Tp1 Tp2 T F F' Phi Phi' : TermPattern .
     vars Pr Pr' : ProofRule .
     op _|-_ : Proof ProofLine -> Bool .
 
@@ -229,8 +239,42 @@ mod CHECKER is
          (P1 ((I1) \imp(Tp1, T) Pr  ;) P2) := Pi /\ 
          (P3 ((I2) \imp(T, Tp2) Pr' ;) P4) := Pi .
 
-    eq [exists-intro] :
-        Pi |- (N) \eq(Tp1 or Tp2, \exists(X, X and (\eq(X, Tp1) or \eq(X, Tp2)))) [exists-intro] ; = true .
+    ceq [exists-intro] : Pi |- (N) \eq(Tp1 or Tp2, \exists(X, X and (\eq(X, Tp1) or \eq(X, Tp2)))) [exists-intro] ; = true
+      if isFunctional(Tp1) /\ isFunctional(Tp2) /\ not(X in fv(Tp1)) /\ not(X in fv(Tp2)) .
+
+    ceq [exists-equiv] :  Pi |- (N) \eq(Tp1, Tp2) [exists-equiv] ; = true
+      if (Vs1, Phi) := collect-exists(Tp1) /\
+          (Vs2, Phi) := collect-exists(Tp2) /\
+          Vs1 == Vs2 .
+
+    vars VPhi VPhi' Psi Psi' : TermPattern .
+    ceq [antiunification-dec] : Pi |- (N) \eq(Tp1, Tp2) [antiunification-dec] ; = true
+      if (Zs,X,Phi) := destruct-until-dec-var(Tp1) /\
+          (Psi, VPhi, VPhi', Tp, Tp') := destruct-left(Phi, X) /\
+          {F ;; PList} := destruct-pattern(Tp) /\
+          {F ;; PList'} := destruct-pattern(Tp') /\
+          sizePL(PList) == sizePL(PList') /\
+          (Ys, X, Phi') := destruct-until-dec-var(Tp2) /\
+          sizeV(diff(Ys, Zs)) == sizePL(PList) /\
+          (Psi ; VPhi ; VPhi') := destruct-right(Phi', X, F, diff(Ys, Zs), PList, PList') . 
+
+    ceq [exists-elim] : Pi |- (N) \eq(Tp1, Tp2) [exists-elim] ; = true
+      if (Zs, X, Phi) := destruct-until-dec-var(Tp1) /\
+          < Psi, VPhi > := destruct-ex-elim(Phi, X) /\
+          (Xs, Psi') := collect-exists(Tp2) /\
+          Zs == Xs /\
+          Psi' == Psi[VPhi / X] .
+
+    ceq [eq-tranz] : Pi |- (N) \eq(Tp1, Tp2) [eq-tranz, I1, I2] ; = true  
+      if I1 < N /\ I2 < N /\
+          (P1 ((I1) \eq(Tp1, T) Pr  ;) P2) := Pi /\ 
+          (P3 ((I2) \eq(T, Tp2) Pr' ;) P4) := Pi .
+
+    sort PatternPair .
+    op <_,_> : TermPattern TermPattern -> PatternPair .
+    op destruct-ex-elim : TermPattern EVar -> PatternPair .
+    eq destruct-ex-elim(Psi and \eq(X, Phi), X) = < Psi, Phi > .
+
 
     --- helpers
     op __in_ : NzNat TermPattern Proof -> Bool .
@@ -240,4 +284,64 @@ mod CHECKER is
     op check-impl : NzNat NzNat TermPattern Proof -> Bool .
     ceq check-impl(I1, I2, Tp, Pi) = (Tp1 == \imp(Tp2, Tp))
       if (P1 ((I1) Tp1 Pr  ;) P2) := Pi /\ (P3 ((I2) Tp2 Pr' ;) P4) := Pi .
+
+    vars Xs Vs1 Vs2 Zs Ys EVs : Vars .
+    sort ExistsPair .
+    op (_,_) : Vars TermPattern -> ExistsPair .
+    op collect-exists : TermPattern -> ExistsPair .
+    ceq collect-exists(\exists(X, Tp)) = ((X ; Xs), Tp') if (Xs, Tp') := collect-exists(Tp) .
+    eq collect-exists(Tp) = (.Vars, Tp) [owise] .
+
+    sort DestructTriple .
+    op (_,_,_) : Vars EVar TermPattern -> DestructTriple .
+    op destruct-until-dec-var : TermPattern -> DestructTriple .
+    ceq destruct-until-dec-var(\exists(X, \exists(Y, Phi))) = ((X ; Xs), Y', Phi')
+      if (Xs, Y', Phi') := destruct-until-dec-var(\exists(Y, Phi)) .
+    eq destruct-until-dec-var(\exists(X, Phi)) = (.Vars, X, Phi) [owise] .
+
+    sort DestructLeft .
+    op (_,_,_,_,_) : TermPattern TermPattern TermPattern TermPattern TermPattern -> DestructLeft .
+    op destruct-left : TermPattern EVar -> DestructLeft .
+    eq destruct-left(Psi and ((VPhi and \eq(X, Tp)) or (VPhi' and \eq(X, Tp'))), X) = (Psi, VPhi, VPhi', Tp, Tp') .
+    eq destruct-left(Psi and ((\eq(X, Tp)) or (\eq(X, Tp'))), X) = (Psi, \imp(\bot, \bot), \imp(\bot,\bot), Tp, Tp') .
+
+
+    vars TEQ VEQ VEQ' : TermPattern .
+    sort DestructRight .
+    op (_;_;_) : TermPattern TermPattern TermPattern -> DestructRight .
+    op destruct-right : TermPattern EVar TermPattern Vars PatternList PatternList -> DestructRight .
+    ceq destruct-right( Psi and TEQ and (VEQ or VEQ'), X, F, EVs, PList, PList' ) = (Psi ; \imp(\bot, \bot) ; \imp(\bot, \bot))
+      if TEQ := \eq(X, apply(F, EVs)) /\
+          VEQ := equations(EVs, PList) /\
+          VEQ' := equations(EVs, PList') .
+    ceq destruct-right( Psi and TEQ and ((VPhi and VEQ) or (VPhi' and VEQ')), X, F, EVs, PList, PList' ) = (Psi ; VPhi ; VPhi')
+      if TEQ := \eq(X, apply(F, EVs)) /\
+          VEQ := equations(EVs, PList) /\
+          VEQ' := equations(EVs, PList') .
+
+    op equations : Vars PatternList -> TermPattern .
+    eq equations(X, T) = \eq(X, T) .
+    eq equations((X ; Xs), (T ,, PList)) = \eq(X, T) and equations(Xs, PList) .
+
+    op apply : TermPattern Vars -> TermPattern .
+    eq apply(F, .Vars) = F .
+    eq apply(F, (X ; Xs)) = apply(\app(F, X), Xs) .
+
+    sort PatternList .
+    subsort TermPattern < PatternList .
+    op .PatternList : -> PatternList .
+    op _,,_ : PatternList PatternList -> PatternList [assoc id: .PatternList] .
+
+    vars PList PList' : PatternList . 
+    op sizePL : PatternList -> Nat .
+    eq sizePL(.PatternList) = 0 .
+    eq sizePL((T ,, PList)) = 1 + sizePL(PList) .
+
+    sort CompoundTerm .
+    op {_;;_} : TermPattern PatternList -> CompoundTerm .
+    op destruct-pattern : TermPattern -> CompoundTerm .
+    eq destruct-pattern(\app(\symb(N), T)) = { \symb(N) ;; T } .
+    ceq destruct-pattern(\app(F, T)) = { F' ;; (PList ,, T) } if {F' ;; PList } := destruct-pattern(F) .
+
 endm
+

@@ -123,7 +123,8 @@ endm
 
 mod PROOF-GENERATION is
     pr SETUP .
-    pr ANTI-UNIFICATION . 
+    pr ANTI-UNIFICATION .
+    pr CHECKER .
 
 
     vars Eqs Eqs' Eqs1 Eqs2 : Equations .
@@ -291,13 +292,12 @@ rew in PRETTY : pretty(gen-proof(
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
     )) .
-
-
-eof
-rew in PRETTY : check(gen-proof1(
+rew in PRETTY : check(gen-proof(
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
 )) .
+eof
+
 rew in PRETTY : pretty(gen-proof2(
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \evar(4)), \evar(2))),
     \app(\app(\symb(1), \evar(2)), \app(\app(\symb(3), \symb(5)), \symb(6)))
