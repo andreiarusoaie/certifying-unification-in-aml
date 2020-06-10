@@ -1,0 +1,20 @@
+load tests-setup.maude
+
+*** occurs check: x = f(x)
+rew in PRETTY : pretty(gen-proof1(
+\evar(1),
+\app(\symb(100), \evar(1))
+)) .
+rew in PROOF-GENERATION : check(gen-proof1(
+\evar(1),
+\app(\symb(100), \evar(1))
+)) .
+rew in PRETTY : pretty(gen-proof2(
+\evar(1),
+\app(\symb(100), \evar(1))
+)) .
+rew in PROOF-GENERATION : check(gen-proof2(
+\evar(1),
+\app(\symb(100), \evar(1))
+)) .
+q

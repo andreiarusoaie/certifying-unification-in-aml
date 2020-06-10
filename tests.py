@@ -5,14 +5,15 @@ import os
 from src import utils as u
 
 # setup
-MAUDE        = 'maude' # modify this with the full path of the maude executable
-TESTS        = 'tests' # tests folder
-EXPECTED_OUT = 'out'   # the outputs are saved in the out folder under TESTS
+MAUDE        = 'maude'       # modify this with the full path of the maude executable
+TESTS        = 'tests'       # tests folder
+DIR          = 'unification' # unification tests
+EXPECTED_OUT = 'out'         # the outputs are saved in the out folder under DIR
 
 
 def run_tests():
     dir = os.path.dirname(os.path.realpath(__file__))
-    tests = os.path.join(dir, TESTS, MAUDE)
+    tests = os.path.join(dir, TESTS, DIR)
     log_dir = os.path.join(tests, EXPECTED_OUT)
     passed = 0
     failed = 0
