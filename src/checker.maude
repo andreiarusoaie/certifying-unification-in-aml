@@ -344,4 +344,3 @@ mod CHECKER is
     ceq destruct-pattern(\app(F, T)) = { F' ;; (PList ,, T) } if {F' ;; PList } := destruct-pattern(F) .
 
 endm
-

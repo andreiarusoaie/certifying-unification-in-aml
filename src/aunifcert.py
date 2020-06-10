@@ -97,7 +97,7 @@ def extract_maude(out):
     output = out.decode("utf-8")
     proofs = [p.groups() for p in regex_prf.finditer(output)]
     checks = [c.groups() for c in regex_chk.finditer(output)]
-    if len(proofs) != 2 or len(checks) != 2:
+    if len(proofs) != 1 or len(checks) != 1:
         print("cannot extract proofs and checks from maude output")
         print("please run `maude", log,'`` to find out what is wrong')
         exit(1)
