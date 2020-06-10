@@ -1,0 +1,12 @@
+load tests-setup.maude
+
+*** f(x) vs f(a) 
+rew in PRETTY : pretty(gen-proof(
+    \app(\symb(100), \evar(1)),
+    \app(\symb(100), \symb(10))
+    )) .
+rew in PROOF-GENERATION : check(gen-proof(
+    \app(\symb(100), \evar(1)),
+    \app(\symb(100), \symb(10))
+    )) .
+q

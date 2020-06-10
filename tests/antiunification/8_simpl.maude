@@ -1,0 +1,10 @@
+load tests-setup.maude
+
+*** x vs a
+rew in PRETTY : pretty(gen-proof(
+    \evar(1), \symb(10)
+    )) .
+rew in PROOF-GENERATION : check(gen-proof(
+    \evar(1), \symb(10)
+    )) .
+q

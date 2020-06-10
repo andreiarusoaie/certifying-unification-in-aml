@@ -1,0 +1,12 @@
+load tests-setup.maude
+
+*** f(g(y), h(a)) vs. f(h(a), g(z))
+rew in PRETTY : pretty(gen-proof(
+    \app(\app(\symb(100), \app(\symb(101), \evar(2))), \app(\symb(102), \symb(10))),
+    \app(\app(\symb(100), \app(\symb(102), \symb(10))), \app(\symb(101), \evar(2)))
+    )) .
+rew in PROOF-GENERATION : check(gen-proof(
+    \app(\app(\symb(100), \app(\symb(101), \evar(2))), \app(\symb(102), \symb(10))),
+    \app(\app(\symb(100), \app(\symb(102), \symb(10))), \app(\symb(101), \evar(2)))
+    )) .
+q

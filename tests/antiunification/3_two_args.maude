@@ -1,0 +1,13 @@
+load tests-setup.maude
+
+
+*** g(x, a) vs f(y, y) 
+rew in PRETTY : pretty(gen-proof(
+    \app(\app(\symb(101), \evar(1)), \symb(10)),
+    \app(\app(\symb(100), \evar(2)), \evar(2))
+    )) .
+rew in PROOF-GENERATION : check(gen-proof(
+    \app(\app(\symb(101), \evar(1)), \symb(10)),
+    \app(\app(\symb(100), \evar(2)), \evar(2))
+    )) .
+q
