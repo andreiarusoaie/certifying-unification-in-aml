@@ -92,7 +92,7 @@ def get_goal(proofline):
         return "cannot extract proof goal; the goal is the last line in this proof"
 
 def extract_maude(out):
-    regex_prf = re.compile(r'Proof:(.*?)(====|Bye)', re.DOTALL)
+    regex_prf = re.compile(r'Proof(?:Line)?:(.*?)(====|Bye)', re.DOTALL)
     regex_chk = re.compile(r'Bool:(.*?)(====|Bye)', re.DOTALL)
     output = out.decode("utf-8")
     proofs = [p.groups() for p in regex_prf.finditer(output)]
