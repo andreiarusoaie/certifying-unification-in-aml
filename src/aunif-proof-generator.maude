@@ -1,0 +1,225 @@
+load checker
+
+mod SETUP is
+    pr PROOF .
+    pr INT .
+
+    sorts Pair Pairs .
+    subsorts Pair < Pairs .
+    op .Pairs : -> Pairs .
+    op __ : Pairs Pairs -> Pairs [assoc prec 120 id: .Pairs] .
+    op _⊔_ : TermPattern TermPattern -> Pair .
+
+    var Pr : Pair .
+    op size : Pairs -> Nat .
+    eq size(.Pairs) = 0 .
+    eq size(Pr) = 1 .
+    ceq size((P P')) = size(P) + size(P') if P =/= .Pairs /\ P' =/= .Pairs .
+
+    sort MaybePairs .
+    op nothing : -> MaybePairs .
+    op just_ : Pairs -> MaybePairs .
+    op _;_ : MaybePairs MaybePairs -> MaybePairs .
+    vars M : MaybePairs .
+    vars P P' : Pairs .
+    eq nothing ; M = nothing .
+    eq M ; nothing = nothing .
+    eq just P ; just P' = just (P P') .
+
+    vars N N' I J : Nat .
+    vars T T' F F' : TermPattern .
+    op dec-reverse : TermPattern TermPattern -> MaybePairs .
+    ceq dec-reverse(\app(\symb(N), T), \app(\symb(N'), T')) = nothing if N =/= N' .
+    eq dec-reverse(\app(\symb(N), T), \app(\symb(N), T')) = just (T ⊔ T') .
+    eq dec-reverse(\app(F, T), \app(F', T')) = dec-reverse(F, F') ; just (T ⊔ T') .
+    eq dec-reverse(T, T') = nothing [owise] .
+
+    sorts SubstPair SubstList .
+    op subst-pair : EVar TermPattern -> SubstPair .
+    op subst-cons : SubstPair SubstList -> SubstList .
+    op subst-nil : -> SubstList .
+
+    op collapse : SubstList -> SubstPair .
+    vars X Y : EVar .
+    vars Phi Phi' T1 T2 : TermPattern .
+    var PR : SubstPair .
+    var PL : SubstList .
+    eq collapse(subst-cons(PR, subst-nil)) = PR .
+
+    eq collapse(subst-cons(subst-pair(Y, Phi), subst-cons(subst-pair(X, Phi'), PL))) =
+       collapse(subst-cons(subst-pair(X, (Phi' [ Phi / Y ])), PL)) .
+
+    sorts Equation Equations .
+    subsort Equation < Equations .
+    op .Equations : -> Equations .
+    op _={_}_ : TermPattern EVar TermPattern -> Equation .
+    op __ : Equations Equations -> Equations [assoc comm prec 120 id: .Equations] .
+
+    op fresh : EVar -> EVar .
+    eq fresh(\evar(N)) = \evar(N + 1) .
+
+    sort GenVars .
+    vars Vs : Vars .
+    op (_,_) : Vars Nat -> GenVars .
+    op generate-vars : Nat Int -> GenVars .
+    eq generate-vars(I, 0) = (.Vars, I) .
+    ceq generate-vars(I, N) = ((\evar(I + 1) ; Vs), N') if (Vs, N') := generate-vars(I + 1, N - 1) .
+
+    vars Eq : Equation .
+    vars Eqs1 Eqs2 : Equations .
+    op solved : Equations -> Bool .
+    eq solved(.Equations) = true .
+    ceq solved(T1 ={ X } T2) = true if dec-reverse(T1, T2) == nothing .
+    ceq solved((Eqs1 Eqs2)) = solved(Eqs1) and solved(Eqs2) if (Eqs1 =/= .Equations and Eqs2 =/= .Equations) .
+    eq solved(Eqs1) = false [owise] .
+
+endm
+
+mod ANTI-UNIFICATION is
+    pr SETUP .
+
+    sort AUnifProblem .
+    op <_|_|_> : SubstList Equations Nat -> AUnifProblem .
+    
+    sort Trace .
+    subsort AUnifProblem < Trace .
+    op .Trace : -> Trace .
+    op end    : -> Trace .
+    op _;;_ : Trace Trace -> Trace [assoc prec 121 id: .Trace] .
+
+    vars Ss : SubstList .
+    vars Eqs Eqs' : Equations .
+    vars E : Equation .
+    vars T1 T2 T Trm : TermPattern .
+    vars N NextId : Int .
+    vars X : EVar .
+    vars Vs : Vars .
+    vars Tr : Trace .
+    vars Ps : Pairs .
+
+    crl [decomposition] : Tr ;; < Ss | T1 ={ X } T2 Eqs | N > ;; end =>
+                          Tr ;; < Ss | T1 ={ X } T2 Eqs | N > ;; < subst-cons(subst-pair(X, Trm), Ss) | Eqs' Eqs | NextId > ;; end
+      if  just Ps := dec-reverse(T1, T2) /\
+          (Vs, NextId) := generate-vars(N, size(Ps)) /\
+          Trm := generate-term(Vs, get-top-symbol(T1)) /\
+          Eqs' := eqs-build(Vs, Ps) .
+
+    op eqs-build : Vars Pairs -> Equations .
+    eq eqs-build(.Vars, .Pairs) = .Equations .
+    eq eqs-build((X ; Vs), (( T1 ⊔ T2) Ps)) = (T1 ={ X } T2) eqs-build(Vs, Ps) .
+
+    op generate-term : Vars TermPattern -> TermPattern .
+    eq generate-term(.Vars, T) = T .
+    eq generate-term((X ; Vs), T) = generate-term(Vs, \app(T, X)) .
+endm
+
+
+mod PROOF-GENERATION is
+    pr SETUP .
+    pr ANTI-UNIFICATION .
+    pr CHECKER .
+
+
+    vars Eqs Eqs' Eqs1 Eqs2 : Equations .
+    vars N N' : Nat .
+    vars SL : SubstList .
+    vars Phi Phi' T T1 T2 Trm Trm' EQL EQR TP TP' INIT : TermPattern .
+    vars X Y Z : EVar .
+    vars Vs NewVs : Vars .
+    vars Ps : Pairs .
+    vars I K NewK Id : Int .
+    vars Prf : Proof .
+    
+
+    sort Result .
+    op {_,_,_} : Proof Nat TermPattern -> Result .
+
+    op process : AUnifProblem AUnifProblem TermPattern TermPattern Nat -> Result .
+
+
+    ceq process(
+          < SL | Eqs T1 ={ X } T2 | N > ,
+          < subst-cons(subst-pair(X, Trm), SL) | Eqs Eqs' | N' > ,
+          TP, INIT, K) = {
+          (
+            (K)     \eq(TP, prec(rem(X, Vs), \exists(X, Trm' and ((Phi and \eq(X, T1)) or (Phi' and \eq(X, T2)))))) [exists-equiv];
+            (K + 1) \eq(prec(rem(X, Vs), \exists(X, Trm' and ((Phi and \eq(X, T1)) or (Phi' and \eq(X, T2))))),
+              prec(NewVs, prec(rem(X, Vs), \exists(X, Trm' and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR)))))) [antiunification-dec];
+            (K + 2) \eq(prec(NewVs, prec(rem(X, Vs), \exists(X, Trm' and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR))))),
+              T) [exists-elim];
+            (K + 3) \eq(TP,  prec(NewVs, prec(rem(X, Vs), \exists(X, Trm' and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR)))))) [eq-tranz, K, K + 1];
+            (K + 4) \eq(TP, T) [eq-tranz, K + 3, K + 2];
+            (K + 5) \eq(INIT, T) [eq-tranz, K - 1, K + 4];
+            ), 
+             K + 6, T}
+      if subst-pair(Y, Trm') := collapse(SL) /\
+          Vs := vars(Trm') /\
+          NewVs := vars(Trm) /\ 
+          Phi := phi-left(Eqs) /\
+          Phi' := phi-right(Eqs) /\
+          EQL := phi-left(Eqs') /\
+          EQR := phi-right(Eqs') /\
+          T := prec(NewVs, prec(rem(X, Vs), ((Trm' and ((Phi and EQL) or (Phi' and EQR)))[Trm / X]) )) .
+      
+
+    sort OptionalProof .
+    op {_,_} : Proof Nat -> OptionalProof .
+    op gen-tranz : TermPattern TermPattern Nat -> OptionalProof .
+    ceq gen-tranz(INIT, TP', K) = { (K) \eq(INIT, TP') [eq-tranz, K - 6, K - 1]; , K + 1 }
+      if K > 5 .
+    eq gen-tranz(INIT, TP', K) = { .Proof, K } [owise] .
+
+    op get-eqs : AUnifProblem -> Equations .
+    eq get-eqs(< SL | Eqs | K >) = Eqs .
+
+    op phi-left : Equations -> TermPattern .
+    eq phi-left(.Equations) =  \imp(\bot, \bot) .
+    eq phi-left(T1 ={ X } T2) = \eq(X, T1) .
+    ceq phi-left((Eqs1 Eqs2)) = phi-left(Eqs1) and phi-left(Eqs2)
+      if Eqs1 =/= .Equations /\ Eqs2 =/= .Equations .
+
+    op phi-right : Equations -> TermPattern .
+    eq phi-right(.Equations) =  \imp(\bot, \bot) .
+    eq phi-right(T1 ={ X } T2) = \eq(X, T2) .
+    ceq phi-right((Eqs1 Eqs2)) = phi-right(Eqs1) and phi-right(Eqs2)
+      if Eqs1 =/= .Equations /\ Eqs2 =/= .Equations .
+
+    op prec : Vars TermPattern -> TermPattern .
+    eq prec(.Vars, T) = T .
+    eq prec((X ; Vs), T) = prec(Vs, \exists(X, T)) .
+
+    eq \imp(\bot, \bot) and T = T .
+
+
+    vars A1 A2 : AUnifProblem .
+    vars Tr : Trace .
+
+    op process-trace : Trace TermPattern TermPattern Nat -> Proof .
+    ceq process-trace((A1 ;; A2 ;; Tr), TP, Phi, K) = Prf process-trace((A2 ;; Tr), TP', Phi, NewK) 
+        if { Prf, NewK, TP' } := process(A1, A2, TP, Phi, K)  .
+    eq process-trace((A1 ;; end), TP, Phi, K) = .Proof .
+
+    
+    op gen-proof : TermPattern TermPattern -> Proof .
+
+    crl gen-proof(T1, T2) =>
+        (1) \eq(T1 or T2, Phi) [exists-intro];
+        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 2)
+      if  I := freshid(T1, T2) /\ Z := \evar(I) /\
+          Phi := \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2))) /\ 
+          < subst-cons(subst-pair(Z, Z), subst-nil) | T1 ={ Z } T2 | I + 2 > ;; end => (Tr ;; A2 ;; end) /\
+          solved(get-eqs(A2)) .
+    
+
+    op last : Trace -> AUnifProblem .
+    eq last((A1 ;; end)) = A1 .
+    eq last((A1 ;; Tr)) = last(Tr) .
+
+    op freshid : TermPattern TermPattern -> Int .
+    eq freshid(T1, T2) = max((vars(T1) ; vars(T2)), 1) + 1 .
+
+    op max : Vars Int -> Int .
+    eq max(.Vars, Id) = Id .
+    ceq max((\evar(Id) ; Vs), I) = max(Vs, I) if I >= Id .
+    ceq max((\evar(Id) ; Vs), I) = max(Vs, Id) if I < Id .
+endm

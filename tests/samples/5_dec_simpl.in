@@ -1,0 +1,3 @@
+variables: x, z
+symbols: f, a
+problem: f(x, a) =? f(a, z)

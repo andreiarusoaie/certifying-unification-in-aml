@@ -63,8 +63,11 @@ def find_pos_of_first_delim(t_string):
 
 
 def parse_term_list(t_string, vars, symbols):
+    t_string = t_string.lstrip()
     if (not t_string):
         return ([], '')
+    if (t_string[0] == ','):
+        t_string = t_string[1:]
     if (t_string[0] == ')'):
         return ([], t_string[1:])
     (trm, rest)     = parse_term(t_string, vars, symbols)

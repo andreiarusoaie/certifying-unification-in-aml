@@ -1,0 +1,3 @@
+variables: x, y, z
+symbols: f, a, h, b, c, g
+problem: f(g(b), h(a, x)) =? f(g(z), h(c, y))

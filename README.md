@@ -1,5 +1,12 @@
 # certifying-unification-in-aml
-This repo contains a series of Maude scripts for generating and checking proof certificates for syntactic unification in (Applicative) Matching Logic.
+This repo contains a series of Maude scripts for generating and checking proof certificates for syntactic unification and anti-unification in (Applicative) Matching Logic.
+
+## Overview
+* [Prerequisites](#prerequisites)
+* [Repo organisation](#repo-organisation)
+* [Setup](#setup)
+* [Scrips](#scripts)
+* [Using the Maude scripts directly](#using-the-maude-scripts-directly)
 
 ### Prerequisites
 
@@ -11,12 +18,12 @@ This repo contains a series of Maude scripts for generating and checking proof c
   * [Unification in Matching Logic](https://link.springer.com/chapter/10.1007/978-3-030-30942-8_30)
   * [Applicative Matching Logic](http://fsl.cs.illinois.edu/index.php/Applicative_Matching_Logic)
 
-### Organisation
+### Repo Organisation
 The `ml-unify.py` script (Python 3) checks if `Maude` is installed and processes an input file with a specific format. This is explained in detail in the subsection **ml-unify.py** below.
 
 The `tests.py` script (Python 3) checks if `Maude` is installed and runs automatically all the tests.
 
-The `src` folder contains a proof checker for (Applicative) Matching Logic in `checker.maude` and a proof generator for syntactc unification in `proof-generator.maude`.
+The `src` folder contains a proof checker for (Applicative) Matching Logic in `checker.maude` and a proof generator for syntactic unification in `proof-generator.maude`. 
 
 The `tests\maude` folder contains a setup file `tests-setup.maude` and a list of files `n_some_description.maude` where `n` is the test number and `some_description` is a short description indicating the name of the tested rules. Each file generates and checks two proofs for a particular unification problem that is written as a comment at the beginning of the file.
 
@@ -31,6 +38,7 @@ Open a terminal, `cd` into your working dir and type:
 ```
 This will run all the tests in the `tests\maude` folder. Initally, all tests pass. If you want to add more tests in the `tests\maude` directory, please follow the same naming convention as in the **Guidelines** section above. You can inspect the output in the corresponding file in the `tests/out/` directory.
 
+## Scripts
 ### ml-unify.py
 
 The `ml-unify.py` script takes as input files that specify unification problems. Here's an example:
@@ -144,12 +152,45 @@ ERROR: bad symbol x, expecting one of ['f', 'g', 'k', 'u', 't']
 Exit with non-zero code: 4
 ```
 
+### ml-antiunify.py
+This script is very similar to `ml-unify.py`, except it produces a proof that corresponds to anti-unification of terms. The input has the same format:
+
+```
+variables: x, z
+symbols: f, g , u, t
+problem: f(x, g(z, x)) =? f(x, g(u, t))
+```
+
+On this input, the produces proof is:
+
+```
+$ python3 ml-antiunify.py tests/samples/1_dec.in 
+Found Maude version: 3.0
+
+Proof of: (f(x, g(u, t)) or f(x, g(z, x)) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11))))  
+(1)(f(x, g(u, t)) or f(x, g(z, x)) === ∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) [exists-intro] ;
+(2)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) === ∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) [exists-equiv] ;
+(3)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) === ∃ v(9) . ∃ v(8) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [antiunification-dec] ;
+(4)((∃ v(9) . ∃ v(8) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) === ∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [exists-elim] ;
+(5)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) === ∃ v(9) . ∃ v(8) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [eq-tranz,2,3] ;
+(6)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) === ∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [eq-tranz,5,4] ;
+(7)(f(x, g(u, t)) or f(x, g(z, x)) === ∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [eq-tranz,1,6] ;
+(8)((∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) === ∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [exists-equiv] ;
+(9)((∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [antiunification-dec] ;
+(10)((∃ v(11) . ∃ v(10) . ∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [exists-elim] ;
+(11)((∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [eq-tranz,8,9] ;
+(12)((∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [eq-tranz,11,10] ;
+(13)(f(x, g(u, t)) or f(x, g(z, x)) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [eq-tranz,7,12] ;
+Checked:   true
+
+```
+
+The output contains a single proof of the equality <img src="https://render.githubusercontent.com/render/math?math=t_1 \vee t_2 = \exists\overline{z}.t\wedge(\phi^{\sigma_1} \vee \phi^{\sigma_2})">.
+
 ## Using the Maude scripts directly 
 
-### Using the checker
-
-#### (Applicative) Matching Logic formulas
-The syntax of the formulas is given below:
+### (Applicative) Matching Logic formulas
+The syntax of the formulas (file `checker.maude`) is given below:
 
 ```
 subsort EVar < TermPattern .
@@ -175,7 +216,10 @@ With this syntax we build formulas:
 * `\imp(\eq(\app(\symb(1), \evar(1)), \app(\symb(1), \evar(2))), \eq(\evar(1), \evar(2))` is a *pattern*. If we use `y` to denote `\evar(2)` then our pattern is `f(x) = f(y) -> x = y`.
 
 #### Using the proof generator
-The proof generator provides two functions `gen-proof1` and `gen-proof2` that are used to generate proofs for the unification of two *term patterns* `t1` and `t2` given as arguments. 
+
+There are two proof generators: `proof-generator.maude` for unification and `aunif-proof-generator.maude` for antiunification.
+
+The `proof-generator.maude` provides two functions `gen-proof1` and `gen-proof2` that are used to generate proofs for the unification of two *term patterns* `t1` and `t2` given as arguments. 
 
 Let us consider two term patterns `f(x)` and `f(y)` encoded as `\app(\symb(1), \evar(1))` and `\app(\symb(1), \evar(2))`. The following Maude commands generate proofs for the unification problem `f(x) =? f(y)`:
 
@@ -184,14 +228,27 @@ rew in PROOF-GENERATION : gen-proof1(\app(\symb(1), \evar(1)), \app(\symb(1), \e
 rew in PROOF-GENERATION : gen-proof2(\app(\symb(1), \evar(1)), \app(\symb(1), \evar(2))) .
 ```
 
-#### Using the proof checker
+The `aunif-proof-generator.maude` provides only one function `gen-proof` for generating the only proof needed. Continuing the above example, this ca be used as follows:
+
+```
+rew in PROOF-GENERATION : gen-proof(\app(\symb(1), \evar(1)), \app(\symb(1), \evar(2))) .
+```
+
+#### Using the proof checker in Maude
 
 The above commands will generate two proofs. We can check them by simply calling `check` as follows:
 
+> For unification:
 ```
 rew in PROOF-GENERATION : check(gen-proof1(\app(\symb(1), \evar(1)), \app(\symb(1), \evar(2)))) .
 rew in PROOF-GENERATION : check(gen-proof2(\app(\symb(1), \evar(1)), \app(\symb(1), \evar(2)))) .
 ```
+
+> For antiunification:
+```
+rew in PROOF-GENERATION : check(gen-proof(\app(\symb(1), \evar(1)), \app(\symb(1), \evar(2)))) .
+```
+
 
 If `check` returns `true`, then the proof was checked successfully. Otherwise, the proof is displayed together with a coloured marker that indicates where the proof checking failed.
 
