@@ -1,3 +1,3 @@
 variables: x, y, z
 symbols: f, a, h, b, c
-problem: f(h(a, x) b) =? f(z, h(c, y))
+problem: f(h(a, x), b) =? f(z, h(c, y))
