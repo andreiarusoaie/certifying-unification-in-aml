@@ -1,9 +1,0 @@
-load tests-setup.maude
-
-*** orientation: f(a) = f(x)
-rew in PRETTY : pretty(gen-proof1(\app(\symb(100), \symb(10)), \app(\symb(100), \evar(1)))) .
-rew in PROOF-GENERATION : check(gen-proof1(\app(\symb(100), \symb(10)), \app(\symb(100), \evar(1)))) .
-rew in PRETTY : pretty(gen-proof2(\app(\symb(100), \symb(10)), \app(\symb(100), \evar(1)))) .
-rew in PROOF-GENERATION : check(gen-proof2(\app(\symb(100), \symb(10)), \app(\symb(100), \evar(1)))) .
-
-q

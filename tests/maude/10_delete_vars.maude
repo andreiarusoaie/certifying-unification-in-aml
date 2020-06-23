@@ -1,8 +1,0 @@
-load tests-setup.maude
-
-*** delete: x = x
-rew in PRETTY : pretty(gen-proof1(\evar(1), \evar(1))) .
-rew in PROOF-GENERATION : check(gen-proof1(\evar(1), \evar(1))) .
-rew in PRETTY : pretty(gen-proof2(\evar(1), \evar(1))) .
-rew in PROOF-GENERATION : check(gen-proof2(\evar(1), \evar(1))) .
-q
