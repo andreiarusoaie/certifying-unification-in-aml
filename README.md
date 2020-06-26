@@ -5,7 +5,7 @@ This repo contains a series of Maude scripts for generating and checking proof c
 * [Prerequisites](#prerequisites)
 * [Repo organisation](#repo-organisation)
 * [Setup](#setup)
-* [Scrips](#scripts)
+* [Scripts](#scripts)
 * [Using the Maude scripts directly](#using-the-maude-scripts-directly)
 
 ### Prerequisites
