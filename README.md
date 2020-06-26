@@ -1,4 +1,4 @@
-# certifying-unification-in-aml
+# Certifying (anti)unification in Matching Logic
 This repo contains a series of Maude scripts for generating and checking proof certificates for syntactic unification and anti-unification in (Applicative) Matching Logic.
 
 ## Overview
