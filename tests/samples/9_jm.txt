@@ -1,0 +1,4 @@
+variables: x, y, z, u, v, w
+symbols: f, g, h, p, q, r, k
+problem: f(h(x, x), p(g(z), r(q(z))) ) =? f(h(g(u), g(k(v, q(w)))), p(x,y))
+x

@@ -40,8 +40,9 @@ mod SETUP is
     vars N N' : Nat .
     op hasTopSymbol : TermPattern -> Bool .
     eq hasTopSymbol(\symb(N)) = true .
-    eq hasTopSymbol(\app(\symb(N), Tp)) = true .
-    eq hasTopSymbol(Tp) = false .
+    ***    eq hasTopSymbol(\app(\symb(N), Tp)) = true .
+    eq hasTopSymbol(\app(Tp1, Tp2)) = hasTopSymbol(Tp1) .
+    eq hasTopSymbol(\evar(N)) = false .
     
     op subst-unif : EVar TermPattern UnificationProblem -> UnificationProblem .
     eq subst-unif(X, Tp, bot) = bot .
