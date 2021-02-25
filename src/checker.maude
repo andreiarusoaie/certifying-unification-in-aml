@@ -8,13 +8,13 @@ mod SYNTAX is
     op \app  : TermPattern TermPattern  -> TermPattern .
     op \imp  : TermPattern TermPattern  -> TermPattern .
     op \bot  :                          -> TermPattern .
-    op \exists : EVar TermPattern       -> TermPattern . *** this is not a term pattern
 
     --- derived syntax
     op _and_ : TermPattern TermPattern -> TermPattern [assoc comm prec 28] .
-    op _or_ : TermPattern TermPattern -> TermPattern [assoc comm prec 30] .
+    op _or_  : TermPattern TermPattern -> TermPattern [assoc comm prec 30] .
     op \not  : TermPattern             -> TermPattern .
     op \eq   : TermPattern TermPattern -> TermPattern .
+    op \eqv  : TermPattern TermPattern -> TermPattern .
 
     --- utils
     vars X Y              : EVar .
@@ -33,14 +33,20 @@ mod SYNTAX is
     eq (T1 and T2)[T / X]      = (T1[T / X]) and (T2[T / X]) .
     eq (T1 or T2)[T / X]       = (T1[T / X]) or (T2[T / X]) .
     eq \not(T1) [T / X]        = \not(T1[T / X]) .
-    eq \exists(X, T1) [T / X]  = \exists(X, T1) .
-    ceq \exists(Y, T1) [T / X] = \exists(Y, T1[T / X]) if X =/= Y /\ not (Y in fv(T)) .
+***    eq \exists(X, T1) [T / X]  = \exists(X, T1) .
+***    ceq \exists(Y, T1) [T / X] = \exists(Y, T1[T / X]) if X =/= Y /\ not (Y in fv(T)) .
 
     --- free vars
     sort Vars .
     subsort EVar < Vars .
     op .Vars :            -> Vars [ctor] .
     op _;_ : Vars Vars    -> Vars [ctor assoc comm id: .Vars prec 121] .
+
+    var Xs : Vars .
+    op \exists : Vars TermPattern     -> TermPattern . *** this is not a term pattern
+    eq  \exists((X ; Xs), T1) [T / X] = \exists((X ; Xs), T1) .
+    ceq \exists(Xs, T1) [T / X] = \exists(Xs, T1[T / X]) if not (X in Xs) .
+    
 
     var Vs Vs' : Vars .
     op rem : EVar Vars -> Vars .
@@ -147,11 +153,11 @@ mod PROOF is
     op occurs-check           : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
 
     --- antiunification
-    op exists-intro           : -> RuleName . --- t1 or t2 = exists x.x and (x = t1 or x = t2)
-    op antiunification-dec    : -> RuleName . --- antiunification decomposition rule
-    op exists-elim            : -> RuleName . --- 
-    op exists-equiv           : -> RuleName . --- 
-    op eq-tranz               : -> RuleName . --- 
+    op or-gen           : -> RuleName . --- t1 or t2 <-> exists x.x and (x = t1 or x = t2)
+    op gen              : -> RuleName . --- gen
+---    op exists-elim            : -> RuleName . --- exists x1 ... x ... xk . x = t and phi  <-> exists x1 ... exists xk . phi[t/x]
+---    op exists-equiv           : -> RuleName . --- exists x . exists y . phi <-> exists y . exists x . phi
+    op eq-tranz               : -> RuleName . --- phi1 = phi2 /\ phi2 = phi3 <-> phi1 = phi3
 ---    op eq-elim                : -> RuleName . --- phi1 = phi2 /\ psi[phi1/x] -> psi[phi2/x]
 ---    op imp-and-elim           : -> RuleName . --- phi -> phi' if |- psi and phi -> phi'   /\  |- psi
 endm
@@ -176,7 +182,7 @@ mod CHECKER is
 
     ceq [tauto-context] :
         Pi |- (N) \imp(T and Tp1, T and Tp2) [tauto-context, I] ; = true
-      if I < N /\ I \imp(Tp1, Tp2) in Pi .
+      if I < N /\ (I \imp(Tp1, Tp2) in Pi) .
 
     eq [tauto-and-simpl] :
         Pi |- (N) \imp(T and T, T) [tauto-and-simpl] ; = true .
@@ -239,36 +245,96 @@ mod CHECKER is
          (P1 ((I1) \imp(Tp1, T) Pr  ;) P2) := Pi /\ 
          (P3 ((I2) \imp(T, Tp2) Pr' ;) P4) := Pi .
 
-    ceq [exists-intro] : Pi |- (N) \eq(Tp1 or Tp2, \exists(X, X and (\eq(X, Tp1) or \eq(X, Tp2)))) [exists-intro] ; = true
+    ceq [or-gen] : Pi |- (N) \eqv(Tp1 or Tp2, \exists(X, X and (\eq(X, Tp1) or \eq(X, Tp2)))) [or-gen] ; = true
       if isFunctional(Tp1) /\ isFunctional(Tp2) /\ not(X in fv(Tp1)) /\ not(X in fv(Tp2)) .
 
-    ceq [exists-equiv] :  Pi |- (N) \eq(Tp1, Tp2) [exists-equiv] ; = true
-      if (Vs1, Phi) := collect-exists(Tp1) /\
-          (Vs2, Phi) := collect-exists(Tp2) /\
-          Vs1 == Vs2 .
 
-    vars VPhi VPhi' Psi Psi' : TermPattern .
-    ceq [antiunification-dec] : Pi |- (N) \eq(Tp1, Tp2) [antiunification-dec] ; = true
-      if (Zs,X,Phi) := destruct-until-dec-var(Tp1) /\
-          (Psi, VPhi, VPhi', Tp, Tp') := destruct-left(Phi, X) /\
-          {F ;; PList} := destruct-pattern(Tp) /\
-          {F ;; PList'} := destruct-pattern(Tp') /\
-          sizePL(PList) == sizePL(PList') /\
-          (Ys, X, Phi') := destruct-until-dec-var(Tp2) /\
-          sizeV(diff(Ys, Zs)) == sizePL(PList) /\
-          (Psi ; VPhi ; VPhi') := destruct-right(Phi', X, F, diff(Ys, Zs), PList, PList') . 
+    vars T1 T2 EQL EQR Sym1 Sym2 Sym : TermPattern .
+    vars Args1 Args2 Args : TermPatternList .
+    var Z : EVar .
+    vars Xs : Vars .
+    ceq [gen-0] : Pi |- (N) \eqv(\eq(Z,T1) or \eq(Z, T2), \exists(Xs, \eq(Z,T) and (EQL or EQR))) [gen] ; = true 
+     if isFunctional(T1) /\ isFunctional(T2) /\ 
+        (Sym1, Args1) := destruct(T1) /\ 
+        (Sym2, Args2) := destruct(T2) /\ 
+        (Sym, Args) := destruct(T) /\ 
+        Sym == Sym1 /\ Sym == Sym2 /\
+        EQL == zipAnd(Args, Args1) /\ 
+        EQR == zipAnd(Args, Args2) /\ 
+        Xs == vars(T) /\ 
+        noneIn(Xs, vars(T1)) /\ 
+        noneIn(Xs, vars(T2)).
+        
 
-    ceq [exists-elim] : Pi |- (N) \eq(Tp1, Tp2) [exists-elim] ; = true
-      if (Zs, X, Phi) := destruct-until-dec-var(Tp1) /\
-          < Psi, VPhi > := destruct-ex-elim(Phi, X) /\
-          (Xs, Psi') := collect-exists(Tp2) /\
-          Zs == Xs /\
-          Psi' == Psi[VPhi / X] .
+    ceq [gen] : 
+        Pi |- (N) \eqv((Phi and \eq(Z,T1)) or (Phi' and \eq(Z, T2)), \exists(Xs, \eq(Z,T) and ((Phi and EQL) or (Phi' and EQR)))) [gen] ; = true 
+     if isFunctional(T1) /\ isFunctional(T2) /\ 
+        (Sym1, Args1) := destruct(T1) /\ 
+        (Sym2, Args2) := destruct(T2) /\ 
+        (Sym, Args) := destruct(T) /\ 
+        Sym == Sym1 /\ Sym == Sym2 /\
+        EQL == zipAnd(Args, Args1) /\ 
+        EQR == zipAnd(Args, Args2) /\ 
+        Xs == vars(T) /\ 
+        noneIn(Xs, vars(T1)) /\ 
+        noneIn(Xs, vars(T2)).
+
 
     ceq [eq-tranz] : Pi |- (N) \eq(Tp1, Tp2) [eq-tranz, I1, I2] ; = true  
       if I1 < N /\ I2 < N /\
           (P1 ((I1) \eq(Tp1, T) Pr  ;) P2) := Pi /\ 
           (P3 ((I2) \eq(T, Tp2) Pr' ;) P4) := Pi .
+
+    --- helpers
+    op __in_ : NzNat TermPattern Proof -> Bool .
+    eq N Tp in (P ((N) Tp Pr ;) P') = true .
+    eq N Tp in Pi = false [owise] .
+
+    sort TermPatternList .
+    subsort TermPattern < TermPatternList .
+    op .TPList : -> TermPatternList .
+    op _,,_ : TermPatternList TermPatternList -> TermPatternList [assoc id: .TPList] .
+
+    sort SymArgs .
+    op (_,_) : TermPattern TermPatternList -> SymArgs .
+    op destruct : TermPattern -> SymArgs .
+    eq destruct(\app(\symb(N), T)) = (\symb(N), T) .
+    ceq destruct(\app(\app(T1, T2), T)) = (Sym, (Args ,, T) ) 
+      if (Sym, Args) := destruct(\app(T1, T2)) .
+
+    vars TPL1 TPL2 : TermPatternList .
+    op zipAnd : TermPatternList TermPatternList -> TermPattern .
+    eq zipAnd((T1 ,, .TPList), (T2 ,, .TPList)) = \eq(T1, T2) .
+    eq zipAnd((T1 ,, TPL1), (T2 ,, TPL2)) = \eq(T1, T2) and zipAnd(TPL1, TPL2) . *** maude executes eq in order
+
+    vars Ys : Vars .
+    op noneIn : Vars Vars -> Bool .
+    eq noneIn(.Vars, Xs) = true .
+    eq noneIn ( (X ; Xs), (Ys)) = (not (X in Ys)) and noneIn(Xs, Ys) .
+
+endm
+
+eof
+                
+    vars Psi VPhi VPhi' : TermPattern .
+
+
+    *** ceq [exists-equiv] :  Pi |- (N) \eq(Tp1, Tp2) [exists-equiv] ; = true
+    ***   if (Vs1, Phi) := collect-exists(Tp1) /\
+    ***       (Vs2, Phi) := collect-exists(Tp2) /\
+    ***       Vs1 == Vs2 .
+
+    *** ceq [exists-elim] : Pi |- (N) \eq(Tp1, Tp2) [exists-elim] ; = true
+    ***   if (Zs, X, Phi) := destruct-until-dec-var(Tp1) /\
+    ***       < Psi, VPhi > := destruct-ex-elim(Phi, X) /\
+    ***       (Xs, Psi') := collect-exists(Tp2) /\
+    ***       Zs == Xs /\
+    ***       Psi' == Psi[VPhi / X] .
+
+    *** ceq [eq-tranz] : Pi |- (N) \eq(Tp1, Tp2) [eq-tranz, I1, I2] ; = true  
+    ***   if I1 < N /\ I2 < N /\
+    ***       (P1 ((I1) \eq(Tp1, T) Pr  ;) P2) := Pi /\ 
+    ***       (P3 ((I2) \eq(T, Tp2) Pr' ;) P4) := Pi .
 
     sort PatternPair .
     op <_,_> : TermPattern TermPattern -> PatternPair .

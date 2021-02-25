@@ -113,7 +113,6 @@ mod ANTI-UNIFICATION is
     eq generate-term((X ; Vs), T) = generate-term(Vs, \app(T, X)) .
 endm
 
-
 mod PROOF-GENERATION is
     pr SETUP .
     pr ANTI-UNIFICATION .
@@ -136,22 +135,16 @@ mod PROOF-GENERATION is
 
     op process : AUnifProblem AUnifProblem TermPattern TermPattern Nat -> Result .
 
-
     ceq process(
-          < SL | Eqs T1 ={ X } T2 | N > ,
-          < subst-cons(subst-pair(X, Trm), SL) | Eqs Eqs' | N' > ,
+          < SL | Eqs T1 ={ Z } T2 | N > ,
+          < subst-cons(subst-pair(Z, Trm), SL) | Eqs Eqs' | N' > ,
           TP, INIT, K) = {
           (
-            (K)     \eq(TP, prec(rem(X, Vs), \exists(X, Trm' and ((Phi and \eq(X, T1)) or (Phi' and \eq(X, T2)))))) [exists-equiv];
-            (K + 1) \eq(prec(rem(X, Vs), \exists(X, Trm' and ((Phi and \eq(X, T1)) or (Phi' and \eq(X, T2))))),
-              prec(NewVs, prec(rem(X, Vs), \exists(X, Trm' and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR)))))) [antiunification-dec];
-            (K + 2) \eq(prec(NewVs, prec(rem(X, Vs), \exists(X, Trm' and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR))))),
-              T) [exists-elim];
-            (K + 3) \eq(TP,  prec(NewVs, prec(rem(X, Vs), \exists(X, Trm' and \eq(X, Trm) and ((Phi and EQL) or (Phi' and EQR)))))) [eq-tranz, K, K + 1];
-            (K + 4) \eq(TP, T) [eq-tranz, K + 3, K + 2];
-            (K + 5) \eq(INIT, T) [eq-tranz, K - 1, K + 4];
-            ), 
-             K + 6, T}
+            (K)     \eqv((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)), 
+                         \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )) [gen];
+            
+          ),
+             K + 6, T }
       if subst-pair(Y, Trm') := collapse(SL) /\
           Vs := vars(Trm') /\
           NewVs := vars(Trm) /\ 
@@ -159,7 +152,7 @@ mod PROOF-GENERATION is
           Phi' := phi-right(Eqs) /\
           EQL := phi-left(Eqs') /\
           EQR := phi-right(Eqs') /\
-          T := prec(NewVs, prec(rem(X, Vs), ((Trm' and ((Phi and EQL) or (Phi' and EQR)))[Trm / X]) )) .
+          T := prec(NewVs, prec(rem(Z, Vs), ((Trm' and ((Phi and EQL) or (Phi' and EQR)))[Trm / Z]) )) .
       
 
     sort OptionalProof .
@@ -203,7 +196,7 @@ mod PROOF-GENERATION is
     op gen-proof : TermPattern TermPattern -> Proof .
 
     crl gen-proof(T1, T2) =>
-        (1) \eq(T1 or T2, Phi) [exists-intro];
+        (1) \eqv(T1 or T2, Phi) [or-gen];
         process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 2)
       if  I := freshid(T1, T2) /\ Z := \evar(I) /\
           Phi := \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2))) /\ 
@@ -223,3 +216,4 @@ mod PROOF-GENERATION is
     ceq max((\evar(Id) ; Vs), I) = max(Vs, I) if I >= Id .
     ceq max((\evar(Id) ; Vs), I) = max(Vs, Id) if I < Id .
 endm
+
