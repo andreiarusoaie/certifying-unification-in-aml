@@ -147,6 +147,9 @@ mod PROOF-GENERATION is
             (K + 2) \eqv( Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) ),
                          \exists(NewVs, Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) ) [e-scope];
 
+            (K + 3) \eqv(\exists(vars(Trm'), Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )),
+                         \exists(vars(Trm'), \exists(NewVs, Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))) ) [e-closure(K + 2)];
+
           ),
              K + 6, T }
       if subst-pair(Y, Trm') := collapse(SL) /\

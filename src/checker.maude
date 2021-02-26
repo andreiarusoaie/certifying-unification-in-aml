@@ -157,6 +157,7 @@ mod PROOF is
     op gen              : -> RuleName . --- gen
     op e-context        : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
     op e-scope          : -> RuleName . *** exists x. phi1 /\ phi2   <->  exists x . (phi1 /\ phi2), x not in fv(phi2)
+    op e-closure        : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi2 <-> exists x . phi2'
 ---    op exists-elim            : -> RuleName . --- exists x1 ... x ... xk . x = t and phi  <-> exists x1 ... exists xk . phi[t/x]
 ---    op exists-equiv           : -> RuleName . --- exists x . exists y . phi <-> exists y . exists x . phi
     op eq-tranz               : -> RuleName . --- phi1 = phi2 /\ phi2 = phi3 <-> phi1 = phi3
@@ -295,6 +296,11 @@ mod CHECKER is
       if I1 < N /\ I2 < N /\
           (P1 ((I1) \eq(Tp1, T) Pr  ;) P2) := Pi /\ 
           (P3 ((I2) \eq(T, Tp2) Pr' ;) P4) := Pi .
+
+    ceq [e-closure] : 
+        Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp2)) [e-closure(I1)] ; = true 
+       if I1 < N /\ I1 \eqv(Tp1, Tp2) in Pi .
+
 
     --- helpers
     op __in_ : NzNat TermPattern Proof -> Bool .
