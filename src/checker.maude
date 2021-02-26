@@ -156,6 +156,7 @@ mod PROOF is
     op or-gen           : -> RuleName . --- t1 or t2 <-> exists x.x and (x = t1 or x = t2)
     op gen              : -> RuleName . --- gen
     op e-context        : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
+    op e-scope          : -> RuleName . *** exists x. phi1 /\ phi2   <->  exists x . (phi1 /\ phi2), x not in fv(phi2)
 ---    op exists-elim            : -> RuleName . --- exists x1 ... x ... xk . x = t and phi  <-> exists x1 ... exists xk . phi[t/x]
 ---    op exists-equiv           : -> RuleName . --- exists x . exists y . phi <-> exists y . exists x . phi
     op eq-tranz               : -> RuleName . --- phi1 = phi2 /\ phi2 = phi3 <-> phi1 = phi3
@@ -269,7 +270,8 @@ mod CHECKER is
         
 
     ceq [gen] : 
-        Pi |- (N) \eqv((Phi and \eq(Z,T1)) or (Phi' and \eq(Z, T2)), \exists(Xs, \eq(Z,T) and ((Phi and EQL) or (Phi' and EQR)))) [gen] ; = true 
+        Pi |- (N) \eqv((Phi and \eq(Z,T1)) or (Phi' and \eq(Z, T2)), 
+                        \exists(Xs, \eq(Z,T) and ((Phi and EQL) or (Phi' and EQR)))) [gen] ; = true 
      if isFunctional(T1) /\ isFunctional(T2) /\ 
         (Sym1, Args1) := destruct(T1) /\ 
         (Sym2, Args2) := destruct(T2) /\ 
@@ -283,8 +285,11 @@ mod CHECKER is
 
     ceq [e-context] : 
         Pi |- (N) \eqv(\exists(Xs, Phi and Tp1),\exists(Xs, Phi and Tp2)) [e-context(I1)] ; = true 
-       if I1 < N /\
-          I1 \eqv(Tp1, Tp2) in Pi .
+       if I1 < N /\ I1 \eqv(Tp1, Tp2) in Pi .
+
+    ceq [e-scope] : 
+        Pi |- (N) \eqv(\exists(Xs, Tp1) and Tp2,\exists(Xs, Tp1 and Tp2)) [e-scope] ; = true 
+       if noneIn(Xs, vars(Tp2)) .
 
     ceq [eq-tranz] : Pi |- (N) \eq(Tp1, Tp2) [eq-tranz, I1, I2] ; = true  
       if I1 < N /\ I2 < N /\
