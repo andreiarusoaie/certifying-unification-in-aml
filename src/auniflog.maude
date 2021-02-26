@@ -82,6 +82,10 @@ endm
 *** ) .
 
 
+rew in PRETTY : gen-proof(
+  \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(6))),
+  \app(\app(\symb(1), \evar(7)), \app(\app(\symb(1), \app(\symb(2), \evar(7))), \evar(5))) 
+) .
 rew in PRETTY : pretty((gen-proof(
   \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(6))),
   \app(\app(\symb(1), \evar(7)), \app(\app(\symb(1), \app(\symb(2), \evar(7))), \evar(5))) 

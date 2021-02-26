@@ -142,7 +142,8 @@ mod PROOF-GENERATION is
           (
             (K)     \eqv((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)), 
                          \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )) [gen];
-            
+            (K + 1) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
+                         \exists(vars(Trm'), (Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )))) [e-context(K)];
           ),
              K + 6, T }
       if subst-pair(Y, Trm') := collapse(SL) /\
@@ -154,7 +155,6 @@ mod PROOF-GENERATION is
           EQR := phi-right(Eqs') /\
           T := prec(NewVs, prec(rem(Z, Vs), ((Trm' and ((Phi and EQL) or (Phi' and EQR)))[Trm / Z]) )) .
       
-
     sort OptionalProof .
     op {_,_} : Proof Nat -> OptionalProof .
     op gen-tranz : TermPattern TermPattern Nat -> OptionalProof .
