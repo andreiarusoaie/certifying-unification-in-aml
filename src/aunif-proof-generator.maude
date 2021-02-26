@@ -149,6 +149,11 @@ mod PROOF-GENERATION is
 
             (K + 3) \eqv(\exists(vars(Trm'), Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )),
                          \exists(vars(Trm'), \exists(NewVs, Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))) ) [e-closure(K + 2)];
+            (K + 4) \eqv(\exists(vars(Trm'), \exists(NewVs, Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))),
+                         \exists((vars(Trm') ; NewVs), Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) ) [e-set];
+            (K + 5) \eqv(\exists(vars(Trm'), Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )),
+                         \exists((vars(Trm') ; NewVs), Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) ) [eqv-tranz(K + 3, K + 4)];
+
 
           ),
              K + 6, T }
@@ -164,7 +169,7 @@ mod PROOF-GENERATION is
     sort OptionalProof .
     op {_,_} : Proof Nat -> OptionalProof .
     op gen-tranz : TermPattern TermPattern Nat -> OptionalProof .
-    ceq gen-tranz(INIT, TP', K) = { (K) \eq(INIT, TP') [eq-tranz, K - 6, K - 1]; , K + 1 }
+    ceq gen-tranz(INIT, TP', K) = { (K) \eqv(INIT, TP') [eqv-tranz(K - 6, K - 1)]; , K + 1 }
       if K > 5 .
     eq gen-tranz(INIT, TP', K) = { .Proof, K } [owise] .
 
