@@ -122,7 +122,7 @@ mod PROOF-GENERATION is
     vars Eqs Eqs' Eqs1 Eqs2 : Equations .
     vars N N' : Nat .
     vars SL : SubstList .
-    vars Phi Phi' T T1 T2 Trm Trm' EQL EQR TP TP' INIT : TermPattern .
+    vars Phi Phi' T T1 T2 Trm Trm' EQL EQR TP TP' INIT TP1 TP2 : TermPattern .
     vars X Y Z : EVar .
     vars Vs NewVs : Vars .
     vars Ps : Pairs .
@@ -133,12 +133,12 @@ mod PROOF-GENERATION is
     sort Result .
     op {_,_,_} : Proof Nat TermPattern -> Result .
 
-    op process : AUnifProblem AUnifProblem TermPattern TermPattern Nat -> Result .
+    op process : AUnifProblem AUnifProblem TermPattern TermPattern Nat TermPattern TermPattern -> Result .
 
     ceq process(
           < SL | Eqs T1 ={ Z } T2 | N > ,
           < subst-cons(subst-pair(Z, Trm), SL) | Eqs Eqs' | N' > ,
-          TP, INIT, K) = {
+          TP, INIT, K, TP1, TP2) = {
           (
             (K)     \eqv((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)), 
                          \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )) [gen];
@@ -154,9 +154,55 @@ mod PROOF-GENERATION is
             (K + 5) \eqv(\exists(vars(Trm'), Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )),
                          \exists((vars(Trm') ; NewVs), Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) ) [eqv-tranz(K + 3, K + 4)];
 
+            (K + 6) \eqv( \exists(Z, (Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])),
+                          \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) [e-scope];
 
+            (K + 7) \eqv( \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, (Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))),
+                          \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [e-closure(K + 6)];
+            (K + 8) \eqv( \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, (Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
+                          \exists( (rem(Z, (NewVs ; vars(Trm'))) ; Z), (Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [e-set];
+            
+            (K + 9) \eqv (\exists( (rem(Z, (NewVs ; vars(Trm'))) ; Z), (Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])),
+                          \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 8, K + 7)];
+
+
+            (K + 10) \eqv(\exists(Z, Trm' and \eq(Z,Trm)) , Trm'[Trm / Z]) [sbst1];
+
+            (K + 11) \eqv(\exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])), 
+                         \exists(NewVs, (Trm'[Trm / Z])                 and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))  ) [e-context(K + 10)];
+
+
+            (K + 12) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
+                          \exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))  ) [e-closure(K + 11)];
+
+
+            (K + 13) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
+                          \exists((rem(Z, vars(Trm')) ; NewVs), \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [e-set];
+
+            (K + 14) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))),
+                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [e-set];
+
+            (K + 15) \eqv(\exists((rem(Z, vars(Trm')) ; NewVs), \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])),
+                          \exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))) [eqv-tranz(K + 13, K + 12)];
+
+            (K + 16) \eqv(\exists((rem(Z, vars(Trm')) ; NewVs), \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])),
+                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [eqv-tranz(K + 15, K + 14)];
+
+
+            (K + 17) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
+                          \exists((vars(Trm') ; NewVs), Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) ) [eqv-tranz(K + 1, K + 5)];
+
+            (K + 18) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
+                          \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 17, K + 9)];
+
+
+            (K + 20) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
+                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 16, K + 18)];
+
+            (K + 21) \eqv(TP1 or TP2 ,
+                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [eqv-tranz(K - 1, K + 20)];
           ),
-             K + 6, T }
+             K + 22, T }
       if subst-pair(Y, Trm') := collapse(SL) /\
           Vs := vars(Trm') /\
           NewVs := vars(Trm) /\ 
@@ -198,17 +244,17 @@ mod PROOF-GENERATION is
     vars A1 A2 : AUnifProblem .
     vars Tr : Trace .
 
-    op process-trace : Trace TermPattern TermPattern Nat -> Proof .
-    ceq process-trace((A1 ;; A2 ;; Tr), TP, Phi, K) = Prf process-trace((A2 ;; Tr), TP', Phi, NewK) 
-        if { Prf, NewK, TP' } := process(A1, A2, TP, Phi, K)  .
-    eq process-trace((A1 ;; end), TP, Phi, K) = .Proof .
+    op process-trace : Trace TermPattern TermPattern Nat TermPattern TermPattern -> Proof .
+    ceq process-trace((A1 ;; A2 ;; Tr), TP, Phi, K, T1, T2) = Prf process-trace((A2 ;; Tr), TP', Phi, NewK, T1, T2) 
+        if { Prf, NewK, TP' } := process(A1, A2, TP, Phi, K, T1, T2)  .
+    eq process-trace((A1 ;; end), TP, Phi, K, T1, T2) = .Proof .
 
     
     op gen-proof : TermPattern TermPattern -> Proof .
 
     crl gen-proof(T1, T2) =>
         (1) \eqv(T1 or T2, Phi) [or-gen];
-        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 2)
+        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 2, T1, T2)
       if  I := freshid(T1, T2) /\ Z := \evar(I) /\
           Phi := \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2))) /\ 
           < subst-cons(subst-pair(Z, Z), subst-nil) | T1 ={ Z } T2 | I + 2 > ;; end => (Tr ;; A2 ;; end) /\
@@ -227,4 +273,3 @@ mod PROOF-GENERATION is
     ceq max((\evar(Id) ; Vs), I) = max(Vs, I) if I >= Id .
     ceq max((\evar(Id) ; Vs), I) = max(Vs, Id) if I < Id .
 endm
-
