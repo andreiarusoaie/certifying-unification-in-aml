@@ -155,15 +155,14 @@ mod PROOF is
     op occurs-check           : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
 
     --- antiunification
-    op and-assoc        : -> RuleName . --- A and (B and C) <-> (A and B) and C
-    op or-gen           : -> RuleName . --- t1 or t2 <-> exists x.x and (x = t1 or x = t2)
-    op gen              : -> RuleName . --- gen
-    op e-context        : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
-    op e-scope          : -> RuleName . *** exists x. phi1 /\ phi2   <->  exists x . (phi1 /\ phi2), x not in fv(phi2)
-    op e-closure        : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi2 <-> exists x . phi2'
-    op e-set            : -> RuleName . --- \exists X.\exists Y. phi <-> \exists X,Y . phi
+    op or-gen           : -> RuleName .       --- t1 or t2 <-> exists x.x and (x = t1 or x = t2)
+    op gen              : -> RuleName .       --- gen
+    op e-context        : Nat -> RuleName .   --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
+    op e-scope          : -> RuleName .       *** - (exists x. phi1) /\ phi2   <->  exists x . (phi1 /\ phi2), x not in fv(phi2)
+    op e-intro          : Nat -> RuleName .   --- if phi2 <-> phi2' then exists x . phi2 <-> exists x . phi2'
+    op e-set            : -> RuleName .       --- \exists X.\exists Y. phi <-> \exists X,Y . phi
     op eqv-tranz        : Nat Nat -> RuleName . --- if phi1 <-> phi2 and  phi2 <-> phi3 then  phi1 <-> phi3
-    op sbst1            : -> RuleName . --- exists z. t and z = u  <-> t[u/z] . 
+    op sbst1            : -> RuleName .          --- exists z. t and z = u  <-> t[u/z] . 
 ---    op exists-elim            : -> RuleName . --- exists x1 ... x ... xk . x = t and phi  <-> exists x1 ... exists xk . phi[t/x]
 ---    op exists-equiv           : -> RuleName . --- exists x . exists y . phi <-> exists y . exists x . phi
 ---    op eq-elim                : -> RuleName . --- phi1 = phi2 /\ psi[phi1/x] -> psi[phi2/x]
@@ -272,7 +271,7 @@ mod CHECKER is
         EQR == zipAnd(Args, Args2) /\ 
         Xs == vars(T) /\ 
         noneIn(Xs, vars(T1)) /\ 
-        noneIn(Xs, vars(T2)).
+        noneIn(Xs, vars(T2)) .
         
 
     ceq [gen] : 
@@ -287,7 +286,7 @@ mod CHECKER is
         EQR == zipAnd(Args, Args2) /\ 
         Xs == vars(T) /\ 
         noneIn(Xs, vars(T1)) /\ 
-        noneIn(Xs, vars(T2)).
+        noneIn(Xs, vars(T2)) .
 
     ceq [e-context] : 
         Pi |- (N) \eqv(\exists(Xs, Phi and Tp1),\exists(Xs, Phi and Tp2)) [e-context(I1)] ; = true 
@@ -297,8 +296,8 @@ mod CHECKER is
         Pi |- (N) \eqv(\exists(Xs, Tp1) and Tp2,\exists(Xs, Tp1 and Tp2)) [e-scope] ; = true 
        if noneIn(Xs, vars(Tp2)) .
 
-    ceq [e-closure] : 
-        Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp2)) [e-closure(I1)] ; = true 
+    ceq [e-introduction] : 
+        Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp2)) [e-intro(I1)] ; = true 
        if I1 < N /\ I1 \eqv(Tp1, Tp2) in Pi .
 
     eq [e-set] : Pi |- (N) \eqv(\exists(Xs, \exists(Ys, Phi)), \exists((Xs ; Ys), Phi)) [e-set] ; = true .
