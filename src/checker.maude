@@ -156,11 +156,17 @@ mod PROOF is
 
     --- antiunification
     op or-gen           : -> RuleName .       --- t1 or t2 <-> exists x.x and (x = t1 or x = t2)
+    op term-gen         : -> RuleName .       --- t <-> exists z. z /\ (z = t) , z not in vars(t)
+
     op gen              : -> RuleName .       --- gen
     op e-context        : Nat -> RuleName .   --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
     op e-scope          : -> RuleName .       *** - (exists x. phi1) /\ phi2   <->  exists x . (phi1 /\ phi2), x not in fv(phi2)
     op e-intro          : Nat -> RuleName .   --- if phi2 <-> phi2' then exists x . phi2 <-> exists x . phi2'
-    op e-set            : -> RuleName .       --- \exists X.\exists Y. phi <-> \exists X,Y . phi
+    op e-set            : -> RuleName .       --- exists X.\exists Y. phi <-> \exists X,Y . phi
+    op e-collapse       : -> RuleName .       --- exists x.phi1) \/ (exists x.phi2) <-> exists x. (phi1 \/ phi2)
+
+    op and-or-distr     : -> RuleName .         --- phi /\ phi1) or (phi /\ phi2)  <-> phi /\ (phi1 or phi2) 
+    op eqv-or           : Nat Nat -> RuleName . --- if phi1 <-> phi2 and psi1 <-> psi2 then phi1 or psi1 <-> phi2 or psi2 
     op eqv-tranz        : Nat Nat -> RuleName . --- if phi1 <-> phi2 and  phi2 <-> phi3 then  phi1 <-> phi3
     op sbst1            : -> RuleName .          --- exists z. t and z = u  <-> t[u/z] . 
 ---    op exists-elim            : -> RuleName . --- exists x1 ... x ... xk . x = t and phi  <-> exists x1 ... exists xk . phi[t/x]
@@ -256,6 +262,10 @@ mod CHECKER is
       if isFunctional(Tp1) /\ isFunctional(Tp2) /\ not(X in fv(Tp1)) /\ not(X in fv(Tp2)) .
 
 
+    ceq [term-gen] : Pi |- (N) \eqv(Tp, \exists(X, X and \eq(X, Tp))) [term-gen] ; = true
+      if isFunctional(Tp) .
+      
+
     vars T1 T2 EQL EQR Sym1 Sym2 Sym : TermPattern .
     vars Args1 Args2 Args : TermPatternList .
     var Z : EVar .
@@ -298,14 +308,24 @@ mod CHECKER is
 
     ceq [e-introduction] : 
         Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp2)) [e-intro(I1)] ; = true 
-       if I1 < N /\ I1 \eqv(Tp1, Tp2) in Pi .
+      if I1 < N /\ I1 \eqv(Tp1, Tp2) in Pi .
 
     eq [e-set] : Pi |- (N) \eqv(\exists(Xs, \exists(Ys, Phi)), \exists((Xs ; Ys), Phi)) [e-set] ; = true .
+
+    eq [e-collapse] : Pi |- (N) \eqv(\exists(Xs, Tp1) or \exists(Xs, Tp2), \exists(Xs, Tp1 or Tp2)) [e-collapse] ; = true .
+    
+
+    eq [and-or-distr]: Pi |- (N) \eqv((Phi and Tp1) or (Phi and Tp2), Phi and (Tp1 or Tp2)) [and-or-distr] ; = true .
 
     ceq [eqv-tranz] : Pi |- (N) \eqv(Tp1, Tp2) [eqv-tranz(I1,I2)] ; = true  
       if I1 < N /\ I2 < N /\
           (P1 ((I1) \eqv(Tp1, T) Pr  ;) P2) := Pi /\ 
           (P3 ((I2) \eqv(T, Tp2) Pr' ;) P4) := Pi .
+
+    ceq [eqv-or] : Pi |- (N) \eqv(Tp or Phi, Tp' or Phi') [eqv-or(I1,I2)] ; = true  
+      if I1 < N /\ I2 < N /\
+          (P1 ((I1) \eqv(Tp, Tp') Pr  ;) P2) := Pi /\ 
+          (P3 ((I2) \eqv(Phi, Phi') Pr' ;) P4) := Pi .
 
     ceq [sbst1] : Pi |- (N) \eqv(\exists(X, Tp and \eq(X,Tp1)), Tp2 ) [sbst1] ; = true 
       if Tp2 == (Tp[Tp1 / X]) . 

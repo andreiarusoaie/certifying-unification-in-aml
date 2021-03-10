@@ -254,7 +254,15 @@ mod PROOF-GENERATION is
 
     crl gen-proof(T1, T2) =>
         (1) \eqv(T1 or T2, Phi) [or-gen];
-        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 2, T1, T2)
+        (2) \eqv(T1, \exists(Z, Z and \eq(Z, T1))) [term-gen];
+        (3) \eqv(T2, \exists(Z, Z and \eq(Z, T2))) [term-gen];
+        (4) \eqv(T1 or T2, \exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2))) [eqv-or(2,3)];
+        (5) \eqv(\exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2)), \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [e-collapse];
+        (6) \eqv((Z and \eq(Z, T1)) or (Z and \eq(Z, T2)), Z and (\eq(Z, T1) or \eq(Z, T2))) [and-or-distr];
+        (7) \eqv(\exists(Z, (Z and \eq(Z, T1)) or (Z and \eq(Z, T2))), \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [e-intro(6)];
+        (8) \eqv(T1 or T2, \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [eqv-tranz(4,5)];
+        (9) \eqv(T1 or T2, \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [eqv-tranz(8,7)];
+        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 10, T1, T2)
       if  I := freshid(T1, T2) /\ Z := \evar(I) /\
           Phi := \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2))) /\ 
           < subst-cons(subst-pair(Z, Z), subst-nil) | T1 ={ Z } T2 | I + 2 > ;; end => (Tr ;; A2 ;; end) /\
