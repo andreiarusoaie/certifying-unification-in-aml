@@ -132,49 +132,45 @@ mod PROOF is
 
     sort RuleName .
 
-    --- FOL 
-    op tauto-context          :     -> RuleName . --- if phi -> phi' then psi and phi -> psi and phi'
-    op tauto-imp-refl         :     -> RuleName . --- phi -> phi
-    op tauto-imp-tranz        :     -> RuleName . --- if (phi1 -> phi) (phi -> phi2) then (phi1 -> phi2)
-    op tauto-and-simpl        :     -> RuleName . --- phi and phi -> phi 
-    op tauto-and-expand       :     -> RuleName . --- phi -> phi and phi
-    op tauto-and-unit         :     -> RuleName . --- phi and true -> phi 
-    op tauto-and-exp-unit     :     -> RuleName . --- phi -> phi and true
-    op tauto-and-bot          :     -> RuleName . --- phi and false -> false
-    op tauto-bot-elim         :     -> RuleName . --- bot -> phi
-    op tauto-equality-id      :     -> RuleName . --- phi = phi -> true 
-    op tauto-equality-refl    :     -> RuleName . --- true -> phi = phi
-    op equality-symmetry      :     -> RuleName . --- phi = phi' -> phi' = phi
-    op and-eqv-intro          : Nat -> RuleName . --- if phi1 <-> phi2 then (phi and phi1 <-> phi and phi2)
+    --- FOL tautologies
+    op tauto-context      :         -> RuleName . --- if phi -> phi' then psi and phi -> psi and phi'
+    op tauto-imp-refl     :         -> RuleName . --- phi -> phi
+    op tauto-imp-tranz    :         -> RuleName . --- if (phi1 -> phi) (phi -> phi2) then (phi1 -> phi2)
+    op tauto-and-simpl    :         -> RuleName . --- phi and phi -> phi 
+    op tauto-and-expand   :         -> RuleName . --- phi -> phi and phi
+    op tauto-and-unit     :         -> RuleName . --- phi and true -> phi 
+    op tauto-and-exp-unit :         -> RuleName . --- phi -> phi and true
+    op tauto-and-bot      :         -> RuleName . --- phi and false -> false
+    op tauto-bot-elim     :         -> RuleName . --- bot -> phi
+    op and-eqv-intro      : Nat     -> RuleName . --- if phi1 <-> phi2 then (phi and phi1 <-> phi and phi2)
+    op and-or-distr       :         -> RuleName . --- phi /\ phi1) or (phi /\ phi2)  <-> phi /\ (phi1 or phi2) 
+    op eqv-or             : Nat Nat -> RuleName . --- if phi1 <-> phi2 and psi1 <-> psi2 then phi1 or psi1 <-> phi2 or psi2 
+    op eqv-tranz          : Nat Nat -> RuleName . --- if phi1 <-> phi2 and  phi2 <-> phi3 then  phi1 <-> phi3
 
-    --- TERM theory related rules
+    --- equality
+    op tauto-equality-id      : -> RuleName . --- phi = phi -> true 
+    op tauto-equality-refl    : -> RuleName . --- true -> phi = phi
+    op equality-symmetry      : -> RuleName . --- phi = phi' -> phi' = phi
     op equality-elimination   : -> RuleName . --- x = t and phi -> phi[t/x]
     op equality-introduction1 : -> RuleName . --- functional(t) /\ phi[t/x] -> x = t and phi
-    op axiom-no-confusion-I   : -> RuleName . --- f == g -> \bot 
-    op axiom-no-confusion-II  : -> RuleName . --- f(t) = f(t') -> f = t'
-    op axiom-5.24.3-1         : -> RuleName . --- t1 and t2 -> t1 and (t1 = t2) 
-    op axiom-5.24.3-2         : -> RuleName . --- t1 and (t1 = t2) -> t1 and t2
-    op axiom-functional       : -> RuleName . --- isFunctional(phi)
-    op occurs-check           : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
 
-    --- antiunification
-    op term-gen         : -> RuleName .       --- t <-> exists z. z /\ (z = t) , z not in vars(t)
+    --- TERM theory related rules
+    op axiom-no-confusion-I  : -> RuleName . --- f == g -> \bot 
+    op axiom-no-confusion-II : -> RuleName . --- f(t) = f(t') -> f = t'
+    op axiom-5.24.3-1        : -> RuleName . --- t1 and t2 -> t1 and (t1 = t2) 
+    op axiom-5.24.3-2        : -> RuleName . --- t1 and (t1 = t2) -> t1 and t2
+    op axiom-functional      : -> RuleName . --- isFunctional(phi)
+    op occurs-check          : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
 
-    op e-context        : Nat -> RuleName .   --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
-    op e-scope          : -> RuleName .       *** - (exists x. phi1) /\ phi2   <->  exists x . (phi1 /\ phi2), x not in fv(phi2)
-    op e-intro          : Nat -> RuleName .   --- if phi2 <-> phi2' then exists x . phi2 <-> exists x . phi2'
-    op e-set            : -> RuleName .       --- exists X.\exists Y. phi <-> \exists X,Y . phi
-    op e-collapse       : -> RuleName .       --- exists x.phi1) \/ (exists x.phi2) <-> exists x. (phi1 \/ phi2)
-    op e-gen            : -> RuleName .       ---- z = f(t1 .. tn)  <->  exists z1..zn . z = f(z1 .. zn) /\ (z1 = t1 /\ ... /\ zn = tn)
-
-    op and-or-distr     : -> RuleName .         --- phi /\ phi1) or (phi /\ phi2)  <-> phi /\ (phi1 or phi2) 
-    op eqv-or           : Nat Nat -> RuleName . --- if phi1 <-> phi2 and psi1 <-> psi2 then phi1 or psi1 <-> phi2 or psi2 
-    op eqv-tranz        : Nat Nat -> RuleName . --- if phi1 <-> phi2 and  phi2 <-> phi3 then  phi1 <-> phi3
-    op sbst1            : -> RuleName .          --- exists z. t and z = u  <-> t[u/z] . 
----    op exists-elim            : -> RuleName . --- exists x1 ... x ... xk . x = t and phi  <-> exists x1 ... exists xk . phi[t/x]
----    op exists-equiv           : -> RuleName . --- exists x . exists y . phi <-> exists y . exists x . phi
----    op eq-elim                : -> RuleName . --- phi1 = phi2 /\ psi[phi1/x] -> psi[phi2/x]
----    op imp-and-elim           : -> RuleName . --- phi -> phi' if |- psi and phi -> phi'   /\  |- psi
+    --- antiunification only
+    op term-gen   :     -> RuleName . --- t <-> exists z. z /\ (z = t) , z not in vars(t)
+    op sbst1      :     -> RuleName . --- exists z. t and z = u  <-> t[u/z] . 
+    op e-context  : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
+    op e-scope    :     -> RuleName . --- exists x. phi1) /\ phi2   <->  exists x . (phi1 /\ phi2), x not in fv(phi2)
+    op e-intro    : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi2 <-> exists x . phi2'
+    op e-set      :     -> RuleName . --- exists X.\exists Y. phi <-> \exists X,Y . phi
+    op e-collapse :     -> RuleName . --- exists x.phi1) \/ (exists x.phi2) <-> exists x. (phi1 \/ phi2)
+    op e-gen      :     -> RuleName . ---- z = f(t1 .. tn)  <->  exists z1..zn . z = f(z1 .. zn) /\ (z1 = t1 /\ ... /\ zn = tn)
 endm
 
 
