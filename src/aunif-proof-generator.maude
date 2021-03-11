@@ -126,8 +126,8 @@ mod PROOF-GENERATION is
     vars X Y Z : EVar .
     vars Vs NewVs : Vars .
     vars Ps : Pairs .
-    vars I K NewK Id : Int .
-    vars Prf : Proof .
+    vars I K NewK Id Index : Int .
+    vars Prf DecProof : Proof .
     
 
     sort Result .
@@ -135,13 +135,58 @@ mod PROOF-GENERATION is
 
     op process : AUnifProblem AUnifProblem TermPattern TermPattern Nat TermPattern TermPattern -> Result .
 
+
+    *** K Phi Phi' Z T1 T2 Trm EQL EQR NewVs
+    sort OptionalProof .
+    op {_,_} : Proof Nat -> OptionalProof . 
+    op dec-proof : Int TermPattern TermPattern EVar TermPattern TermPattern TermPattern TermPattern TermPattern Vars -> OptionalProof .
+    *** eq dec-proof(K, Phi, Phi', Z, T1, T2, Trm, EQL, EQR, NewVs) = 
+    ***         { (K) \eqv((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)), 
+    ***                    \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )) [e-gen]; 
+    ***           , K } . 
+
+    eq dec-proof(K, Phi, Phi', Z, T1, T2, Trm, EQL, EQR, NewVs) = 
+            {
+              (K) \eqv(\eq(Z, T1), \exists(NewVs, \eq(Z, Trm) and EQL)) [e-gen]; 
+              (K + 1) \eqv(Phi and \eq(Z, T1), Phi and \exists(NewVs, \eq(Z, Trm) and EQL)) [and-eqv-intro(K)];
+              (K + 2) \eqv(Phi and \exists(NewVs, \eq(Z, Trm) and EQL),
+                           \exists(NewVs, Phi and \eq(Z, Trm) and EQL)) [e-scope];
+              (K + 3) \eqv(Phi and \eq(Z, T1), \exists(NewVs, Phi and \eq(Z, Trm) and EQL)) [eqv-tranz(K + 1, K + 2)];
+
+              (K + 4) \eqv(\eq(Z, T2), \exists(NewVs, \eq(Z, Trm) and EQR)) [e-gen]; 
+              (K + 5) \eqv(Phi' and \eq(Z, T2), Phi' and \exists(NewVs, \eq(Z, Trm) and EQR)) [and-eqv-intro(K + 4)];
+              (K + 6) \eqv(Phi' and \exists(NewVs, \eq(Z, Trm) and EQR),
+                           \exists(NewVs, Phi' and \eq(Z, Trm) and EQR)) [e-scope];
+              (K + 7) \eqv(Phi' and \eq(Z, T2), \exists(NewVs, Phi' and \eq(Z, Trm) and EQR)) [eqv-tranz(K + 5, K + 6)];
+
+              (K + 8) \eqv( (Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)) ,
+                             \exists(NewVs, Phi and \eq(Z, Trm) and EQL) or  \exists(NewVs, Phi' and \eq(Z, Trm) and EQR)) [eqv-or(K + 3, K + 7)];
+
+              (K + 9) \eqv(\exists(NewVs, Phi and \eq(Z, Trm) and EQL) or  \exists(NewVs, Phi' and \eq(Z, Trm) and EQR), 
+                           \exists(NewVs, (Phi and \eq(Z, Trm) and EQL) or  (Phi' and \eq(Z, Trm) and EQR)) ) [e-collapse]; 
+
+
+              (K + 10) \eqv( (Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)) ,
+                             \exists(NewVs, (Phi and \eq(Z, Trm) and EQL) or  (Phi' and \eq(Z, Trm) and EQR)) ) [eqv-tranz(K + 8, K + 9)]; 
+
+              (K + 11) \eqv( (Phi and \eq(Z, Trm) and EQL) or  (Phi' and \eq(Z, Trm) and EQR),
+                            \eq(Z, Trm) and ((Phi and EQL) or (Phi' and EQR))) [and-or-distr];
+
+              (K + 12) \eqv( \exists(NewVs, (Phi and \eq(Z, Trm) and EQL) or  (Phi' and \eq(Z, Trm) and EQR)),
+                             \exists(NewVs, \eq(Z, Trm) and ((Phi and EQL) or (Phi' and EQR)))) [e-intro(K + 11)];
+
+              (K + 13) \eqv( (Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)) ,
+                             \exists(NewVs, \eq(Z, Trm) and ((Phi and EQL) or (Phi' and EQR)))) [eqv-tranz(K + 10, K + 12)];
+
+              , K + 13 } . 
+    
+
     ceq process(
           < SL | Eqs T1 ={ Z } T2 | N > ,
           < subst-cons(subst-pair(Z, Trm), SL) | Eqs Eqs' | N' > ,
-          TP, INIT, K, TP1, TP2) = {
+          TP, INIT, Index, TP1, TP2) = {
           (
-            (K)     \eqv((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)), 
-                         \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )) [gen];
+            DecProof 
             (K + 1) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
                          \exists(vars(Trm'), (Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )))) [e-context(K)];
             (K + 2) \eqv( Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) ),
@@ -200,7 +245,7 @@ mod PROOF-GENERATION is
                           \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 16, K + 18)];
 
             (K + 21) \eqv(TP1 or TP2 ,
-                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [eqv-tranz(K - 1, K + 20)];
+                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [eqv-tranz(Index - 1, K + 20)];
           ),
              K + 22, T }
       if subst-pair(Y, Trm') := collapse(SL) /\
@@ -210,14 +255,9 @@ mod PROOF-GENERATION is
           Phi' := phi-right(Eqs) /\
           EQL := phi-left(Eqs') /\
           EQR := phi-right(Eqs') /\
+          {DecProof, K} := dec-proof(Index, Phi, Phi', Z, T1, T2, Trm, EQL, EQR, NewVs) /\
           T := prec(NewVs, prec(rem(Z, Vs), ((Trm' and ((Phi and EQL) or (Phi' and EQR)))[Trm / Z]) )) .
       
-    sort OptionalProof .
-    op {_,_} : Proof Nat -> OptionalProof .
-    op gen-tranz : TermPattern TermPattern Nat -> OptionalProof .
-    ceq gen-tranz(INIT, TP', K) = { (K) \eqv(INIT, TP') [eqv-tranz(K - 6, K - 1)]; , K + 1 }
-      if K > 5 .
-    eq gen-tranz(INIT, TP', K) = { .Proof, K } [owise] .
 
     op get-eqs : AUnifProblem -> Equations .
     eq get-eqs(< SL | Eqs | K >) = Eqs .
@@ -253,16 +293,15 @@ mod PROOF-GENERATION is
     op gen-proof : TermPattern TermPattern -> Proof .
 
     crl gen-proof(T1, T2) =>
-        (1) \eqv(T1 or T2, Phi) [or-gen];
-        (2) \eqv(T1, \exists(Z, Z and \eq(Z, T1))) [term-gen];
-        (3) \eqv(T2, \exists(Z, Z and \eq(Z, T2))) [term-gen];
-        (4) \eqv(T1 or T2, \exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2))) [eqv-or(2,3)];
-        (5) \eqv(\exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2)), \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [e-collapse];
-        (6) \eqv((Z and \eq(Z, T1)) or (Z and \eq(Z, T2)), Z and (\eq(Z, T1) or \eq(Z, T2))) [and-or-distr];
-        (7) \eqv(\exists(Z, (Z and \eq(Z, T1)) or (Z and \eq(Z, T2))), \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [e-intro(6)];
-        (8) \eqv(T1 or T2, \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [eqv-tranz(4,5)];
-        (9) \eqv(T1 or T2, \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [eqv-tranz(8,7)];
-        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 10, T1, T2)
+        (1) \eqv(T1, \exists(Z, Z and \eq(Z, T1))) [term-gen];
+        (2) \eqv(T2, \exists(Z, Z and \eq(Z, T2))) [term-gen];
+        (3) \eqv(T1 or T2, \exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2))) [eqv-or(1,2)];
+        (4) \eqv(\exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2)), \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [e-collapse];
+        (5) \eqv((Z and \eq(Z, T1)) or (Z and \eq(Z, T2)), Z and (\eq(Z, T1) or \eq(Z, T2))) [and-or-distr];
+        (6) \eqv(\exists(Z, (Z and \eq(Z, T1)) or (Z and \eq(Z, T2))), \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [e-intro(5)];
+        (7) \eqv(T1 or T2, \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [eqv-tranz(3,4)];
+        (8) \eqv(T1 or T2, \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [eqv-tranz(7,6)];
+        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 9, T1, T2)
       if  I := freshid(T1, T2) /\ Z := \evar(I) /\
           Phi := \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2))) /\ 
           < subst-cons(subst-pair(Z, Z), subst-nil) | T1 ={ Z } T2 | I + 2 > ;; end => (Tr ;; A2 ;; end) /\
