@@ -293,8 +293,8 @@ mod PROOF-GENERATION is
     op gen-proof : TermPattern TermPattern -> Proof .
 
     crl gen-proof(T1, T2) =>
-        (1) \eqv(T1, \exists(Z, Z and \eq(Z, T1))) [term-gen];
-        (2) \eqv(T2, \exists(Z, Z and \eq(Z, T2))) [term-gen];
+        (1) \eqv(T1, \exists(Z, Z and \eq(Z, T1))) [sbst1];
+        (2) \eqv(T2, \exists(Z, Z and \eq(Z, T2))) [sbst1];
         (3) \eqv(T1 or T2, \exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2))) [eqv-or(1,2)];
         (4) \eqv(\exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2)), \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [e-collapse];
         (5) \eqv((Z and \eq(Z, T1)) or (Z and \eq(Z, T2)), Z and (\eq(Z, T1) or \eq(Z, T2))) [and-or-distr];

@@ -154,9 +154,8 @@ mod PROOF is
     op axiom-5.24.3-2        : -> RuleName . --- t1 and (t1 = t2) -> t1 and t2
     op axiom-functional      : -> RuleName . --- isFunctional(phi)
     op occurs-check          : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
-    op term-gen              :     -> RuleName . --- t <-> exists z. z /\ (z = t) , z not in vars(t)
-    op sbst1                 :     -> RuleName . --- exists z. t and z = u  <-> t[u/z] . 
-    op e-gen                 :     -> RuleName . ---- z = f(t1 .. tn)  <->  exists z1..zn . z = f(z1 .. zn) /\ (z1 = t1 /\ ... /\ zn = tn)
+    op sbst1                 : -> RuleName . --- exists z. t and z = u  <-> t[u/z] . 
+    op e-gen                 : -> RuleName . ---- z = f(t1 .. tn)  <->  exists z1..zn . z = f(z1 .. zn) /\ (z1 = t1 /\ ... /\ zn = tn)
 
     --- antiunification only
     op e-context  : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
@@ -252,9 +251,6 @@ mod CHECKER is
 
     ceq [oc] : Pi |- (N) \imp(\eq(X, Tp), \bot) [occurs-check] ; = true
       if X in vars(Tp) /\ isCompound(Tp) .
-
-    ceq [term-gen] : Pi |- (N) \eqv(Tp, \exists(X, X and \eq(X, Tp))) [term-gen] ; = true
-      if isFunctional(Tp) .
 
     ceq [sbst1] : Pi |- (N) \eqv(\exists(X, Tp and \eq(X,Tp1)), Tp2 ) [sbst1] ; = true 
       if Tp2 == (Tp[Tp1 / X]) . 
