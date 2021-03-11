@@ -6,9 +6,10 @@ mod PRETTY is
     DECLARATIONS
 
     op _-->_ : TermPattern TermPattern -> TermPattern .
+    op _<-->_ : TermPattern TermPattern -> TermPattern .
     op _===_ : TermPattern TermPattern -> TermPattern .
     op _`[_`] : TermPattern TermPattern -> TermPattern .
-    op ∃_._ : EVar TermPattern -> TermPattern .
+    op ∃_._ : Vars TermPattern -> TermPattern .
     op v : NzNat -> EVar .
 
     vars N : NzNat .
@@ -16,6 +17,7 @@ mod PRETTY is
     vars Pr : ProofRule .
     vars P1 P2 : Proof .
     vars X : EVar .
+    vars Xs : Vars .
 
     op pretty : Proof -> Proof [format(nm d)] .
     ops tt ff : -> TermPattern . *** true and false
@@ -27,11 +29,16 @@ mod PRETTY is
     --- eq prettyTermPattern(\imp(\bot, \bot)) = tt .  
     eq prettyTermPattern(\bot) = ff .
     eq prettyTermPattern(\imp(Tp1, Tp2)) = prettyTermPattern(Tp1) --> prettyTermPattern(Tp2) .
+    eq prettyTermPattern(\eqv(Tp1, Tp2)) = prettyTermPattern(Tp1) <--> prettyTermPattern(Tp2) .
     eq prettyTermPattern(\eq(Tp1, Tp2)) = prettyTermPattern(Tp1) === prettyTermPattern(Tp2) .
     eq prettyTermPattern(Tp1 and Tp2) = prettyTermPattern(Tp1) and prettyTermPattern(Tp2) .
     eq prettyTermPattern(Tp1 or Tp2) = prettyTermPattern(Tp1) or prettyTermPattern(Tp2) .
-    eq prettyTermPattern(\exists(X, Tp)) = ∃ prettyTermPattern(X) . prettyTermPattern(Tp) .
+    eq prettyTermPattern(\exists(Xs, Tp)) = ∃ prettyVars(Xs) . prettyTermPattern(Tp) .
 
+    op prettyVars : Vars -> Vars .
+    eq prettyVars(.Vars) = .Vars .
+    eq prettyVars( (X ; Xs) ) = prettyTermPattern(X) ; prettyVars(Xs) . 
+    
     PRETTYPRINT
     eq prettyTermPattern(\evar(N)) = v(N) [owise] .
 
