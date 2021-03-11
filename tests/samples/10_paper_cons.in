@@ -1,0 +1,3 @@
+variables: x, z
+symbols: cons, a
+problem: cons(x, a) =? cons(a, z)
