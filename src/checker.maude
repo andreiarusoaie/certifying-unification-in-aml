@@ -285,6 +285,8 @@ mod CHECKER is
          (Sym, Args) := destruct(T) /\
          Sym1 == Sym /\
          Xs == vars(T) /\
+         sizeV(Xs) == size(Args) /\ 
+         sizeV(Xs) == size(Args1) /\ 
          EQL == zipAnd(Args, Args1) /\
          noneIn(Xs, vars(T1)) .
 
@@ -332,6 +334,10 @@ mod CHECKER is
     subsort TermPattern < TermPatternList .
     op .TPList : -> TermPatternList .
     op _,,_ : TermPatternList TermPatternList -> TermPatternList [assoc id: .TPList] .
+    op size : TermPatternList -> Nat .
+    eq size(.TPList) = 0 .
+    eq size((Tp ,, TPL2)) = 1 + size(TPL2) .
+
 
     sort SymArgs .
     op (_,_) : TermPattern TermPatternList -> SymArgs .
