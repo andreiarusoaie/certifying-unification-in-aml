@@ -323,7 +323,7 @@ Checked:   true
 
 ```
 
-The output contains a single proof of the equality <img src="https://render.githubusercontent.com/render/math?math=t_1 \vee t_2 = \exists\overline{z}.t\wedge(\phi^{\sigma_1} \vee \phi^{\sigma_2})">.
+The output contains a single proof of the equivalence <img src="https://render.githubusercontent.com/render/math?math=t_1 \vee t_2 \leftrightarrow \exists\overline{z}.t\wedge(\phi^{\sigma_1} \vee \phi^{\sigma_2})">.
 
 ## Using the Maude scripts directly 
 
