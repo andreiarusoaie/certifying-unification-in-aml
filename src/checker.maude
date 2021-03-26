@@ -150,8 +150,8 @@ mod PROOF is
     --- TERM theory related rules
     op axiom-no-confusion-I  : -> RuleName . --- f == g -> \bot 
     op axiom-no-confusion-II : -> RuleName . --- f(t) = f(t') -> f = t'
-    op axiom-5.24.3-1        : -> RuleName . --- t1 and t2 -> t1 and (t1 = t2) 
-    op axiom-5.24.3-2        : -> RuleName . --- t1 and (t1 = t2) -> t1 and t2
+    op axiom-term-eq-intro   : -> RuleName . --- t1 and t2 -> t1 and (t1 = t2) 
+    op axiom-term-eq-elim    : -> RuleName . --- t1 and (t1 = t2) -> t1 and t2
     op axiom-functional      : -> RuleName . --- isFunctional(phi)
     op occurs-check          : -> RuleName . --- x == t -> \bot if x \in vars(t) and t is not var
     op sbst1                 : -> RuleName . --- exists z. t and z = u  <-> t[u/z] . 
@@ -244,8 +244,8 @@ mod CHECKER is
     ceq [axiom-no-confusion-II] : Pi |- (N) \imp(Tp1, Tp2) [axiom-no-confusion-II] ; = true
       if check-functional-rec(\imp(Tp2, Tp1)) .
 
-    eq [axiom-5.24.3-1] : Pi |- (N) \imp(Tp1 and Tp2, Tp1 and \eq(Tp1, Tp2)) [axiom-5.24.3-1] ; = true .
-    eq [axiom-5.24.3-2] : Pi |- (N) \imp(Tp1 and \eq(Tp1, Tp2), Tp1 and Tp2) [axiom-5.24.3-2] ; = true .
+    eq [axiom-term-eq-intro] : Pi |- (N) \imp(Tp1 and Tp2, Tp1 and \eq(Tp1, Tp2)) [axiom-term-eq-intro] ; = true .
+    eq [axiom-term-eq-elim]  : Pi |- (N) \imp(Tp1 and \eq(Tp1, Tp2), Tp1 and Tp2) [axiom-term-eq-elim] ; = true .
 
     ceq [axiom-functional] : Pi |- (N) Phi [axiom-functional] ; = true if check-functional-rec(Phi) .
 

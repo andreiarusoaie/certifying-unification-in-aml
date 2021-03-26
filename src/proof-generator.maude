@@ -134,7 +134,7 @@ mod PROOF-GENERATION is
         ((1) \imp(\eq(Tp, Tp'), \eq(Tp, Tp')) [tauto-imp-refl] ;
           Prf
           (K + 1) \imp(Tp and Phi, Tp and Phi') [tauto-context, K] ;
-          (K + 2) \imp(Tp and Tp', Tp and Phi)  [axiom-5.24.3-1] ;
+          (K + 2) \imp(Tp and Tp', Tp and Phi)  [axiom-term-eq-intro] ;
           (K + 3) \imp(Tp and Tp', Tp and Phi') [tauto-imp-tranz, K + 2, K + 1] ; )
       if < Tp =? Tp' | .Trace > => < U | Tr > /\ solved-form(U)  /\
           Prf  := gen-proof1-aux(Tr, 2, \eq(Tp, Tp')) /\
@@ -250,7 +250,7 @@ mod PROOF-GENERATION is
         ( (1) \imp(PhiS, PhiS) [tauto-imp-refl] ;
           Prf
           (K + 1) \imp(Tp and Phi, Tp and Phi') [tauto-context, K] ;
-          (K + 2) \imp(Tp and Phi', Tp and Tp')  [axiom-5.24.3-2] ;
+          (K + 2) \imp(Tp and Phi', Tp and Tp')  [axiom-term-eq-elim] ;
           (K + 3) \imp(Tp and Phi, Tp and Tp') [tauto-imp-tranz, K + 1, K + 2] ; )
       if < Tp =? Tp' | .Trace > => < U | Tr > /\ solved-form(U) /\
           PhiS := asPattern(U) /\
