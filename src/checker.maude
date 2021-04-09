@@ -139,7 +139,8 @@ mod PROOF is
     op and-or-distr       :         -> RuleName . --- phi /\ phi1) or (phi /\ phi2)  <-> phi /\ (phi1 or phi2) 
     op eqv-or             : Nat Nat -> RuleName . --- if phi1 <-> phi2 and psi1 <-> psi2 then phi1 or psi1 <-> phi2 or psi2 
     op eqv-tranz          : Nat Nat -> RuleName . --- if phi1 <-> phi2 and  phi2 <-> phi3 then  phi1 <-> phi3
-
+    op modus-ponens       : Nat Nat -> RuleName . --- modus ponens
+	  
     --- equality
     op tauto-equality-id      : -> RuleName . --- phi = phi -> true 
     op tauto-equality-refl    : -> RuleName . --- true -> phi = phi
@@ -226,6 +227,12 @@ mod CHECKER is
           (P1 ((I1) \eqv(Tp1, T) Pr  ;) P2) := Pi /\ 
           (P3 ((I2) \eqv(T, Tp2) Pr' ;) P4) := Pi .
 
+    ceq [modus-ponens] : Pi |- (N) Tp2 [modus-ponens(I1, I2)] ; = true
+      if I1 < N /\ I2 < N /\
+	  (P1 ((I1) Tp1 Pr  ;) P2) := Pi /\
+	  (I2 \eqv(Tp1, Tp2) in Pi) .
+
+    
     eq [tauto-equality-id] : Pi |- (N) \imp(\eq(Tp, Tp), \imp(\bot, \bot)) [tauto-equality-id] ; = true .
 
     eq [tauto-equality-refl] : Pi |- (N) \imp(\imp(\bot, \bot), \eq(Tp, Tp)) [tauto-equality-refl] ; = true .
@@ -252,7 +259,7 @@ mod CHECKER is
     ceq [oc] : Pi |- (N) \imp(\eq(X, Tp), \bot) [occurs-check] ; = true
       if X in vars(Tp) /\ isCompound(Tp) .
 
-    ceq [sbst1] : Pi |- (N) \eqv(\exists(X, Tp and \eq(X,Tp1)), Tp2 ) [sbst1] ; = true 
+    ceq [sbst1] : Pi |- (N) \exists(X, \eqv(Tp and \eq(X,Tp1), Tp2)) [sbst1] ; = true 
       if Tp2 == (Tp[Tp1 / X]) . 
 
     ceq [e-gen] : Pi |- (N) \eqv(\eq(Z, T1), \exists(Xs, \eq(Z, T) and EQL)) [e-gen] ; = true 
@@ -271,8 +278,12 @@ mod CHECKER is
 
     ceq [e-scope] : Pi |- (N) \eqv(\exists(Xs, Tp1) and Tp2,\exists(Xs, Tp1 and Tp2)) [e-scope] ; = true 
        if noneIn(Xs, vars(Tp2)) .
+    ceq [e-scope] : Pi |- (N) \eqv(\eqv(\exists(Xs, Tp1), Tp2),\exists(Xs, \eqv(Tp1, Tp2))) [e-scope] ; = true 
+       if noneIn(Xs, vars(Tp2)) .
     eq [e-scope] : Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp1)) [e-scope] ; = true . --- avoid matching issue
 
+
+    
     eq [e-collapse] : Pi |- (N) \eqv(\exists(Xs, Tp1) or \exists(Xs, Tp2), \exists(Xs, Tp1 or Tp2)) [e-collapse] ; = true .
     
     ceq [e-intro] : Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp2)) [e-intro(I1)] ; = true 

@@ -6,10 +6,7 @@ mod PRETTY is
     op cons : TermPattern TermPattern -> TermPattern .
     op succ : TermPattern -> TermPattern .
     op zero :  -> TermPattern .
-    ops a b : -> TermPattern .
-    op f : TermPattern TermPattern -> TermPattern .
-    ops x y z : -> EVar .
-    ops x1 z z1 z2 : -> EVar .
+    op x1 : -> EVar .
     op x2 : -> EVar .
     op l1 : -> EVar .
     op l2 : -> EVar .
@@ -38,8 +35,8 @@ mod PRETTY is
     --- eq prettyTermPattern(\imp(\bot, \bot)) = tt .  
     eq prettyTermPattern(\bot) = ff .
     eq prettyTermPattern(\imp(Tp1, Tp2)) = prettyTermPattern(Tp1) --> prettyTermPattern(Tp2) .
-    eq prettyTermPattern(\eq(Tp1, Tp2)) = prettyTermPattern(Tp1) === prettyTermPattern(Tp2) .
     eq prettyTermPattern(\eqv(Tp1, Tp2)) = prettyTermPattern(Tp1) <--> prettyTermPattern(Tp2) .
+    eq prettyTermPattern(\eq(Tp1, Tp2)) = prettyTermPattern(Tp1) === prettyTermPattern(Tp2) .
     eq prettyTermPattern(Tp1 and Tp2) = prettyTermPattern(Tp1) and prettyTermPattern(Tp2) .
     eq prettyTermPattern(Tp1 or Tp2) = prettyTermPattern(Tp1) or prettyTermPattern(Tp2) .
     eq prettyTermPattern(\exists(Xs, Tp)) = ∃ prettyVars(Xs) . prettyTermPattern(Tp) .
@@ -47,50 +44,24 @@ mod PRETTY is
     op prettyVars : Vars -> Vars .
     eq prettyVars(.Vars) = .Vars .
     eq prettyVars( (X ; Xs) ) = prettyTermPattern(X) ; prettyVars(Xs) . 
-
+    
     vars T1 T2 : TermPattern .
-    eq prettyTermPattern(\app(\app(\symb(100), T1), T2)) = f(prettyTermPattern(T1),prettyTermPattern(T2)) .
     eq prettyTermPattern(\app(\app(\symb(1), T1), T2)) = cons(prettyTermPattern(T1),prettyTermPattern(T2)) .
     eq prettyTermPattern(\app(\symb(2), T1)) = succ(prettyTermPattern(T1)) .
-    eq prettyTermPattern(\symb(10)) = a .
     eq prettyTermPattern(\symb(4)) = zero .
     eq prettyTermPattern(\evar(3)) = x1 .
-    eq prettyTermPattern(\evar(6)) = l1 .
-    eq prettyTermPattern(\evar(5)) = l2 .
-    eq prettyTermPattern(\evar(7)) = x2 .
+    eq prettyTermPattern(\evar(6)) = x2 .
+    eq prettyTermPattern(\evar(5)) = l1 .
+    eq prettyTermPattern(\evar(7)) = l2 .
     eq prettyTermPattern(\evar(N)) = v(N) [owise] .
 
 endm
-*** rew in PRETTY : pretty(gen-proof(
-***      \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(5))),
-***      \app(\app(\symb(1), \evar(6)), \app(\app(\symb(1), \app(\symb(2), \evar(6))), \evar(7)))
-***      )) .
-*** rew in PRETTY : check(gen-proof(
-***     \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(5))),
-***     \app(\app(\symb(1), \evar(6)), \app(\app(\symb(1), \app(\symb(2), \evar(6))), \evar(7)))
-***     )) .
-
-*** rew in PRETTY : pretty(gen-proof(\app(\app(\symb(100), \evar(1)), \symb(10)), 
-***                          \app(\app(\symb(100), \evar(2)), \symb(10)))) .
-
-*** rew in PRETTY : prettyTermPattern(
-***      \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(6)))
-*** ) .
-
-*** rew in PRETTY : prettyTermPattern(
-***      \app(\app(\symb(1), \evar(7)), \app(\app(\symb(1), \app(\symb(2), \evar(7))), \evar(5)))
-*** ) .
-
-
-rew in PRETTY : gen-proof(
-  \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(6))),
-  \app(\app(\symb(1), \evar(7)), \app(\app(\symb(1), \app(\symb(2), \evar(7))), \evar(5))) 
-) .
-rew in PRETTY : pretty((gen-proof(
-  \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(6))),
-  \app(\app(\symb(1), \evar(7)), \app(\app(\symb(1), \app(\symb(2), \evar(7))), \evar(5))) 
-))) .
-rew in PRETTY : check((gen-proof(
-  \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(6))),
-  \app(\app(\symb(1), \evar(7)), \app(\app(\symb(1), \app(\symb(2), \evar(7))), \evar(5)))
-))) .
+rew in PRETTY : pretty(gen-proof(
+    \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(5))),
+    \app(\app(\symb(1), \evar(6)), \app(\app(\symb(1), \app(\symb(2), \evar(6))), \evar(7)))
+    )) .
+rew in PRETTY : check(gen-proof(
+    \app(\app(\symb(1), \app(\symb(2), \evar(3))), \app(\app(\symb(1), \symb(4)), \evar(5))),
+    \app(\app(\symb(1), \evar(6)), \app(\app(\symb(1), \app(\symb(2), \evar(6))), \evar(7)))
+    )) .
+q

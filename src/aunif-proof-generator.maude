@@ -211,43 +211,46 @@ mod PROOF-GENERATION is
                           \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 8, K + 7)];
 
 
-            (K + 10) \eqv(\exists(Z, Trm' and \eq(Z,Trm)) , Trm'[Trm / Z]) [sbst1];
+            (K + 10) \exists(Z, \eqv(Trm' and \eq(Z,Trm) , Trm'[Trm / Z])) [sbst1];
+	    (K + 11) \eqv(\exists(Z, \eqv(Trm' and \eq(Z,Trm) , Trm'[Trm / Z])), \eqv(\exists(Z, Trm' and \eq(Z,Trm)) , Trm'[Trm / Z])) [e-scope];
+            (K + 12) \eqv(\exists(Z, Trm' and \eq(Z,Trm)) , Trm'[Trm / Z]) [modus-ponens(K + 10, K + 11)];
+	    
 
-            (K + 11) \eqv(\exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])), 
-                         \exists(NewVs, (Trm'[Trm / Z])                 and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))  ) [e-context(K + 10)];
+            (K + 13) \eqv(\exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])), 
+                         \exists(NewVs, (Trm'[Trm / Z])                 and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))  ) [e-context(K + 12)];
 
 
-            (K + 12) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
-                          \exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))  ) [e-intro(K + 11)];
+            (K + 14) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
+                          \exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))  ) [e-intro(K + 13)];
 
 
-            (K + 13) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
+            (K + 15) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
                           \exists((rem(Z, vars(Trm')) ; NewVs), \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [e-set];
 
-            (K + 14) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))),
+            (K + 16) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))),
                           \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [e-set];
 
-            (K + 15) \eqv(\exists((rem(Z, vars(Trm')) ; NewVs), \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])),
-                          \exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))) [eqv-tranz(K + 13, K + 12)];
+            (K + 17) \eqv(\exists((rem(Z, vars(Trm')) ; NewVs), \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])),
+                          \exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))) [eqv-tranz(K + 15, K + 14)];
 
-            (K + 16) \eqv(\exists((rem(Z, vars(Trm')) ; NewVs), \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])),
-                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [eqv-tranz(K + 15, K + 14)];
+            (K + 18) \eqv(\exists((rem(Z, vars(Trm')) ; NewVs), \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])),
+                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [eqv-tranz(K + 17, K + 16)];
 
 
-            (K + 17) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
+            (K + 19) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
                           \exists((vars(Trm') ; NewVs), Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) ) [eqv-tranz(K + 1, K + 5)];
 
-            (K + 18) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
-                          \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 17, K + 9)];
-
-
             (K + 20) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
-                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 16, K + 18)];
+                          \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 19, K + 9)];
 
-            (K + 21) \eqv(TP1 or TP2 ,
-                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [eqv-tranz(Index - 1, K + 20)];
+
+            (K + 21) \eqv(\exists(vars(Trm'), (Trm' and ((Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2))))), 
+                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 18, K + 20)];
+
+            (K + 22) \eqv(TP1 or TP2 ,
+                          \exists((rem(Z, vars(Trm')) ; NewVs), (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) ) [eqv-tranz(Index - 1, K + 21)];
           ),
-             K + 22, T }
+             K + 23, T }
       if subst-pair(Y, Trm') := collapse(SL) /\
           Vs := vars(Trm') /\
           NewVs := vars(Trm) /\ 
@@ -293,15 +296,19 @@ mod PROOF-GENERATION is
     op gen-proof : TermPattern TermPattern -> Proof .
 
     crl gen-proof(T1, T2) =>
-        (1) \eqv(T1, \exists(Z, Z and \eq(Z, T1))) [sbst1];
-        (2) \eqv(T2, \exists(Z, Z and \eq(Z, T2))) [sbst1];
-        (3) \eqv(T1 or T2, \exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2))) [eqv-or(1,2)];
-        (4) \eqv(\exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2)), \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [e-collapse];
-        (5) \eqv((Z and \eq(Z, T1)) or (Z and \eq(Z, T2)), Z and (\eq(Z, T1) or \eq(Z, T2))) [and-or-distr];
-        (6) \eqv(\exists(Z, (Z and \eq(Z, T1)) or (Z and \eq(Z, T2))), \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [e-intro(5)];
-        (7) \eqv(T1 or T2, \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [eqv-tranz(3,4)];
-        (8) \eqv(T1 or T2, \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [eqv-tranz(7,6)];
-        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 9, T1, T2)
+        (1) \exists(Z, \eqv(T1, Z and \eq(Z, T1))) [sbst1];
+        (2) \eqv(\exists(Z, \eqv(T1, Z and \eq(Z, T1))), \eqv(T1, \exists(Z, Z and \eq(Z, T1)))) [e-scope];
+        (3) \eqv(T1, \exists(Z, Z and \eq(Z, T1))) [modus-ponens(1,2)];
+        (4) \exists(Z, \eqv(T2, Z and \eq(Z, T2))) [sbst1];
+        (5) \eqv(\exists(Z, \eqv(T2, Z and \eq(Z, T2))), \eqv(T2, \exists(Z, Z and \eq(Z, T2)))) [e-scope];
+        (6) \eqv(T2, \exists(Z, Z and \eq(Z, T2))) [modus-ponens(4,5)];
+        (7) \eqv(T1 or T2, \exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2))) [eqv-or(3,6)];
+        (8) \eqv(\exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2)), \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [e-collapse];
+        (9) \eqv((Z and \eq(Z, T1)) or (Z and \eq(Z, T2)), Z and (\eq(Z, T1) or \eq(Z, T2))) [and-or-distr];
+        (10) \eqv(\exists(Z, (Z and \eq(Z, T1)) or (Z and \eq(Z, T2))), \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [e-intro(9)];
+        (11) \eqv(T1 or T2, \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [eqv-tranz(7,8)];
+        (12) \eqv(T1 or T2, \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [eqv-tranz(11,10)];
+        process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 13, T1, T2)
       if  I := freshid(T1, T2) /\ Z := \evar(I) /\
           Phi := \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2))) /\ 
           < subst-cons(subst-pair(Z, Z), subst-nil) | T1 ={ Z } T2 | I + 2 > ;; end => (Tr ;; A2 ;; end) /\
