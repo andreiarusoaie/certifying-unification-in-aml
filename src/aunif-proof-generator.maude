@@ -211,7 +211,7 @@ mod PROOF-GENERATION is
                           \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [eqv-tranz(K + 8, K + 7)];
 
 
-            (K + 10) \exists(Z, \eqv(Trm' and \eq(Z,Trm) , Trm'[Trm / Z])) [sbst1];
+            (K + 10) \exists(Z, \eqv(Trm' and \eq(Z,Trm) , Trm'[Trm / Z])) [e-subst];
 	    (K + 11) \eqv(\exists(Z, \eqv(Trm' and \eq(Z,Trm) , Trm'[Trm / Z])), \eqv(\exists(Z, Trm' and \eq(Z,Trm)) , Trm'[Trm / Z])) [e-scope];
             (K + 12) \eqv(\exists(Z, Trm' and \eq(Z,Trm)) , Trm'[Trm / Z]) [modus-ponens(K + 10, K + 11)];
 	    
@@ -296,10 +296,10 @@ mod PROOF-GENERATION is
     op gen-proof : TermPattern TermPattern -> Proof .
 
     crl gen-proof(T1, T2) =>
-        (1) \exists(Z, \eqv(T1, Z and \eq(Z, T1))) [sbst1];
+        (1) \exists(Z, \eqv(T1, Z and \eq(Z, T1))) [e-subst];
         (2) \eqv(\exists(Z, \eqv(T1, Z and \eq(Z, T1))), \eqv(T1, \exists(Z, Z and \eq(Z, T1)))) [e-scope];
         (3) \eqv(T1, \exists(Z, Z and \eq(Z, T1))) [modus-ponens(1,2)];
-        (4) \exists(Z, \eqv(T2, Z and \eq(Z, T2))) [sbst1];
+        (4) \exists(Z, \eqv(T2, Z and \eq(Z, T2))) [e-subst];
         (5) \eqv(\exists(Z, \eqv(T2, Z and \eq(Z, T2))), \eqv(T2, \exists(Z, Z and \eq(Z, T2)))) [e-scope];
         (6) \eqv(T2, \exists(Z, Z and \eq(Z, T2))) [modus-ponens(4,5)];
         (7) \eqv(T1 or T2, \exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2))) [eqv-or(3,6)];
