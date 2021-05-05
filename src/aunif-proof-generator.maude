@@ -173,7 +173,7 @@ mod PROOF-GENERATION is
                             \eq(Z, Trm) and ((Phi and EQL) or (Phi' and EQR))) [and-or-distr];
 
               (K + 12) \eqv( \exists(NewVs, (Phi and \eq(Z, Trm) and EQL) or  (Phi' and \eq(Z, Trm) and EQR)),
-                             \exists(NewVs, \eq(Z, Trm) and ((Phi and EQL) or (Phi' and EQR)))) [e-intro(K + 11)];
+                             \exists(NewVs, \eq(Z, Trm) and ((Phi and EQL) or (Phi' and EQR)))) [e-context(K + 11)];
 
               (K + 13) \eqv( (Phi and \eq(Z, T1)) or (Phi' and \eq(Z, T2)) ,
                              \exists(NewVs, \eq(Z, Trm) and ((Phi and EQL) or (Phi' and EQR)))) [eqv-tranz(K + 10, K + 12)];
@@ -193,7 +193,7 @@ mod PROOF-GENERATION is
                          \exists(NewVs, Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) ) [e-scope];
 
             (K + 3) \eqv(\exists(vars(Trm'), Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )),
-                         \exists(vars(Trm'), \exists(NewVs, Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))) ) [e-intro(K + 2)];
+                         \exists(vars(Trm'), \exists(NewVs, Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))) ) [e-context(K + 2)];
             (K + 4) \eqv(\exists(vars(Trm'), \exists(NewVs, Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))),
                          \exists((vars(Trm') ; NewVs), Trm' and (\eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) ) [e-set];
             (K + 5) \eqv(\exists(vars(Trm'), Trm' and \exists(NewVs, \eq(Z,Trm) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]) )),
@@ -203,7 +203,7 @@ mod PROOF-GENERATION is
                           \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z])) [e-scope];
 
             (K + 7) \eqv( \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, (Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))),
-                          \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [e-intro(K + 6)];
+                          \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, Trm' and \eq(Z,Trm)) and  (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [e-context(K + 6)];
             (K + 8) \eqv( \exists(rem(Z, (NewVs ; vars(Trm'))), \exists(Z, (Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
                           \exists( (rem(Z, (NewVs ; vars(Trm'))) ; Z), (Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))) [e-set];
             
@@ -221,7 +221,7 @@ mod PROOF-GENERATION is
 
 
             (K + 14) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
-                          \exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))  ) [e-intro(K + 13)];
+                          \exists(rem(Z, vars(Trm')), \exists(NewVs, (Trm'[Trm / Z]) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z])))  ) [e-context(K + 13)];
 
 
             (K + 15) \eqv(\exists(rem(Z, vars(Trm')), \exists(NewVs, \exists(Z, Trm' and \eq(Z,Trm)) and (((Phi and EQL) or (Phi' and EQR))[Trm / Z]))), 
@@ -305,7 +305,7 @@ mod PROOF-GENERATION is
         (7) \eqv(T1 or T2, \exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2))) [eqv-or(3,6)];
         (8) \eqv(\exists(Z, Z and \eq(Z, T1)) or \exists(Z, Z and \eq(Z, T2)), \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [e-collapse];
         (9) \eqv((Z and \eq(Z, T1)) or (Z and \eq(Z, T2)), Z and (\eq(Z, T1) or \eq(Z, T2))) [and-or-distr];
-        (10) \eqv(\exists(Z, (Z and \eq(Z, T1)) or (Z and \eq(Z, T2))), \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [e-intro(9)];
+        (10) \eqv(\exists(Z, (Z and \eq(Z, T1)) or (Z and \eq(Z, T2))), \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [e-context(9)];
         (11) \eqv(T1 or T2, \exists(Z,  (Z and \eq(Z, T1)) or (Z and \eq(Z, T2)))) [eqv-tranz(7,8)];
         (12) \eqv(T1 or T2, \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2)))) [eqv-tranz(11,10)];
         process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 13, T1, T2)
