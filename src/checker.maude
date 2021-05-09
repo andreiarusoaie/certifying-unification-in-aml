@@ -162,7 +162,6 @@ mod PROOF is
     op e-context  : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi /\ phi2 <-> exists x . phi /\ phi2'
     op e-scope    :     -> RuleName . --- exists x. phi1) /\ phi2   <->  exists x . (phi1 /\ phi2), x not in fv(phi2)
     op e-collapse :     -> RuleName . --- exists x.phi1) \/ (exists x.phi2) <-> exists x. (phi1 \/ phi2)
-    op e-intro    : Nat -> RuleName . --- if phi2 <-> phi2' then exists x . phi2 <-> exists x . phi2'
     op e-set      :     -> RuleName . --- exists X.\exists Y. phi <-> \exists X,Y . phi
 endm
 
@@ -275,6 +274,8 @@ mod CHECKER is
 
     ceq [e-context] : Pi |- (N) \eqv(\exists(Xs, Phi and Tp1),\exists(Xs, Phi and Tp2)) [e-context(I1)] ; = true 
        if I1 < N /\ I1 \eqv(Tp1, Tp2) in Pi .
+    ceq [e-intro] : Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp2)) [e-context(I1)] ; = true 
+      if I1 < N /\ I1 \eqv(Tp1, Tp2) in Pi .
 
     ceq [e-scope] : Pi |- (N) \eqv(\exists(Xs, Tp1) and Tp2,\exists(Xs, Tp1 and Tp2)) [e-scope] ; = true 
        if noneIn(Xs, vars(Tp2)) .
@@ -286,8 +287,6 @@ mod CHECKER is
     
     eq [e-collapse] : Pi |- (N) \eqv(\exists(Xs, Tp1) or \exists(Xs, Tp2), \exists(Xs, Tp1 or Tp2)) [e-collapse] ; = true .
     
-    ceq [e-intro] : Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp2)) [e-intro(I1)] ; = true 
-      if I1 < N /\ I1 \eqv(Tp1, Tp2) in Pi .
 
     eq [e-set] : Pi |- (N) \eqv(\exists(Xs, \exists(Ys, Phi)), \exists((Xs ; Ys), Phi)) [e-set] ; = true .
 
