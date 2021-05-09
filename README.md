@@ -167,25 +167,163 @@ On this input, the produces proof is:
 $ python3 ml-antiunify.py tests/samples/1_dec.in 
 Found Maude version: 3.0
 
-Proof of: (f(x, g(u, t)) or f(x, g(z, x)) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11))))  
-(1)(f(x, g(u, t)) or f(x, g(z, x)) === ∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) [exists-intro] ;
-(2)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) === ∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) [exists-equiv] ;
-(3)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) === ∃ v(9) . ∃ v(8) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [antiunification-dec] ;
-(4)((∃ v(9) . ∃ v(8) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) === ∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [exists-elim] ;
-(5)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) === ∃ v(9) . ∃ v(8) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [eq-tranz,2,3] ;
-(6)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) === ∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [eq-tranz,5,4] ;
-(7)(f(x, g(u, t)) or f(x, g(z, x)) === ∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [eq-tranz,1,6] ;
-(8)((∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) === ∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [exists-equiv] ;
-(9)((∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [antiunification-dec] ;
-(10)((∃ v(11) . ∃ v(10) . ∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [exists-elim] ;
-(11)((∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [eq-tranz,8,9] ;
-(12)((∃ v(9) . ∃ v(8) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [eq-tranz,11,10] ;
-(13)(f(x, g(u, t)) or f(x, g(z, x)) === ∃ v(11) . ∃ v(10) . ∃ v(8) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [eq-tranz,7,12] ;
+Proof of: (f(x, g(u, t)) or f(x, g(z, x)) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11))))  
+(1)(f(x, g(z, x)) <--> ∃ v(5) . v(5) and (v(5) === f(x, g(z, x)))) [sbst1] ;
+
+(2)(f(x, g(u, t)) <--> ∃ v(5) . v(5) and (v(5) === f(x, g(u, t)))) [sbst1] ;
+
+(3)(f(x, g(u, t)) or f(x, g(z, x)) <--> (∃ v(5) . v(5) and (v(5) === f(x, g(u, t)))) or (∃ v(5) . v(5) and (v(5) === f(x, g(z, x))))) [eqv-or(1, 2)] ;
+
+(4)((∃ v(5) . v(5) and (v(5) === f(x, g(u, t)))) or (∃ v(5) . v(5) and (v(5) === f(x, g(z, x)))) <--> ∃ v(5) . v(5) and (v(5) === f(x, g(u, t))) or v(5) and (v(5) === f(x, g(z, x)))) [e-collapse] ;
+
+(5)(v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x)))) <--> v(5) and (v(5) === f(x, g(u, t))) or v(5) and (v(5) === f(x, g(z, x)))) [and-or-distr] ;
+
+(6)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) <--> ∃ v(5) . v(5) and (v(5) === f(x, g(u, t))) or v(5) and (v(5) === f(x, g(z, x)))) [e-intro(5)] ;
+
+(7)(f(x, g(u, t)) or f(x, g(z, x)) <--> ∃ v(5) . v(5) and (v(5) === f(x, g(u, t))) or v(5) and (v(5) === f(x, g(z, x)))) [eqv-tranz(3, 4)] ;
+
+(8)(f(x, g(u, t)) or f(x, g(z, x)) <--> ∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) [eqv-tranz(7, 6)] ;
+
+(9)((v(5) === f(x, g(z, x))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [e-gen] ;
+
+(10)((v(5) === f(x, g(z, x))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [and-eqv-intro(9)] ;
+
+(11)((∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [e-scope] ;
+
+(12)((v(5) === f(x, g(z, x))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [eqv-tranz(10, 11)] ;
+
+(13)((v(5) === f(x, g(u, t))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t))) [e-gen] ;
+
+(14)((v(5) === f(x, g(u, t))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t))) [and-eqv-intro(13)] ;
+
+(15)((∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t))) [e-scope] ;
+
+(16)((v(5) === f(x, g(u, t))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t))) [eqv-tranz(14, 15)] ;
+
+(17)((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))) <--> (∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t))) or (∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x)))) [eqv-or(12, 16)] ;
+
+(18)((∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t))) or (∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t)) or (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [e-collapse] ;
+
+(19)((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t)) or (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [eqv-tranz(17, 18)] ;
+
+(20)(((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9))) <--> (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t)) or (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [and-or-distr] ;
+
+(21)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t)) or (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [e-intro(20)] ;
+
+(22)((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [eqv-tranz(19, 21)] ;
+
+(23)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) <--> ∃ v(5) . v(5) and (∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9))))) [e-context(22)] ;
+
+(24)(v(5) and (∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-scope] ;
+
+(25)((∃ v(5) . v(5) and (∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9))))) <--> ∃ v(5) . ∃ v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-intro(24)] ;
+
+(26)((∃ v(5) . ∃ v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-set] ;
+
+(27)((∃ v(5) . v(5) and (∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9))))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [eqv-tranz(25, 26)] ;
+
+(28)(((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9)))) <--> ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-scope] ;
+
+(29)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) <--> ∃ v(8) ; v(9) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-intro(28)] ;
+
+(30)((∃ v(8) ; v(9) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-set] ;
+
+(31)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [eqv-tranz(30, 29)] ;
+
+(32)(f(v(8), v(9)) <--> ∃ v(5) . v(5) and (v(5) === f(v(8), v(9)))) [sbst1] ;
+
+(33)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [e-context(32)] ;
+
+(34)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [e-intro(33)] ;
+
+(35)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [e-set] ;
+
+(36)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [e-set] ;
+
+(37)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [eqv-tranz(35, 34)] ;
+
+(38)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [eqv-tranz(37, 36)] ;
+
+(39)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [eqv-tranz(23, 27)] ;
+
+(40)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [eqv-tranz(39, 31)] ;
+
+(42)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [eqv-tranz(38, 40)] ;
+
+(43)(f(x, g(u, t)) or f(x, g(z, x)) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) [eqv-tranz(8, 42)] ;
+
+(44)((v(9) === g(z, x)) <--> ∃ v(10) ; v(11) . (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [e-gen] ;
+
+(45)((v(8) === x) and (v(9) === g(z, x)) <--> (v(8) === x) and (∃ v(10) ; v(11) . (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x))) [and-eqv-intro(44)] ;
+
+(46)((v(8) === x) and (∃ v(10) ; v(11) . (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [e-scope] ;
+
+(47)((v(8) === x) and (v(9) === g(z, x)) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [eqv-tranz(45, 46)] ;
+
+(48)((v(9) === g(u, t)) <--> ∃ v(10) ; v(11) . (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t)) [e-gen] ;
+
+(49)((v(8) === x) and (v(9) === g(u, t)) <--> (v(8) === x) and (∃ v(10) ; v(11) . (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t))) [and-eqv-intro(48)] ;
+
+(50)((v(8) === x) and (∃ v(10) ; v(11) . (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t)) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t)) [e-scope] ;
+
+(51)((v(8) === x) and (v(9) === g(u, t)) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t)) [eqv-tranz(49, 50)] ;
+
+(52)((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x)) <--> (∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t)) or (∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x))) [eqv-or(47, 51)] ;
+
+(53)((∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t)) or (∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [e-collapse] ;
+
+(54)((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x)) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [eqv-tranz(52, 53)] ;
+
+(55)(((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11))) <--> (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [and-or-distr] ;
+
+(56)((∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [e-intro(55)] ;
+
+(57)((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x)) <--> ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11)))) [eqv-tranz(54, 56)] ;
+
+(58)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(9) . f(v(8), v(9)) and (∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11))))) [e-context(57)] ;
+
+(59)(f(v(8), v(9)) and (∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-scope] ;
+
+(60)((∃ v(8) ; v(9) . f(v(8), v(9)) and (∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(9) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-intro(59)] ;
+
+(61)((∃ v(8) ; v(9) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(8) ; v(9) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-set] ;
+
+(62)((∃ v(8) ; v(9) . f(v(8), v(9)) and (∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(9) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [eqv-tranz(60, 61)] ;
+
+(63)(((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-scope] ;
+
+(64)((∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(10) ; v(11) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-intro(63)] ;
+
+(65)((∃ v(8) ; v(10) ; v(11) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(8) ; v(9) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-set] ;
+
+(66)((∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(9) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [eqv-tranz(65, 64)] ;
+
+(67)(f(v(8), g(v(10), v(11))) <--> ∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [sbst1] ;
+
+(68)((∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) <--> ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [e-context(67)] ;
+
+(69)((∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) <--> ∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [e-intro(68)] ;
+
+(70)((∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [e-set] ;
+
+(71)((∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [e-set] ;
+
+(72)((∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [eqv-tranz(70, 69)] ;
+
+(73)((∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [eqv-tranz(72, 71)] ;
+
+(74)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(9) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [eqv-tranz(58, 62)] ;
+
+(75)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [eqv-tranz(74, 66)] ;
+
+(77)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [eqv-tranz(73, 75)] ;
+
+(78)(f(x, g(u, t)) or f(x, g(z, x)) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) [eqv-tranz(43, 77)] ;
 Checked:   true
 
 ```
 
-The output contains a single proof of the equality <img src="https://render.githubusercontent.com/render/math?math=t_1 \vee t_2 = \exists\overline{z}.t\wedge(\phi^{\sigma_1} \vee \phi^{\sigma_2})">.
+The output contains a single proof of the equivalence <img src="https://render.githubusercontent.com/render/math?math=t_1 \vee t_2 \leftrightarrow \exists\overline{z}.t\wedge(\phi^{\sigma_1} \vee \phi^{\sigma_2})">.
 
 ## Using the Maude scripts directly 
 

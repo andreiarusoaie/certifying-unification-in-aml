@@ -1,0 +1,28 @@
+Found Maude version: 3.0beta1
+
+[1m[95mProof of:[94m (x or f(x) <--> ∃ v(2) . v(2) and ((v(2) === x) or (v(2) === f(x))))  [0m
+(1)(∃ v(2) . (x <--> v(2) and (v(2) === x))) [e-subst] ;
+
+(2)((x <--> ∃ v(2) . v(2) and (v(2) === x)) <--> ∃ v(2) . (x <--> v(2) and (v(2) === x))) [e-scope] ;
+
+(3)(x <--> ∃ v(2) . v(2) and (v(2) === x)) [modus-ponens(1, 2)] ;
+
+(4)(∃ v(2) . (f(x) <--> v(2) and (v(2) === f(x)))) [e-subst] ;
+
+(5)((f(x) <--> ∃ v(2) . v(2) and (v(2) === f(x))) <--> ∃ v(2) . (f(x) <--> v(2) and (v(2) === f(x)))) [e-scope] ;
+
+(6)(f(x) <--> ∃ v(2) . v(2) and (v(2) === f(x))) [modus-ponens(4, 5)] ;
+
+(7)(x or f(x) <--> (∃ v(2) . v(2) and (v(2) === x)) or (∃ v(2) . v(2) and (v(2) === f(x)))) [eqv-or(3, 6)] ;
+
+(8)((∃ v(2) . v(2) and (v(2) === x)) or (∃ v(2) . v(2) and (v(2) === f(x))) <--> ∃ v(2) . v(2) and (v(2) === x) or v(2) and (v(2) === f(x))) [e-collapse] ;
+
+(9)(v(2) and ((v(2) === x) or (v(2) === f(x))) <--> v(2) and (v(2) === x) or v(2) and (v(2) === f(x))) [and-or-distr] ;
+
+(10)((∃ v(2) . v(2) and ((v(2) === x) or (v(2) === f(x)))) <--> ∃ v(2) . v(2) and (v(2) === x) or v(2) and (v(2) === f(x))) [e-context(9)] ;
+
+(11)(x or f(x) <--> ∃ v(2) . v(2) and (v(2) === x) or v(2) and (v(2) === f(x))) [eqv-tranz(7, 8)] ;
+
+(12)(x or f(x) <--> ∃ v(2) . v(2) and ((v(2) === x) or (v(2) === f(x)))) [eqv-tranz(11, 10)] ;
+[94mChecked: [0m [1m[92m true
+[0m
