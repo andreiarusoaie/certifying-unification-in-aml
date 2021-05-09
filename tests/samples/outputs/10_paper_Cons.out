@@ -1,0 +1,100 @@
+Found Maude version: 3.0beta1
+
+[1m[95mProof of:[94m (cons(a, z) or cons(x, a) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9)))  [0m
+(1)(∃ v(5) . (cons(x, a) <--> v(5) and (v(5) === cons(x, a)))) [e-subst] ;
+
+(2)((cons(x, a) <--> ∃ v(5) . v(5) and (v(5) === cons(x, a))) <--> ∃ v(5) . (cons(x, a) <--> v(5) and (v(5) === cons(x, a)))) [e-scope] ;
+
+(3)(cons(x, a) <--> ∃ v(5) . v(5) and (v(5) === cons(x, a))) [modus-ponens(1, 2)] ;
+
+(4)(∃ v(5) . (cons(a, z) <--> v(5) and (v(5) === cons(a, z)))) [e-subst] ;
+
+(5)((cons(a, z) <--> ∃ v(5) . v(5) and (v(5) === cons(a, z))) <--> ∃ v(5) . (cons(a, z) <--> v(5) and (v(5) === cons(a, z)))) [e-scope] ;
+
+(6)(cons(a, z) <--> ∃ v(5) . v(5) and (v(5) === cons(a, z))) [modus-ponens(4, 5)] ;
+
+(7)(cons(a, z) or cons(x, a) <--> (∃ v(5) . v(5) and (v(5) === cons(a, z))) or (∃ v(5) . v(5) and (v(5) === cons(x, a)))) [eqv-or(3, 6)] ;
+
+(8)((∃ v(5) . v(5) and (v(5) === cons(a, z))) or (∃ v(5) . v(5) and (v(5) === cons(x, a))) <--> ∃ v(5) . v(5) and (v(5) === cons(a, z)) or v(5) and (v(5) === cons(x, a))) [e-collapse] ;
+
+(9)(v(5) and ((v(5) === cons(a, z)) or (v(5) === cons(x, a))) <--> v(5) and (v(5) === cons(a, z)) or v(5) and (v(5) === cons(x, a))) [and-or-distr] ;
+
+(10)((∃ v(5) . v(5) and ((v(5) === cons(a, z)) or (v(5) === cons(x, a)))) <--> ∃ v(5) . v(5) and (v(5) === cons(a, z)) or v(5) and (v(5) === cons(x, a))) [e-intro(9)] ;
+
+(11)(cons(a, z) or cons(x, a) <--> ∃ v(5) . v(5) and (v(5) === cons(a, z)) or v(5) and (v(5) === cons(x, a))) [eqv-tranz(7, 8)] ;
+
+(12)(cons(a, z) or cons(x, a) <--> ∃ v(5) . v(5) and ((v(5) === cons(a, z)) or (v(5) === cons(x, a)))) [eqv-tranz(11, 10)] ;
+
+(13)((v(5) === cons(x, a)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) [e-gen] ;
+
+(14)((v(5) === cons(x, a)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) [and-eqv-intro(13)] ;
+
+(15)((∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) [e-scope] ;
+
+(16)((v(5) === cons(x, a)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) [eqv-tranz(14, 15)] ;
+
+(17)((v(5) === cons(a, z)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z)) [e-gen] ;
+
+(18)((v(5) === cons(a, z)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z)) [and-eqv-intro(17)] ;
+
+(19)((∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z)) [e-scope] ;
+
+(20)((v(5) === cons(a, z)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z)) [eqv-tranz(18, 19)] ;
+
+(21)((v(5) === cons(a, z)) or (v(5) === cons(x, a)) <--> (∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z)) or (∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a))) [eqv-or(16, 20)] ;
+
+(22)((∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z)) or (∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z) or (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) [e-collapse] ;
+
+(23)((v(5) === cons(a, z)) or (v(5) === cons(x, a)) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z) or (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) [eqv-tranz(21, 22)] ;
+
+(24)(((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9))) <--> (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z) or (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) [and-or-distr] ;
+
+(25)((∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) <--> ∃ v(8) ; v(9) . (v(5) === cons(v(8), v(9))) and (v(8) === a) and (v(9) === z) or (v(5) === cons(v(8), v(9))) and (v(8) === x) and (v(9) === a)) [e-intro(24)] ;
+
+(26)((v(5) === cons(a, z)) or (v(5) === cons(x, a)) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [eqv-tranz(23, 25)] ;
+
+(27)((∃ v(5) . v(5) and ((v(5) === cons(a, z)) or (v(5) === cons(x, a)))) <--> ∃ v(5) . v(5) and (∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9))))) [e-context(26)] ;
+
+(28)(v(5) and (∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) <--> ∃ v(8) ; v(9) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [e-scope] ;
+
+(29)((∃ v(5) . v(5) and (∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9))))) <--> ∃ v(5) . ∃ v(8) ; v(9) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [e-intro(28)] ;
+
+(30)((∃ v(5) . ∃ v(8) ; v(9) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [e-set] ;
+
+(31)((∃ v(5) . v(5) and (∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9))))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [eqv-tranz(29, 30)] ;
+
+(32)(((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9)))) <--> ∃ v(5) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [e-scope] ;
+
+(33)((∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) <--> ∃ v(8) ; v(9) . ∃ v(5) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [e-intro(32)] ;
+
+(34)((∃ v(8) ; v(9) . ∃ v(5) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [e-set] ;
+
+(35)((∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [eqv-tranz(34, 33)] ;
+
+(36)(∃ v(5) . (cons(v(8), v(9)) <--> v(5) and (v(5) === cons(v(8), v(9))))) [e-subst] ;
+
+(37)((cons(v(8), v(9)) <--> ∃ v(5) . v(5) and (v(5) === cons(v(8), v(9)))) <--> ∃ v(5) . (cons(v(8), v(9)) <--> v(5) and (v(5) === cons(v(8), v(9))))) [e-scope] ;
+
+(38)(cons(v(8), v(9)) <--> ∃ v(5) . v(5) and (v(5) === cons(v(8), v(9)))) [modus-ponens(36, 37)] ;
+
+(39)((∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) [e-context(38)] ;
+
+(40)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) <--> ∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) [e-intro(39)] ;
+
+(41)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) [e-set] ;
+
+(42)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) [e-set] ;
+
+(43)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) [eqv-tranz(41, 40)] ;
+
+(44)((∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) [eqv-tranz(43, 42)] ;
+
+(45)((∃ v(5) . v(5) and ((v(5) === cons(a, z)) or (v(5) === cons(x, a)))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (v(5) === cons(v(8), v(9)))) [eqv-tranz(27, 31)] ;
+
+(46)((∃ v(5) . v(5) and ((v(5) === cons(a, z)) or (v(5) === cons(x, a)))) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and (∃ v(5) . v(5) and (v(5) === cons(v(8), v(9))))) [eqv-tranz(45, 35)] ;
+
+(47)((∃ v(5) . v(5) and ((v(5) === cons(a, z)) or (v(5) === cons(x, a)))) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) [eqv-tranz(44, 46)] ;
+
+(48)(cons(a, z) or cons(x, a) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) [eqv-tranz(12, 47)] ;
+[94mChecked: [0m [1m[92m true
+[0m
