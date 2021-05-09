@@ -19,7 +19,7 @@ Found Maude version: 3.0beta1
 
 (9)(v(8) and ((v(8) === cons(x2, cons(succ(x2), l2))) or (v(8) === cons(succ(x1), cons(zero, l1)))) <--> v(8) and (v(8) === cons(x2, cons(succ(x2), l2))) or v(8) and (v(8) === cons(succ(x1), cons(zero, l1)))) [and-or-distr] ;
 
-(10)((∃ v(8) . v(8) and ((v(8) === cons(x2, cons(succ(x2), l2))) or (v(8) === cons(succ(x1), cons(zero, l1))))) <--> ∃ v(8) . v(8) and (v(8) === cons(x2, cons(succ(x2), l2))) or v(8) and (v(8) === cons(succ(x1), cons(zero, l1)))) [e-intro(9)] ;
+(10)((∃ v(8) . v(8) and ((v(8) === cons(x2, cons(succ(x2), l2))) or (v(8) === cons(succ(x1), cons(zero, l1))))) <--> ∃ v(8) . v(8) and (v(8) === cons(x2, cons(succ(x2), l2))) or v(8) and (v(8) === cons(succ(x1), cons(zero, l1)))) [e-context(9)] ;
 
 (11)(cons(x2, cons(succ(x2), l2)) or cons(succ(x1), cons(zero, l1)) <--> ∃ v(8) . v(8) and (v(8) === cons(x2, cons(succ(x2), l2))) or v(8) and (v(8) === cons(succ(x1), cons(zero, l1)))) [eqv-tranz(7, 8)] ;
 
@@ -49,7 +49,7 @@ Found Maude version: 3.0beta1
 
 (24)(((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12))) <--> (v(8) === cons(v(11), v(12))) and (v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(8) === cons(v(11), v(12))) and (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) [and-or-distr] ;
 
-(25)((∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) <--> ∃ v(11) ; v(12) . (v(8) === cons(v(11), v(12))) and (v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(8) === cons(v(11), v(12))) and (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) [e-intro(24)] ;
+(25)((∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) <--> ∃ v(11) ; v(12) . (v(8) === cons(v(11), v(12))) and (v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(8) === cons(v(11), v(12))) and (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) [e-context(24)] ;
 
 (26)((v(8) === cons(x2, cons(succ(x2), l2))) or (v(8) === cons(succ(x1), cons(zero, l1))) <--> ∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [eqv-tranz(23, 25)] ;
 
@@ -57,7 +57,7 @@ Found Maude version: 3.0beta1
 
 (28)(v(8) and (∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) <--> ∃ v(11) ; v(12) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [e-scope] ;
 
-(29)((∃ v(8) . v(8) and (∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12))))) <--> ∃ v(8) . ∃ v(11) ; v(12) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [e-intro(28)] ;
+(29)((∃ v(8) . v(8) and (∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12))))) <--> ∃ v(8) . ∃ v(11) ; v(12) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [e-context(28)] ;
 
 (30)((∃ v(8) . ∃ v(11) ; v(12) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) <--> ∃ v(8) ; v(11) ; v(12) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [e-set] ;
 
@@ -65,7 +65,7 @@ Found Maude version: 3.0beta1
 
 (32)(((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (∃ v(8) . v(8) and (v(8) === cons(v(11), v(12)))) <--> ∃ v(8) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [e-scope] ;
 
-(33)((∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (∃ v(8) . v(8) and (v(8) === cons(v(11), v(12))))) <--> ∃ v(11) ; v(12) . ∃ v(8) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [e-intro(32)] ;
+(33)((∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (∃ v(8) . v(8) and (v(8) === cons(v(11), v(12))))) <--> ∃ v(11) ; v(12) . ∃ v(8) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [e-context(32)] ;
 
 (34)((∃ v(11) ; v(12) . ∃ v(8) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) <--> ∃ v(8) ; v(11) ; v(12) . v(8) and ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (v(8) === cons(v(11), v(12)))) [e-set] ;
 
@@ -79,7 +79,7 @@ Found Maude version: 3.0beta1
 
 (39)((∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and cons(v(11), v(12))) <--> ∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (∃ v(8) . v(8) and (v(8) === cons(v(11), v(12))))) [e-context(38)] ;
 
-(40)((∃ .Vars . ∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and cons(v(11), v(12))) <--> ∃ .Vars . ∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (∃ v(8) . v(8) and (v(8) === cons(v(11), v(12))))) [e-intro(39)] ;
+(40)((∃ .Vars . ∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and cons(v(11), v(12))) <--> ∃ .Vars . ∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (∃ v(8) . v(8) and (v(8) === cons(v(11), v(12))))) [e-context(39)] ;
 
 (41)((∃ .Vars . ∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (∃ v(8) . v(8) and (v(8) === cons(v(11), v(12))))) <--> ∃ v(11) ; v(12) . ((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1))) and (∃ v(8) . v(8) and (v(8) === cons(v(11), v(12))))) [e-set] ;
 
@@ -121,7 +121,7 @@ Found Maude version: 3.0beta1
 
 (60)(((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (v(12) === cons(v(13), v(14))) <--> (v(11) === x2) and (v(12) === cons(v(13), v(14))) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(12) === cons(v(13), v(14))) and (v(13) === zero) and (v(14) === l1)) [and-or-distr] ;
 
-(61)((∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (v(12) === cons(v(13), v(14)))) <--> ∃ v(13) ; v(14) . (v(11) === x2) and (v(12) === cons(v(13), v(14))) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(12) === cons(v(13), v(14))) and (v(13) === zero) and (v(14) === l1)) [e-intro(60)] ;
+(61)((∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (v(12) === cons(v(13), v(14)))) <--> ∃ v(13) ; v(14) . (v(11) === x2) and (v(12) === cons(v(13), v(14))) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(12) === cons(v(13), v(14))) and (v(13) === zero) and (v(14) === l1)) [e-context(60)] ;
 
 (62)((v(11) === x2) and (v(12) === cons(succ(x2), l2)) or (v(11) === succ(x1)) and (v(12) === cons(zero, l1)) <--> ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (v(12) === cons(v(13), v(14)))) [eqv-tranz(59, 61)] ;
 
@@ -129,7 +129,7 @@ Found Maude version: 3.0beta1
 
 (64)(cons(v(11), v(12)) and (∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (v(12) === cons(v(13), v(14)))) <--> ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) [e-scope] ;
 
-(65)((∃ v(11) ; v(12) . cons(v(11), v(12)) and (∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (v(12) === cons(v(13), v(14))))) <--> ∃ v(11) ; v(12) . ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) [e-intro(64)] ;
+(65)((∃ v(11) ; v(12) . cons(v(11), v(12)) and (∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (v(12) === cons(v(13), v(14))))) <--> ∃ v(11) ; v(12) . ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) [e-context(64)] ;
 
 (66)((∃ v(11) ; v(12) . ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) <--> ∃ v(11) ; v(12) ; v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) [e-set] ;
 
@@ -137,7 +137,7 @@ Found Maude version: 3.0beta1
 
 (68)(((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (∃ v(12) . cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) <--> ∃ v(12) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) [e-scope] ;
 
-(69)((∃ v(11) ; v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (∃ v(12) . cons(v(11), v(12)) and (v(12) === cons(v(13), v(14))))) <--> ∃ v(11) ; v(13) ; v(14) . ∃ v(12) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) [e-intro(68)] ;
+(69)((∃ v(11) ; v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (∃ v(12) . cons(v(11), v(12)) and (v(12) === cons(v(13), v(14))))) <--> ∃ v(11) ; v(13) ; v(14) . ∃ v(12) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) [e-context(68)] ;
 
 (70)((∃ v(11) ; v(13) ; v(14) . ∃ v(12) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) <--> ∃ v(11) ; v(12) ; v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), v(12)) and (v(12) === cons(v(13), v(14)))) [e-set] ;
 
@@ -151,7 +151,7 @@ Found Maude version: 3.0beta1
 
 (75)((∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), cons(v(13), v(14)))) <--> ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (∃ v(12) . cons(v(11), v(12)) and (v(12) === cons(v(13), v(14))))) [e-context(74)] ;
 
-(76)((∃ v(11) . ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), cons(v(13), v(14)))) <--> ∃ v(11) . ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (∃ v(12) . cons(v(11), v(12)) and (v(12) === cons(v(13), v(14))))) [e-intro(75)] ;
+(76)((∃ v(11) . ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and cons(v(11), cons(v(13), v(14)))) <--> ∃ v(11) . ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (∃ v(12) . cons(v(11), v(12)) and (v(12) === cons(v(13), v(14))))) [e-context(75)] ;
 
 (77)((∃ v(11) . ∃ v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (∃ v(12) . cons(v(11), v(12)) and (v(12) === cons(v(13), v(14))))) <--> ∃ v(11) ; v(13) ; v(14) . ((v(11) === x2) and (v(13) === succ(x2)) and (v(14) === l2) or (v(11) === succ(x1)) and (v(13) === zero) and (v(14) === l1)) and (∃ v(12) . cons(v(11), v(12)) and (v(12) === cons(v(13), v(14))))) [e-set] ;
 

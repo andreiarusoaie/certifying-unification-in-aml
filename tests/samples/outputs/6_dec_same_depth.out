@@ -19,7 +19,7 @@ Found Maude version: 3.0beta1
 
 (9)(v(10) and ((v(10) === f(g(z), h(c, y))) or (v(10) === f(h(a, x), g(b)))) <--> v(10) and (v(10) === f(g(z), h(c, y))) or v(10) and (v(10) === f(h(a, x), g(b)))) [and-or-distr] ;
 
-(10)((∃ v(10) . v(10) and ((v(10) === f(g(z), h(c, y))) or (v(10) === f(h(a, x), g(b))))) <--> ∃ v(10) . v(10) and (v(10) === f(g(z), h(c, y))) or v(10) and (v(10) === f(h(a, x), g(b)))) [e-intro(9)] ;
+(10)((∃ v(10) . v(10) and ((v(10) === f(g(z), h(c, y))) or (v(10) === f(h(a, x), g(b))))) <--> ∃ v(10) . v(10) and (v(10) === f(g(z), h(c, y))) or v(10) and (v(10) === f(h(a, x), g(b)))) [e-context(9)] ;
 
 (11)(f(g(z), h(c, y)) or f(h(a, x), g(b)) <--> ∃ v(10) . v(10) and (v(10) === f(g(z), h(c, y))) or v(10) and (v(10) === f(h(a, x), g(b)))) [eqv-tranz(7, 8)] ;
 
@@ -49,7 +49,7 @@ Found Maude version: 3.0beta1
 
 (24)(((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14))) <--> (v(10) === f(v(13), v(14))) and (v(13) === g(z)) and (v(14) === h(c, y)) or (v(10) === f(v(13), v(14))) and (v(13) === h(a, x)) and (v(14) === g(b))) [and-or-distr] ;
 
-(25)((∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) <--> ∃ v(13) ; v(14) . (v(10) === f(v(13), v(14))) and (v(13) === g(z)) and (v(14) === h(c, y)) or (v(10) === f(v(13), v(14))) and (v(13) === h(a, x)) and (v(14) === g(b))) [e-intro(24)] ;
+(25)((∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) <--> ∃ v(13) ; v(14) . (v(10) === f(v(13), v(14))) and (v(13) === g(z)) and (v(14) === h(c, y)) or (v(10) === f(v(13), v(14))) and (v(13) === h(a, x)) and (v(14) === g(b))) [e-context(24)] ;
 
 (26)((v(10) === f(g(z), h(c, y))) or (v(10) === f(h(a, x), g(b))) <--> ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [eqv-tranz(23, 25)] ;
 
@@ -57,7 +57,7 @@ Found Maude version: 3.0beta1
 
 (28)(v(10) and (∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) <--> ∃ v(13) ; v(14) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [e-scope] ;
 
-(29)((∃ v(10) . v(10) and (∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14))))) <--> ∃ v(10) . ∃ v(13) ; v(14) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [e-intro(28)] ;
+(29)((∃ v(10) . v(10) and (∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14))))) <--> ∃ v(10) . ∃ v(13) ; v(14) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [e-context(28)] ;
 
 (30)((∃ v(10) . ∃ v(13) ; v(14) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) <--> ∃ v(10) ; v(13) ; v(14) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [e-set] ;
 
@@ -65,7 +65,7 @@ Found Maude version: 3.0beta1
 
 (32)(((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (∃ v(10) . v(10) and (v(10) === f(v(13), v(14)))) <--> ∃ v(10) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [e-scope] ;
 
-(33)((∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (∃ v(10) . v(10) and (v(10) === f(v(13), v(14))))) <--> ∃ v(13) ; v(14) . ∃ v(10) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [e-intro(32)] ;
+(33)((∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (∃ v(10) . v(10) and (v(10) === f(v(13), v(14))))) <--> ∃ v(13) ; v(14) . ∃ v(10) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [e-context(32)] ;
 
 (34)((∃ v(13) ; v(14) . ∃ v(10) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) <--> ∃ v(10) ; v(13) ; v(14) . v(10) and ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (v(10) === f(v(13), v(14)))) [e-set] ;
 
@@ -79,7 +79,7 @@ Found Maude version: 3.0beta1
 
 (39)((∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and f(v(13), v(14))) <--> ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (∃ v(10) . v(10) and (v(10) === f(v(13), v(14))))) [e-context(38)] ;
 
-(40)((∃ .Vars . ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and f(v(13), v(14))) <--> ∃ .Vars . ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (∃ v(10) . v(10) and (v(10) === f(v(13), v(14))))) [e-intro(39)] ;
+(40)((∃ .Vars . ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and f(v(13), v(14))) <--> ∃ .Vars . ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (∃ v(10) . v(10) and (v(10) === f(v(13), v(14))))) [e-context(39)] ;
 
 (41)((∃ .Vars . ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (∃ v(10) . v(10) and (v(10) === f(v(13), v(14))))) <--> ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and (∃ v(10) . v(10) and (v(10) === f(v(13), v(14))))) [e-set] ;
 

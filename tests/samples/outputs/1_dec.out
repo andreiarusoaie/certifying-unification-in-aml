@@ -19,7 +19,7 @@ Found Maude version: 3.0beta1
 
 (9)(v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x)))) <--> v(5) and (v(5) === f(x, g(u, t))) or v(5) and (v(5) === f(x, g(z, x)))) [and-or-distr] ;
 
-(10)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) <--> ∃ v(5) . v(5) and (v(5) === f(x, g(u, t))) or v(5) and (v(5) === f(x, g(z, x)))) [e-intro(9)] ;
+(10)((∃ v(5) . v(5) and ((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))))) <--> ∃ v(5) . v(5) and (v(5) === f(x, g(u, t))) or v(5) and (v(5) === f(x, g(z, x)))) [e-context(9)] ;
 
 (11)(f(x, g(u, t)) or f(x, g(z, x)) <--> ∃ v(5) . v(5) and (v(5) === f(x, g(u, t))) or v(5) and (v(5) === f(x, g(z, x)))) [eqv-tranz(7, 8)] ;
 
@@ -49,7 +49,7 @@ Found Maude version: 3.0beta1
 
 (24)(((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9))) <--> (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t)) or (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [and-or-distr] ;
 
-(25)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t)) or (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [e-intro(24)] ;
+(25)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(8) ; v(9) . (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(u, t)) or (v(5) === f(v(8), v(9))) and (v(8) === x) and (v(9) === g(z, x))) [e-context(24)] ;
 
 (26)((v(5) === f(x, g(u, t))) or (v(5) === f(x, g(z, x))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [eqv-tranz(23, 25)] ;
 
@@ -57,7 +57,7 @@ Found Maude version: 3.0beta1
 
 (28)(v(5) and (∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-scope] ;
 
-(29)((∃ v(5) . v(5) and (∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9))))) <--> ∃ v(5) . ∃ v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-intro(28)] ;
+(29)((∃ v(5) . v(5) and (∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9))))) <--> ∃ v(5) . ∃ v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-context(28)] ;
 
 (30)((∃ v(5) . ∃ v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-set] ;
 
@@ -65,7 +65,7 @@ Found Maude version: 3.0beta1
 
 (32)(((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9)))) <--> ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-scope] ;
 
-(33)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) <--> ∃ v(8) ; v(9) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-intro(32)] ;
+(33)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) <--> ∃ v(8) ; v(9) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-context(32)] ;
 
 (34)((∃ v(8) ; v(9) . ∃ v(5) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) <--> ∃ v(5) ; v(8) ; v(9) . v(5) and ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (v(5) === f(v(8), v(9)))) [e-set] ;
 
@@ -79,7 +79,7 @@ Found Maude version: 3.0beta1
 
 (39)((∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [e-context(38)] ;
 
-(40)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [e-intro(39)] ;
+(40)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and f(v(8), v(9))) <--> ∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [e-context(39)] ;
 
 (41)((∃ .Vars . ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) <--> ∃ v(8) ; v(9) . ((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x))) and (∃ v(5) . v(5) and (v(5) === f(v(8), v(9))))) [e-set] ;
 
@@ -121,7 +121,7 @@ Found Maude version: 3.0beta1
 
 (60)(((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11))) <--> (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [and-or-distr] ;
 
-(61)((∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [e-intro(60)] ;
+(61)((∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(10) ; v(11) . (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(9) === g(v(10), v(11))) and (v(10) === z) and (v(11) === x)) [e-context(60)] ;
 
 (62)((v(8) === x) and (v(9) === g(u, t)) or (v(8) === x) and (v(9) === g(z, x)) <--> ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11)))) [eqv-tranz(59, 61)] ;
 
@@ -129,7 +129,7 @@ Found Maude version: 3.0beta1
 
 (64)(f(v(8), v(9)) and (∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-scope] ;
 
-(65)((∃ v(8) ; v(9) . f(v(8), v(9)) and (∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(9) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-intro(64)] ;
+(65)((∃ v(8) ; v(9) . f(v(8), v(9)) and (∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(9) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-context(64)] ;
 
 (66)((∃ v(8) ; v(9) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(8) ; v(9) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-set] ;
 
@@ -137,7 +137,7 @@ Found Maude version: 3.0beta1
 
 (68)(((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-scope] ;
 
-(69)((∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(10) ; v(11) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-intro(68)] ;
+(69)((∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(10) ; v(11) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-context(68)] ;
 
 (70)((∃ v(8) ; v(10) ; v(11) . ∃ v(9) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) <--> ∃ v(8) ; v(9) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), v(9)) and (v(9) === g(v(10), v(11)))) [e-set] ;
 
@@ -151,7 +151,7 @@ Found Maude version: 3.0beta1
 
 (75)((∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) <--> ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [e-context(74)] ;
 
-(76)((∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) <--> ∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [e-intro(75)] ;
+(76)((∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and f(v(8), g(v(10), v(11)))) <--> ∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [e-context(75)] ;
 
 (77)((∃ v(8) . ∃ v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) <--> ∃ v(8) ; v(10) ; v(11) . ((v(8) === x) and (v(10) === u) and (v(11) === t) or (v(8) === x) and (v(10) === z) and (v(11) === x)) and (∃ v(9) . f(v(8), v(9)) and (v(9) === g(v(10), v(11))))) [e-set] ;
 

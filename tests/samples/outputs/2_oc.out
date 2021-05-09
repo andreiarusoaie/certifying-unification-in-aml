@@ -19,7 +19,7 @@ Found Maude version: 3.0beta1
 
 (9)(v(2) and ((v(2) === x) or (v(2) === f(x))) <--> v(2) and (v(2) === x) or v(2) and (v(2) === f(x))) [and-or-distr] ;
 
-(10)((∃ v(2) . v(2) and ((v(2) === x) or (v(2) === f(x)))) <--> ∃ v(2) . v(2) and (v(2) === x) or v(2) and (v(2) === f(x))) [e-intro(9)] ;
+(10)((∃ v(2) . v(2) and ((v(2) === x) or (v(2) === f(x)))) <--> ∃ v(2) . v(2) and (v(2) === x) or v(2) and (v(2) === f(x))) [e-context(9)] ;
 
 (11)(x or f(x) <--> ∃ v(2) . v(2) and (v(2) === x) or v(2) and (v(2) === f(x))) [eqv-tranz(7, 8)] ;
 
