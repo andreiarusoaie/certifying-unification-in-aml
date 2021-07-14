@@ -1,0 +1,3 @@
+variables: x1, x2, l1, l2, y1, y2
+symbols: cons, succ
+problem: cons(succ(x1), cons(y1, l1)) =? cons(x2, cons(succ(y2), l2))
