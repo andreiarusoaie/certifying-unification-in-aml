@@ -44,10 +44,15 @@ mod SETUP is
     vars Phi Phi' T1 T2 : TermPattern .
     var PR : SubstPair .
     var PL : SubstList .
-    eq collapse(subst-cons(PR, subst-nil)) = PR .
-
+    eq collapse(subst-cons(PR, subst-nil)) = PR [owise] .
+***    eq collapse(subst-cons(subst-pair(Y, Phi), PL)) = collapse(substitute-rest(Y,Phi,PL)) .
     eq collapse(subst-cons(subst-pair(Y, Phi), subst-cons(subst-pair(X, Phi'), PL))) =
-       collapse(subst-cons(subst-pair(X, (Phi' [ Phi / Y ])), PL)) .
+       collapse(subst-cons(subst-pair(X, (Phi' [ Phi / Y ])), substitute-rest(Y, Phi, PL))) .
+
+
+    op substitute-rest : EVar TermPattern SubstList -> SubstList .
+    eq substitute-rest(Y, Phi, subst-cons(subst-pair(X, Phi'), PL)) = subst-cons(subst-pair(X, (Phi' [ Phi / Y ])), substitute-rest(Y, Phi, PL)) .
+    eq substitute-rest(Y, Phi, subst-nil) = subst-nil [owise] .
 
     sorts Equation Equations .
     subsort Equation < Equations .
