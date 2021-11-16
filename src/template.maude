@@ -14,13 +14,13 @@ mod PRETTY is
     vars Pr : ProofRule .
     vars P1 P2 : Proof .
 
-    op pretty : Proof -> Proof [format(nm d)] .
+    op pretty : Proof -> Proof [memo format(nm d)] .
     ops tt ff : -> TermPattern . *** true and false
     eq pretty(.Proof) = .Proof .
     ceq pretty((P1 P2)) = pretty(P1) pretty(P2) if (P1 =/= .Proof) /\ (P2 =/= .Proof) .
     eq pretty((N) Tp Pr ;) = (N) prettyTermPattern(Tp) Pr ; .
 
-    op prettyTermPattern : TermPattern -> TermPattern .
+    op prettyTermPattern : TermPattern -> TermPattern [memo] .
     --- eq prettyTermPattern(\imp(\bot, \bot)) = tt .  
     eq prettyTermPattern(\bot) = ff .
     eq prettyTermPattern(\imp(Tp1, Tp2)) = prettyTermPattern(Tp1) --> prettyTermPattern(Tp2) .

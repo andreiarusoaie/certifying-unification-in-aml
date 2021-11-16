@@ -178,7 +178,7 @@ mod CHECKER is
     vars T1 T2 T Tp Tp' Tp1 Tp2 EQL EQR Sym1 Sym2 Sym F F' Phi Phi' : TermPattern .
     vars Args1 Args2 Args : TermPatternList .
 
-    op check : Proof -> Bool .
+    op check : Proof -> Bool [memo] .
     op _step-marker_ : Proof Proof -> Bool [format(g bn nr o)] .
     op _|-_ : Proof ProofLine -> Bool .
     eq check(Pi) = (.Proof step-marker Pi) .
