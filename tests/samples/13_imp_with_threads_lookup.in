@@ -1,0 +1,24 @@
+variables: x, rest, i, restmap, n, v
+symbols: t, threads, thread, k, seq, env, map, mapitem, id, store, concrete-x, concrete-rest, concrete-i, concrete-restmap, concrete-v
+problem:
+t(
+  threads(
+    thread(
+      k(seq(x, rest)),
+      env(map(mapitem(x,i), restmap))
+      id(n)
+    )
+  ),
+  store(map(i,v)),
+)
+=?
+t(
+  threads(
+    thread(
+      k(seq(concrete-x, concrete-rest)),
+      env(map(mapitem(concrete-x,concrete-i), concrete-restmap)),
+      id(n)
+    )
+  ),
+  store(map(concrete-i,concrete-v))
+)
