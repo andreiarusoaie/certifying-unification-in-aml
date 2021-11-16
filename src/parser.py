@@ -30,10 +30,12 @@ def get_symbols(input):
         u.err("no symbols found; please declare them", EXIT_NO_SYMB);
 
 def get_terms(input, vars, symbols):
-    search = re.search(r"problem:(.*?)=\?(.*?)(?=\n)", input)
+    search = re.search(r"problem:(.+)=\?(.+)", input, re.DOTALL)
     if search:
         t1 = search.group(1).strip()
         t2 = search.group(2).strip()
+        t1 = "".join(t1.split())
+        t2 = "".join(t2.split())
         (term1, rest1) = parse_term(t1, vars, symbols)
         if (rest1 != ''):
             parse_err("cannot parse " + t1 + ", stopped here " + rest1)
