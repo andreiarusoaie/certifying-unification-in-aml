@@ -14,48 +14,48 @@ mod SETUP is
     vars X : EVar .
     vars Tp Tp1 Tp2 Tp' : TermPattern .
     eq bot, (Tp1 =? Tp2), U = bot, U .
-    op solved-form : UnificationProblem -> Bool .
+    op solved-form : UnificationProblem -> Bool [memo] .
     eq solved-form(.U)                  = true .
     eq solved-form(bot)                 = true .
     eq solved-form(U)                   = solved-form-aux(U, U) .
 
-    op solved-form-aux : UnificationProblem UnificationProblem -> Bool .
+    op solved-form-aux : UnificationProblem UnificationProblem -> Bool [memo] .
     eq solved-form-aux(((X =? Tp), U), ((X =? Tp), U')) =
         solved-form-aux(U, ((X =? Tp), U')) and not(occurs-unif(X, U')) and not(X in vars(Tp)) .
     eq solved-form-aux(.U, U')            = true .
     eq solved-form-aux( ((Tp1 =? Tp2), U), U') = false [owise] .
 
-    op occurs-unif : EVar UnificationProblem -> Bool .
+    op occurs-unif : EVar UnificationProblem -> Bool [memo] .
     eq occurs-unif(X, .U)                = false .
     eq occurs-unif(X, bot)               = false .
     eq occurs-unif(X, ((Tp1 =? Tp2), U')) =
         (X in vars(Tp1)) or (X in vars(Tp2)) or occurs-unif(X, U') .
 
-    op asPattern : UnificationProblem -> TermPattern .
+    op asPattern : UnificationProblem -> TermPattern [memo] .
     eq asPattern(bot) = \bot .
     eq asPattern(.U)  = \imp(\bot, \bot) . --- true
     eq asPattern((Tp1 =? Tp2)) = \eq(Tp1, Tp2) .
     eq asPattern(((Tp1 =? Tp2) , U)) = \eq(Tp1, Tp2) and asPattern(U) .
 
     vars N N' : Nat .
-    op hasTopSymbol : TermPattern -> Bool .
+    op hasTopSymbol : TermPattern -> Bool [memo] .
     eq hasTopSymbol(\symb(N)) = true .
     eq hasTopSymbol(\app(\symb(N), Tp)) = true .
     eq hasTopSymbol(Tp) = false .
     
-    op subst-unif : EVar TermPattern UnificationProblem -> UnificationProblem .
+    op subst-unif : EVar TermPattern UnificationProblem -> UnificationProblem [memo] .
     eq subst-unif(X, Tp, bot) = bot .
     eq subst-unif(X, Tp, .U)  = .U .
     eq subst-unif(X, Tp, ((Tp1 =? Tp2) , U)) = (Tp1 [ Tp / X ] =? Tp2 [ Tp / X ]) , subst-unif(X, Tp, U) .
 
-    op clash : TermPattern TermPattern -> Bool .
+    op clash : TermPattern TermPattern -> Bool [memo] .
     eq clash(\symb(N), \symb(N')) = N =/= N' .
     eq clash(\app(Tp, Tp1), \app(Tp', Tp2)) = clash(Tp, Tp') .
     eq clash(\symb(N), \app(Tp', Tp2)) = true .
     eq clash(\app(Tp, Tp1), \symb(N)) = true .
 
     --- decomposition rec
-    op decomposition-rec : UnificationPair -> UnificationProblem .
+    op decomposition-rec : UnificationPair -> UnificationProblem [memo] .
     eq decomposition-rec((\app(\symb(N), Tp1) =? \app(\symb(N), Tp2))) = Tp1 =? Tp2 .
     eq decomposition-rec((\app(Tp, Tp1) =? \app(Tp', Tp2))) =
         decomposition-rec((Tp =? Tp')) , (Tp1 =? Tp2) .
@@ -264,7 +264,7 @@ mod PROOF-GENERATION is
     op gen-proof2-aux' : Trace NzNat TermPattern -> Proof .
     
 
-    op reverse-trace : Trace -> Trace .
+    op reverse-trace : Trace -> Trace [memo] .
     eq reverse-trace(.Trace) = .Trace .
     eq reverse-trace((TrI ,, Tr)) = reverse-trace(Tr) ,, TrI .
 

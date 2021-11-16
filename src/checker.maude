@@ -22,7 +22,7 @@ mod SYNTAX is
     vars T T1 T2 F F' Phi : TermPattern .
 
     --- substitution
-    op _`[_/_`] : TermPattern TermPattern EVar -> TermPattern .
+    op _`[_/_`] : TermPattern TermPattern EVar -> TermPattern [memo] .
     eq X[T / X]                = T .
     ceq \evar(N)[T / \evar(K)] = \evar(N) if N =/= K .
     eq \symb(N)[T / X]         = \symb(N) .
@@ -46,15 +46,15 @@ mod SYNTAX is
     eq  \exists((X ; Xs), T1) [T / X] = \exists((X ; Xs), T1) .
     ceq \exists(Xs, T1) [T / X] = \exists(Xs, T1[T / X]) if not (X in Xs) .
     
-    op rem : EVar Vars -> Vars .
+    op rem : EVar Vars -> Vars [memo] .
     eq rem(X, (X ; Vs)) = rem(X, Vs) .
     eq rem(X, Vs) = Vs [owise] .
 
-    op diff : Vars Vars -> Vars .
+    op diff : Vars Vars -> Vars [memo] .
     eq diff(Vs, .Vars) = Vs .
     eq diff(Vs, (X ; Vs')) = diff(rem(X, Vs), Vs') .
 
-    op vars : TermPattern -> Vars .
+    op vars : TermPattern -> Vars [memo] .
     eq vars(\evar(N))     = \evar(N) .
     eq vars(\symb(N))     = .Vars .
     eq vars(\bot)         = .Vars .
@@ -65,7 +65,7 @@ mod SYNTAX is
     eq vars(\eq(T1, T2))  = vars(T1) ; vars(T2) .
     eq vars(\not(T))      = vars(T) .
 
-    op fv : TermPattern   -> Vars .
+    op fv : TermPattern   -> Vars [memo] .
     eq fv(\evar(N))       = \evar(N) .
     eq fv(\symb(N))       = .Vars .
     eq fv(\bot)           = .Vars .
@@ -77,11 +77,11 @@ mod SYNTAX is
     eq fv(\not(T))        = fv(T) .
     eq fv(\exists(X, T))  = rem(X, fv(T)) .
 
-    op sizeV : Vars -> Nat .
+    op sizeV : Vars -> Nat [memo] .
     eq sizeV(.Vars) = 0 .
     eq sizeV((X ; Vs)) = 1 + sizeV(Vs) .
 
-    op _in_ :         EVar Vars -> Bool .
+    op _in_ :         EVar Vars -> Bool [memo] .
     eq (\evar(N)) in (\evar(N))  = true .
     ceq (\evar(N)) in (\evar(K)) = false if N =/= K .
     eq X in .Vars                = false .
@@ -91,13 +91,13 @@ mod SYNTAX is
     eq isCompound(\app(F, T)) = true .
     eq isCompound(T) = false [owise] .
 
-    op isFunctional : TermPattern -> Bool .
+    op isFunctional : TermPattern -> Bool [memo] .
     eq isFunctional(\evar(N)) = true .
     eq isFunctional(\symb(N)) = true .
     eq isFunctional(\app(T1, T2))= isFunctional(T1) and isFunctional(T2) .
     eq isFunctional(T) = false [owise] .
 
-    op check-functional-rec : TermPattern -> Bool .
+    op check-functional-rec : TermPattern -> Bool [memo] .
     eq check-functional-rec(\imp(\eq(T1, T2) and Phi, \eq(\app(F, T1), \app(F', T2)))) =
         check-functional-rec(\imp(Phi, \eq(F, F'))) and isFunctional(F) and isFunctional(F')  .
     eq check-functional-rec(\imp(\eq(T1, T2), \eq(\app(F, T1), \app(F, T2)))) = isFunctional(F) .

@@ -11,7 +11,7 @@ mod SETUP is
     op _⊔_ : TermPattern TermPattern -> Pair .
 
     var Pr : Pair .
-    op size : Pairs -> Nat .
+    op size : Pairs -> Nat [memo] .
     eq size(.Pairs) = 0 .
     eq size(Pr) = 1 .
     ceq size((P P')) = size(P) + size(P') if P =/= .Pairs /\ P' =/= .Pairs .
@@ -28,7 +28,7 @@ mod SETUP is
 
     vars N N' I J : Nat .
     vars T T' F F' : TermPattern .
-    op dec-reverse : TermPattern TermPattern -> MaybePairs .
+    op dec-reverse : TermPattern TermPattern -> MaybePairs [memo] .
     ceq dec-reverse(\app(\symb(N), T), \app(\symb(N'), T')) = nothing if N =/= N' .
     eq dec-reverse(\app(\symb(N), T), \app(\symb(N), T')) = just (T ⊔ T') .
     eq dec-reverse(\app(F, T), \app(F', T')) = dec-reverse(F, F') ; just (T ⊔ T') .
@@ -39,7 +39,7 @@ mod SETUP is
     op subst-cons : SubstPair SubstList -> SubstList .
     op subst-nil : -> SubstList .
 
-    op collapse : SubstList -> SubstPair .
+    op collapse : SubstList -> SubstPair [memo] .
     vars X Y : EVar .
     vars Phi Phi' T1 T2 : TermPattern .
     var PR : SubstPair .
@@ -50,7 +50,7 @@ mod SETUP is
        collapse(subst-cons(subst-pair(X, (Phi' [ Phi / Y ])), substitute-rest(Y, Phi, PL))) .
 
 
-    op substitute-rest : EVar TermPattern SubstList -> SubstList .
+    op substitute-rest : EVar TermPattern SubstList -> SubstList [memo] .
     eq substitute-rest(Y, Phi, subst-cons(subst-pair(X, Phi'), PL)) = subst-cons(subst-pair(X, (Phi' [ Phi / Y ])), substitute-rest(Y, Phi, PL)) .
     eq substitute-rest(Y, Phi, subst-nil) = subst-nil [owise] .
 
@@ -72,7 +72,7 @@ mod SETUP is
 
     vars Eq : Equation .
     vars Eqs1 Eqs2 : Equations .
-    op solved : Equations -> Bool .
+    op solved : Equations -> Bool [memo] .
     eq solved(.Equations) = true .
     ceq solved(T1 ={ X } T2) = true if dec-reverse(T1, T2) == nothing .
     ceq solved((Eqs1 Eqs2)) = solved(Eqs1) and solved(Eqs2) if (Eqs1 =/= .Equations and Eqs2 =/= .Equations) .
@@ -109,11 +109,11 @@ mod ANTI-UNIFICATION is
           Trm := generate-term(Vs, get-top-symbol(T1)) /\
           Eqs' := eqs-build(Vs, Ps) .
 
-    op eqs-build : Vars Pairs -> Equations .
+    op eqs-build : Vars Pairs -> Equations [memo] .
     eq eqs-build(.Vars, .Pairs) = .Equations .
     eq eqs-build((X ; Vs), (( T1 ⊔ T2) Ps)) = (T1 ={ X } T2) eqs-build(Vs, Ps) .
 
-    op generate-term : Vars TermPattern -> TermPattern .
+    op generate-term : Vars TermPattern -> TermPattern [memo] .
     eq generate-term(.Vars, T) = T .
     eq generate-term((X ; Vs), T) = generate-term(Vs, \app(T, X)) .
 endm
@@ -270,19 +270,19 @@ mod PROOF-GENERATION is
     op get-eqs : AUnifProblem -> Equations .
     eq get-eqs(< SL | Eqs | K >) = Eqs .
 
-    op phi-left : Equations -> TermPattern .
+    op phi-left : Equations -> TermPattern [memo] .
     eq phi-left(.Equations) =  \imp(\bot, \bot) .
     eq phi-left(T1 ={ X } T2) = \eq(X, T1) .
     ceq phi-left((Eqs1 Eqs2)) = phi-left(Eqs1) and phi-left(Eqs2)
       if Eqs1 =/= .Equations /\ Eqs2 =/= .Equations .
 
-    op phi-right : Equations -> TermPattern .
+    op phi-right : Equations -> TermPattern [memo] .
     eq phi-right(.Equations) =  \imp(\bot, \bot) .
     eq phi-right(T1 ={ X } T2) = \eq(X, T2) .
     ceq phi-right((Eqs1 Eqs2)) = phi-right(Eqs1) and phi-right(Eqs2)
       if Eqs1 =/= .Equations /\ Eqs2 =/= .Equations .
 
-    op prec : Vars TermPattern -> TermPattern .
+    op prec : Vars TermPattern -> TermPattern [memo] .
     eq prec(.Vars, T) = T .
     eq prec((X ; Vs), T) = prec(Vs, \exists(X, T)) .
 
@@ -320,14 +320,14 @@ mod PROOF-GENERATION is
           solved(get-eqs(A2)) .
     
 
-    op last : Trace -> AUnifProblem .
+    op last : Trace -> AUnifProblem [memo] .
     eq last((A1 ;; end)) = A1 .
     eq last((A1 ;; Tr)) = last(Tr) .
 
     op freshid : TermPattern TermPattern -> Int .
     eq freshid(T1, T2) = max((vars(T1) ; vars(T2)), 1) + 1 .
 
-    op max : Vars Int -> Int .
+    op max : Vars Int -> Int [memo] .
     eq max(.Vars, Id) = Id .
     ceq max((\evar(Id) ; Vs), I) = max(Vs, I) if I >= Id .
     ceq max((\evar(Id) ; Vs), I) = max(Vs, Id) if I < Id .
