@@ -102,12 +102,17 @@ mod ANTI-UNIFICATION is
     vars Tr : Trace .
     vars Ps : Pairs .
 
-    crl [decomposition] : Tr ;; < Ss | T1 ={ X } T2 Eqs | N > ;; end =>
-                          Tr ;; < Ss | T1 ={ X } T2 Eqs | N > ;; < subst-cons(subst-pair(X, Trm), Ss) | Eqs' Eqs | NextId > ;; end
+    op antiunify : Trace -> Trace .
+
+    ceq [decomposition] : antiunify( (Tr ;; < Ss | T1 ={ X } T2 Eqs | N > ;; end) ) =
+                          antiunify( (Tr ;; < Ss | T1 ={ X } T2 Eqs | N > ;; < subst-cons(subst-pair(X, Trm), Ss) | Eqs' Eqs | NextId > ;; end) )
       if  just Ps := dec-reverse(T1, T2) /\
           (Vs, NextId) := generate-vars(N, size(Ps)) /\
           Trm := generate-term(Vs, get-top-symbol(T1)) /\
           Eqs' := eqs-build(Vs, Ps) .
+
+    eq antiunify(Tr) = Tr [owise] .
+
 
     op eqs-build : Vars Pairs -> Equations [memo] .
     eq eqs-build(.Vars, .Pairs) = .Equations .
@@ -316,7 +321,7 @@ mod PROOF-GENERATION is
         process-trace((Tr  ;; A2 ;; end), Phi, T1 or T2, 13, T1, T2)
       if  I := freshid(T1, T2) /\ Z := \evar(I) /\
           Phi := \exists(Z, Z and (\eq(Z, T1) or \eq(Z, T2))) /\ 
-          < subst-cons(subst-pair(Z, Z), subst-nil) | T1 ={ Z } T2 | I + 2 > ;; end => (Tr ;; A2 ;; end) /\
+          (Tr ;; A2 ;; end) := antiunify( (< subst-cons(subst-pair(Z, Z), subst-nil) | T1 ={ Z } T2 | I + 2 > ;; end) )  /\
           solved(get-eqs(A2)) .
     
 
