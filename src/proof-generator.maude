@@ -40,8 +40,8 @@ mod SETUP is
     vars N N' : Nat .
     op hasTopSymbol : TermPattern -> Bool [memo] .
     eq hasTopSymbol(\symb(N)) = true .
-    eq hasTopSymbol(\app(\symb(N), Tp)) = true .
-    eq hasTopSymbol(Tp) = false .
+    eq hasTopSymbol(\app(Tp1, Tp)) = hasTopSymbol(Tp1) .
+    eq hasTopSymbol(Tp) = false [owise] .
     
     op subst-unif : EVar TermPattern UnificationProblem -> UnificationProblem [memo] .
     eq subst-unif(X, Tp, bot) = bot .
@@ -98,8 +98,8 @@ mod UNIFICATION is
     ***   if U' := decomposition-rec((\app(F, P) =? \app(F', P'))) /\ U' =/= bot .
 
     ceq [orient] :
-        unify( < P =? X , U | Tr > )  = unify( < X =? P , U | Tr ,, ori( (P =? X),  U ) >)
-      if hasTopSymbol(P) .
+        unify( < P =? X , U | Tr > )  = unify( < X =? P , U | Tr ,, ori( (P =? X),  U ) >) 
+       if hasTopSymbol(P) .
 
     *** crl [orient] :
     ***     < P =? X , U | Tr > => < X =? P , U | Tr ,, ori( (P =? X),  U ) >
