@@ -85,28 +85,53 @@ mod UNIFICATION is
     vars Tr Tr' : Trace .
     vars X : EVar .
 
+    op unify : UnifWithTrace -> UnifWithTrace . 
 
-    crl [decomposition] :
-        < \app(F, P) =? \app(F', P') , U | Tr > =>
-        < U' , U | Tr ,, dec((\app(F, P) =? \app(F', P')), U', U) >
+
+    ceq unify( < \app(F, P) =? \app(F', P') , U | Tr > ) = 
+        unify( < U' , U | Tr ,, dec((\app(F, P) =? \app(F', P')), U', U) >) 
       if U' := decomposition-rec((\app(F, P) =? \app(F', P'))) /\ U' =/= bot .
 
-    crl [orient] :
-        < P =? X , U | Tr > => < X =? P , U | Tr ,, ori( (P =? X),  U ) >
+    *** crl [decomposition] :
+    ***     < \app(F, P) =? \app(F', P') , U | Tr > =>
+    ***     < U' , U | Tr ,, dec((\app(F, P) =? \app(F', P')), U', U) >
+    ***   if U' := decomposition-rec((\app(F, P) =? \app(F', P'))) /\ U' =/= bot .
+
+    ceq [orient] :
+        unify( < P =? X , U | Tr > )  = unify( < X =? P , U | Tr ,, ori( (P =? X),  U ) >)
       if hasTopSymbol(P) .
 
-    rl [delete] : < P =? P , U | Tr > => < U | Tr ,, del( (P =? P), U ) > .
+    *** crl [orient] :
+    ***     < P =? X , U | Tr > => < X =? P , U | Tr ,, ori( (P =? X),  U ) >
+    ***   if hasTopSymbol(P) .
 
-    crl [elimination] :
-        < X =? P , U | Tr > => < (X =? P) , U' | Tr ,, elim ((X =? P), U', U) >
+    eq [delete] : unify(< P =? P , U | Tr >) = unify(< U | Tr ,, del( (P =? P), U ) >) .
+
+    *** rl [delete] : < P =? P , U | Tr > => < U | Tr ,, del( (P =? P), U ) > .
+
+    ceq [elimination] :
+        unify(< X =? P , U | Tr >) = unify(< (X =? P) , U' | Tr ,, elim ((X =? P), U', U) >)
       if not(X in vars(P)) /\ occurs-unif(X, U) /\
           hasTopSymbol(P) /\ U' := subst-unif(X, P, U) .
 
-    crl [symbol-clash] : < P =? P' , U | Tr > => < bot | Tr ,, clh(P, P', U) >
+    *** crl [elimination] :
+    ***     < X =? P , U | Tr > => < (X =? P) , U' | Tr ,, elim ((X =? P), U', U) >
+    ***   if not(X in vars(P)) /\ occurs-unif(X, U) /\
+    ***       hasTopSymbol(P) /\ U' := subst-unif(X, P, U) .
+
+    ceq [symbol-clash] : unify(< P =? P' , U | Tr >) = < bot | Tr ,, clh(P, P', U) >
       if clash(P, P') . 
 
-    crl [occurs-check] : < X =? P , U | Tr > => < bot | Tr ,, occ(X, P, U) >
+    *** crl [symbol-clash] : < P =? P' , U | Tr > => < bot | Tr ,, clh(P, P', U) >
+    ***   if clash(P, P') . 
+
+    ceq [occurs-check] : unify(< X =? P , U | Tr >) = < bot | Tr ,, occ(X, P, U) >
       if hasTopSymbol(P) /\ X in vars(P) .
+      
+    *** crl [occurs-check] : < X =? P , U | Tr > => < bot | Tr ,, occ(X, P, U) >
+    ***   if hasTopSymbol(P) /\ X in vars(P) .
+
+    eq unify(< U | Tr >) = < U | Tr > [owise] .
 endm
 
 mod PROOF-GENERATION is 
@@ -136,7 +161,7 @@ mod PROOF-GENERATION is
           (K + 1) \imp(Tp and Phi, Tp and Phi') [tauto-context, K] ;
           (K + 2) \imp(Tp and Tp', Tp and Phi)  [axiom-term-eq-intro] ;
           (K + 3) \imp(Tp and Tp', Tp and Phi') [tauto-imp-tranz, K + 2, K + 1] ; )
-      if < Tp =? Tp' | .Trace > => < U | Tr > /\ solved-form(U)  /\
+      if < U | Tr > := unify( < Tp =? Tp' | .Trace > ) /\ solved-form(U)  /\
           Prf  := gen-proof1-aux(Tr, 2, \eq(Tp, Tp')) /\
           Pl   := last-proofline(Prf) /\
           K    := get-line-no(Pl) /\
@@ -252,7 +277,7 @@ mod PROOF-GENERATION is
           (K + 1) \imp(Tp and Phi, Tp and Phi') [tauto-context, K] ;
           (K + 2) \imp(Tp and Phi', Tp and Tp')  [axiom-term-eq-elim] ;
           (K + 3) \imp(Tp and Phi, Tp and Tp') [tauto-imp-tranz, K + 1, K + 2] ; )
-      if < Tp =? Tp' | .Trace > => < U | Tr > /\ solved-form(U) /\
+      if < U | Tr > := unify(< Tp =? Tp' | .Trace >) /\ solved-form(U) /\
           PhiS := asPattern(U) /\
           Prf := gen-proof2-aux(reverse-trace(Tr), 2, PhiS) /\
           Pl   := last-proofline(Prf) /\
