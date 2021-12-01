@@ -170,7 +170,7 @@ mod CHECKER is
     pr PROOF .
 
     vars X Y Y' Z : EVar .
-    vars I I1 I2 N : NzNat .
+    vars I I1 I2 N N' : NzNat .
     vars Xs : Vars .
     var L : ProofLine .
     vars Pr Pr' : ProofRule .
@@ -187,14 +187,14 @@ mod CHECKER is
 
     *** checker rules
     ceq [tauto-context] : Pi |- (N) \imp(T and Tp1, T and Tp2) [tauto-context, I] ; = true
-      if I < N /\ (I \imp(Tp1, Tp2) in Pi) .
+      if I < N /\ \imp(Tp1, Tp2) := searchline(I, Pi) .
 
     eq [tauto-imp-refl] : Pi |- (N) \imp(Tp, Tp) [tauto-imp-refl] ; = true .
 
     ceq [tauto-imp-tranz] : Pi |- (N) \imp(Tp1, Tp2) [tauto-imp-tranz, I1, I2] ; = true
       if I1 < N /\ I2 < N /\
-         (P1 ((I1) \imp(Tp1, T) Pr  ;) P2) := Pi /\ 
-         (P3 ((I2) \imp(T, Tp2) Pr' ;) P4) := Pi .
+         \imp(Tp1, T) := searchline(I1, Pi) /\
+         \imp(T, Tp2) := searchline(I2, Pi) .
 
     eq [tauto-and-simpl] : Pi |- (N) \imp(T and T, T) [tauto-and-simpl] ; = true .
 
@@ -218,17 +218,17 @@ mod CHECKER is
 
     ceq [eqv-or] : Pi |- (N) \eqv(Tp or Phi, Tp' or Phi') [eqv-or(I1,I2)] ; = true  
       if I1 < N /\ I2 < N /\
-          (P1 ((I1) \eqv(Tp, Tp') Pr  ;) P2) := Pi /\ 
-          (P3 ((I2) \eqv(Phi, Phi') Pr' ;) P4) := Pi .
+          \eqv(Tp, Tp') := searchline(I1, Pi) /\ 
+          \eqv(Phi, Phi') := searchline(I2, Pi) .
 
     ceq [eqv-tranz] : Pi |- (N) \eqv(Tp1, Tp2) [eqv-tranz(I1,I2)] ; = true  
       if I1 < N /\ I2 < N /\
-          (P1 ((I1) \eqv(Tp1, T) Pr  ;) P2) := Pi /\ 
-          (P3 ((I2) \eqv(T, Tp2) Pr' ;) P4) := Pi .
+          \eqv(Tp1, T) := searchline(I1, Pi) /\
+          (I2) \eqv(T, Tp2) in Pi .
 
     ceq [modus-ponens] : Pi |- (N) Tp2 [modus-ponens(I1, I2)] ; = true
       if I1 < N /\ I2 < N /\
-	  (P1 ((I1) Tp1 Pr  ;) P2) := Pi /\
+          Tp1 := searchline(I1, Pi) /\
 	  (I2 \eqv(Tp1, Tp2) in Pi) .
 
     
@@ -283,17 +283,21 @@ mod CHECKER is
        if noneIn(Xs, vars(Tp2)) .
     eq [e-scope] : Pi |- (N) \eqv(\exists(Xs, Tp1),\exists(Xs, Tp1)) [e-scope] ; = true . --- avoid matching issue
 
-
-    
     eq [e-collapse] : Pi |- (N) \eqv(\exists(Xs, Tp1) or \exists(Xs, Tp2), \exists(Xs, Tp1 or Tp2)) [e-collapse] ; = true .
     
-
     eq [e-set] : Pi |- (N) \eqv(\exists(Xs, \exists(Ys, Phi)), \exists((Xs ; Ys), Phi)) [e-set] ; = true .
 
     --- helpers
     op __in_ : NzNat TermPattern Proof -> Bool .
-    eq N Tp in (P ((N) Tp Pr ;) P') = true .
-    eq N Tp in Pi = false [owise] .
+    eq N Tp in .Proof = false .
+    eq N Tp in (((N) Tp Pr ;) P') = true .
+    eq N Tp in (L P') = N Tp in P' [owise] .
+
+    *** partial function
+    op searchline : NzNat Proof -> TermPattern .
+    *** eq search_line(N, .Proof) = \bot . 
+    eq searchline(N, ((N) Tp Pr ;) P') = Tp .
+    eq searchline(N, L P') = searchline(N, P') [owise] . 
 
     sort TermPatternList .
     subsort TermPattern < TermPatternList .
