@@ -1,0 +1,52 @@
+variables: v, n, rest, someId, someLoc, someFStack, someXStack, someId, someInput, someOutput, someLoc, someGEnv, someBusy, someTerminated, someEnv, maprest, someStore, busyrest
+symbols: t, threads, thread, k, kseq, control, fstack, xstack, env, holds, id, genv, store, busy, nextLoc, terminated, input, output, mapitem, map, release, zero, setitem, set
+problem: 
+t(
+    threads(
+    thread(
+            k(kseq(release(v), rest)),
+    
+            control(
+                fstack(someFStack),
+                xstack(someXStack)
+            )
+    
+            env(someEnv),
+            holds(map(mapitem(v, n), maprest)),
+            id(someId)
+        )
+    ),
+
+    genv(someGEnv),
+    store(someStore),
+    busy(someBusy),
+    terminated(someTerminated),
+    input(someInput),
+    output(someOutput),
+    nextLoc(someLoc)
+)
+=?
+t(
+    threads(
+    thread(
+            k(kseq(release(v), rest)),
+    
+            control(
+                fstack(someFStack),
+                xstack(someXStack)
+            )
+    
+            env(someEnv),
+            holds(map(mapitem(v, zero), maprest)),
+            id(someId)
+        )
+    ),
+
+    genv(someGEnv),
+    store(someStore),
+    busy(set(setitem(v), busyrest)),
+    terminated(someTerminated),
+    input(someInput),
+    output(someOutput),
+    nextLoc(someLoc)
+)
