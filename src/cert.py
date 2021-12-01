@@ -115,13 +115,19 @@ def certify(args):
     if (len(args) <= 1):
         u.err("Please provide an input file")
 
+    verbose = False
+    if (len(args) > 2):
+        verbose = True
+        
     # parse input file
     input_filename = args[1];
     input = get_file_as_string(input_filename)
     (variables, symbols, t1, t2) = parser.parse(input)
     check_variables(variables, t1, t2)
     check_symbols(symbols, t1, t2)
-
+    if verbose:
+        print("Parsing finished.")
+    
     dir = os.path.dirname(os.path.realpath(__file__))
     template_text = generate_maude(t1, t2, symbols, variables, dir)
     log           = os.path.join(dir, TEMP)
@@ -138,3 +144,6 @@ def certify(args):
         extract_maude(out)
     else:
         u.err("cannot execute", MAUDE, "\nERROR")
+
+    if verbose:
+        print("Maude finished in ", vtime, "seconds.")
