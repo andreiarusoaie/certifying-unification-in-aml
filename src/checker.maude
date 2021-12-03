@@ -290,14 +290,16 @@ mod CHECKER is
     --- helpers
     op __in_ : NzNat TermPattern Proof -> Bool .
     eq N Tp in .Proof = false .
-    eq N Tp in (((N) Tp Pr ;) P') = true .
-    eq N Tp in (L P') = N Tp in P' [owise] .
+    *** eq N Tp in (((N) Tp Pr ;) P') = true .
+    *** eq N Tp in (L P') = N Tp in P' [owise] .
+    eq N Tp in (((N') Tp' Pr ;) P') = if N == N' and Tp == Tp' then true else (N Tp in P') fi .
 
     *** partial function
     op searchline : NzNat Proof -> TermPattern .
     *** eq search_line(N, .Proof) = \bot . 
-    eq searchline(N, ((N) Tp Pr ;) P') = Tp .
-    eq searchline(N, L P') = searchline(N, P') [owise] . 
+    *** eq searchline(N, ((N) Tp Pr ;) P') = Tp .
+    *** eq searchline(N, L P') = searchline(N, P') [owise] . 
+    eq searchline(N, ((N') Tp Pr ;) P' ) = if N == N' then Tp else searchline (N, P') fi .
 
     sort TermPatternList .
     subsort TermPattern < TermPatternList .
