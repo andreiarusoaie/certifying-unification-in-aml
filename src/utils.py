@@ -37,9 +37,7 @@ def system_call(cmd, dir=".", verbose=False):
 
 def check_maude_installation(MAUDE):
     (out, err, exit_code, elapsed_time) = system_call(MAUDE + " --version");
-    if (exit_code == 0):
-        print("Found Maude version:", out.decode('utf-8'))
-    else:
+    if (exit_code != 0):
         print("Maude not found:", err)
 
 def err(*messages, exit_code = 1):
