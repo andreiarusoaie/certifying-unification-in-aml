@@ -1,0 +1,376 @@
+variables: someMem, someReferences, someFunctions, someGoToMap, someMainTu, someExternalTypes, someExternalDefs, someOdrDefs, someLinkings, someFunctionsTus, someExternalDecls, someExternalDeclsLoc, someExternalUses, someLinkingDeps, someExternalDefsLoc, someOdrDecls, someOdrUses, someTags, someUnnamedLocs, someDynamicInit, someConstExprSymbase, someTuId, someGEnv, someRGEnv, someGTypes, someHasRestrict, someLocalStatics, someExternals, someInternals, someUses, someGEnums, someTemplates, someNextUnnamed, someIncompleteTags, someGlobalNamespace, someNEnv, someNTypes, someNestedNamespaces, someNEnums, someIsInline, someNUsingNamespaces, someInlineNamespaces, someClassId, someClassType, someIsAggregated, someBaseClasses, someVirtualBases, someCEnv, someCTypes, someCEnums, someInitializers, someNonStaticDataMembers, someFunctionMembers, someVariantMembers, someConversionFunctions, someAccess, someBaseAccess, someAccessSpecifiers, someSizeOf, someAlign, someDSize, someNVSize, someNVAlign, someEnumId, someEnumType, SomeScoped, someEnumerators, someEnumComplete, someEnumOpaque, someEnumMin, someEnumMax, someWhenOdrUsed, someHardwareAddresses, someValue, someExtensionsGlobal, someId, someThreadStatus, someMutexes, someGLocks, someThreadId, someFinalComputation, someThreadLocal, someErrorCell, initializingTu, someOptions, someMalloced, someATexit, someQuickExit, someVALists, someJmpBufs, someOpenFiles, someFID, someURI, somePos, someMode, someNextByte, someReadBuffer, someWriteBuffer, fullBuf, bufSiz, someSendingList, someDoneLog, someFError, noLastOp, someInput, someOutput, someStrerrorCache, someSigHandlingState, X, T, Base, noInit, currentTu, restExternalDefs, restExternalTypes
+symbols: global, mem, references, functions, gotomap, maintu, globalstate, externaltypes, externaldefs, odrdefs, linkings, functiontus, linkingstate, externaldecls, externaldeclsloc, externaluses, linkingdeps, externaldefsloc, odrdecls, odruses, tags, unnamedlocs, dynamicinit, constexprsymbase, translationunits, tu, tuid, genv, rgenv, gtypes, hasrestrict, localstatics, tulinkingstate, externals, internals, uses, genums, templates, nextunnamed, incompletetags, namespaces, ns, nsid, nenv, ntypes, nestednamespaces, nenums, isinline, nusingnamespaces, inlinenamespaces, classes, class, classid, classtype, isaggregate, baseclasses, virtualbases, cenv, ctypes, cenums, initializers, nonstaticdatamembers, functionmembers, variantmembers, conversionfunctions, access, baseaccess, accessspecifier, sizeof, align, dsize, nvsize, nvalign, cppenums, cppenum, enumid, enumtype, scoped, enumerators, enumcomplete, enumopaque, enummin, enummax, whenodrused, hardwareaddresses, resultvalue, top, T, exec, extensionsglobal, nextthreadid, compiletimeevaluation, threadinfo, threadstatus, mutexes, glocks, threads, thread, threadid, k, finalcomputation, threadlocal, errorcell, status, options, library, malloced, atexit, atquickexit, valists, jmpbufs, openfiles, files, file, fid, uri, pos, mode, nextbyte, readbuffer, writebuffer, buffermode, buffersize, sending, done, feof, ferror, lastop, input, output, strerrorcache, sighandlingstate, setlocale, localeconv, getenv, NullPointerConstant, true, false, zero, map,declareInternalVariable, map, mapitem, concreteT, concreteX
+problem:
+top(
+  global(
+     mem(someMem),
+     references(someReferences),
+     functions(someFunctions),
+     gotomap(someGoToMap),
+     maintu(someMainTu),
+
+     globalstate(
+          
+          externaltypes(map(mapitem(X, Base), restExternalTypes)),
+          externaldefs(map(mapitem(X, T), restExternalDefs)),
+          odrdefs(someOdrDefs),
+          linkings(someLinkings),
+          functiontus(someFunctionsTus)
+     ),
+
+     linkingstate(
+          externaldecls(someExternalDecls),
+          externaldeclsloc(someExternalDeclsLoc),
+          externaluses(someExternalUses),
+          linkingdeps(someLinkingDeps),
+          externaldefsloc(someExternalDefsLoc),
+          odrdecls(someOdrDecls),
+          odruses(someOdrUses)
+     ),
+
+     tags(someTags),
+     unnamedlocs(someUnnamedLocs),
+     dynamicinit(someDynamicInit),
+     constexprsymbase(someConstExprSymbase),
+     translationunits(
+          tu(
+               tuid(currentTu),
+               genv(someGEnv),
+               rgenv(someRGEnv),
+               gtypes(someGTypes),
+               hasrestrict(someHasRestrict),
+               localstatics(someLocalStatics),
+               tulinkingstate(
+                    externals(someExternals),
+                    internals(someInternals),
+                    uses(someUses),
+                    genums(someGEnums),
+                    templates(someTemplates)
+               ),
+
+               nextunnamed(someNextUnnamed),
+               incompletetags(someIncompleteTags),
+
+               namespaces(
+                    ns(
+                         nsid(someGlobalNamespace),
+                         nenv(someNEnv),
+                         ntypes(someNTypes),
+                         nestednamespaces(someNestedNamespaces),
+                         nenums(someNEnums),
+                         isinline(someIsInline),
+                         nusingnamespaces(someNUsingNamespaces),
+                         inlinenamespaces(someInlineNamespaces)
+                    )
+               ),
+
+               classes(
+                    class(
+                         classid(someClassId),
+                         classtype(someClassType),
+                         isaggregate(someIsAggregated),
+                         baseclasses(someBaseClasses),
+                         virtualbases(someVirtualBases),
+                         cenv(someCEnv),
+                         ctypes(someCTypes),
+                         cenums(someCEnums),
+                         initializers(someInitializers),
+                         nonstaticdatamembers(someNonStaticDataMembers),
+                         functionmembers(someFunctionMembers),
+                         variantmembers(someVariantMembers),
+                         conversionfunctions(someConversionFunctions),
+                         access(someAccess),
+                         baseaccess(someBaseAccess),
+                         accessspecifier(someAccessSpecifiers),
+                         sizeof(someSizeOf),
+                         align(someAlign),
+                         dsize(someDSize),
+                         nvsize(someNVSize),
+                         nvalign(someNVAlign)
+                    )
+                ),
+
+               cppenums(
+                    cppenum(
+                         enumid(someEnumId),
+                         enumtype(someEnumType),
+                         scoped(SomeScoped),
+                         enumerators(someEnumerators),
+                         enumcomplete(someEnumComplete),
+                         enumopaque(someEnumOpaque),
+                         enummin(someEnumMin),
+                         enummax(someEnumMax)
+                    )
+               ),
+
+               whenodrused(someWhenOdrUsed)
+            )
+        ),
+
+    hardwareaddresses(someHardwareAddresses)
+),
+
+resultvalue(someValue)
+
+  T(
+    exec(
+     extensionsglobal(someExtensionsGlobal)
+
+     nextthreadid(someId),
+
+     compiletimeevaluation(true),
+
+     threadinfo(
+          threadstatus(someThreadStatus),
+          mutexes(someMutexes),
+          glocks(someGLocks)
+     )
+     threads(
+          thread(
+               threadid(someThreadId),
+
+               k(declareInternalVariable(X, T, noInit)),
+
+               finalcomputation(someFinalComputation),
+               
+               threadlocal(someThreadLocal)
+          )
+     )
+    ),
+
+    errorcell(someErrorCell),
+
+    status(initializingTu),
+
+    options(someOptions),
+
+    library(
+     
+     malloced(someMalloced),
+     
+     atexit(someATexit),
+     atquickexit(someQuickExit),
+
+     valists(someVALists),
+
+     jmpbufs(someJmpBufs),
+
+     openfiles(someOpenFiles),
+
+     files(
+          file(
+               fid(someFID),
+               uri(someURI),
+               pos(somePos),
+               mode(someMode),
+               nextbyte(someNextByte),
+               readbuffer(someReadBuffer),
+               writebuffer(someWriteBuffer),
+               buffermode(fullBuf),
+               buffersize(bufSiz),
+               sending(someSendingList),
+               done(someDoneLog),
+               feof(false),
+               ferror(someFError),
+               lastop(noLastOp)
+          )
+     ),
+     input(someInput),
+     output(someOutput),
+     
+     strerrorcache(someStrerrorCache),
+     sighandlingstate(someSigHandlingState),
+         
+     setlocale(NullPointerConstant),
+     localeconv(NullPointerConstant),
+     getenv(NullPointerConstant)
+    )
+  )
+)
+=?
+top(
+  global(
+     mem(someMem),
+     references(someReferences),
+     functions(someFunctions),
+     gotomap(someGoToMap),
+     maintu(someMainTu),
+
+     globalstate(
+          
+          externaltypes(map(mapitem(X, Base), restExternalTypes)),
+          externaldefs(map(mapitem(X, T), restExternalDefs)),
+          odrdefs(someOdrDefs),
+          linkings(someLinkings),
+          functiontus(someFunctionsTus)
+     ),
+
+     linkingstate(
+          externaldecls(someExternalDecls),
+          externaldeclsloc(someExternalDeclsLoc),
+          externaluses(someExternalUses),
+          linkingdeps(someLinkingDeps),
+          externaldefsloc(someExternalDefsLoc),
+          odrdecls(someOdrDecls),
+          odruses(someOdrUses)
+     ),
+
+     tags(someTags),
+     unnamedlocs(someUnnamedLocs),
+     dynamicinit(someDynamicInit),
+     constexprsymbase(someConstExprSymbase),
+     translationunits(
+          tu(
+               tuid(someTuId),
+               genv(someGEnv),
+               rgenv(someRGEnv),
+               gtypes(someGTypes),
+               hasrestrict(someHasRestrict),
+               localstatics(someLocalStatics),
+               tulinkingstate(
+                    externals(someExternals),
+                    internals(someInternals),
+                    uses(someUses),
+                    genums(someGEnums),
+                    templates(someTemplates)
+               ),
+
+               nextunnamed(someNextUnnamed),
+               incompletetags(someIncompleteTags),
+
+               namespaces(
+                    ns(
+                         nsid(someGlobalNamespace),
+                         nenv(someNEnv),
+                         ntypes(someNTypes),
+                         nestednamespaces(someNestedNamespaces),
+                         nenums(someNEnums),
+                         isinline(someIsInline),
+                         nusingnamespaces(someNUsingNamespaces),
+                         inlinenamespaces(someInlineNamespaces)
+                    )
+               ),
+
+               classes(
+                    class(
+                         classid(someClassId),
+                         classtype(someClassType),
+                         isaggregate(someIsAggregated),
+                         baseclasses(someBaseClasses),
+                         virtualbases(someVirtualBases),
+                         cenv(someCEnv),
+                         ctypes(someCTypes),
+                         cenums(someCEnums),
+                         initializers(someInitializers),
+                         nonstaticdatamembers(someNonStaticDataMembers),
+                         functionmembers(someFunctionMembers),
+                         variantmembers(someVariantMembers),
+                         conversionfunctions(someConversionFunctions),
+                         access(someAccess),
+                         baseaccess(someBaseAccess),
+                         accessspecifier(someAccessSpecifiers),
+                         sizeof(someSizeOf),
+                         align(someAlign),
+                         dsize(someDSize),
+                         nvsize(someNVSize),
+                         nvalign(someNVAlign)
+                    )
+                ),
+
+               cppenums(
+                    cppenum(
+                         enumid(someEnumId),
+                         enumtype(someEnumType),
+                         scoped(SomeScoped),
+                         enumerators(someEnumerators),
+                         enumcomplete(someEnumComplete),
+                         enumopaque(someEnumOpaque),
+                         enummin(someEnumMin),
+                         enummax(someEnumMax)
+                    )
+               ),
+
+               whenodrused(someWhenOdrUsed)
+            )
+        ),
+
+    hardwareaddresses(someHardwareAddresses)
+),
+
+resultvalue(someValue)
+
+  T(
+    exec(
+     extensionsglobal(someExtensionsGlobal)
+
+     nextthreadid(someId),
+
+     compiletimeevaluation(true),
+
+     threadinfo(
+          threadstatus(someThreadStatus),
+          mutexes(someMutexes),
+          glocks(someGLocks)
+     )
+     threads(
+          thread(
+               threadid(someThreadId),
+
+               k(declareInternalVariable(concreteX, concreteT, noInit)),
+
+               finalcomputation(someFinalComputation),
+               
+               threadlocal(someThreadLocal)
+          )
+     )
+    ),
+
+    errorcell(someErrorCell),
+
+    status(initializingTu),
+
+    options(someOptions),
+
+    library(
+     
+     malloced(someMalloced),
+     
+     atexit(someATexit),
+     atquickexit(someQuickExit),
+
+     valists(someVALists),
+
+     jmpbufs(someJmpBufs),
+
+     openfiles(someOpenFiles),
+
+     files(
+          file(
+               fid(someFID),
+               uri(someURI),
+               pos(somePos),
+               mode(someMode),
+               nextbyte(someNextByte),
+               readbuffer(someReadBuffer),
+               writebuffer(someWriteBuffer),
+               buffermode(fullBuf),
+               buffersize(bufSiz),
+               sending(someSendingList),
+               done(someDoneLog),
+               feof(false),
+               ferror(zero),
+               lastop(noLastOp)
+          )
+     ),
+     input(someInput),
+     output(someOutput),
+     
+     strerrorcache(someStrerrorCache),
+     sighandlingstate(someSigHandlingState),
+       
+     setlocale(NullPointerConstant),
+     localeconv(NullPointerConstant),
+     getenv(NullPointerConstant)
+    )
+  )
+)
