@@ -1,4 +1,4 @@
-variables: someMem, someReferences, someFunctions, someGoToMap, someMainTu, someExternalTypes, someExternalDefs, someOdrDefs, someLinkings, someFunctionsTus, someExternalDecls, someExternalDeclsLoc, someExternalUses, someLinkingDeps, someExternalDefsLoc, someOdrDecls, someOdrUses, someTags, someUnnamedLocs, someDynamicInit, someConstExprSymbase, someTuId, someGEnv, someRGEnv, someGTypes, someHasRestrict, someLocalStatics, someExternals, someInternals, someUses, someGEnums, someTemplates, someNextUnnamed, someIncompleteTags, someGlobalNamespace, someNEnv, someNTypes, someNestedNamespaces, someNEnums, someIsInline, someNUsingNamespaces, someInlineNamespaces, someClassId, someClassType, someIsAggregated, someBaseClasses, someVirtualBases, someCEnv, someCTypes, someCEnums, someInitializers, someNonStaticDataMembers, someFunctionMembers, someVariantMembers, someConversionFunctions, someAccess, someBaseAccess, someAccessSpecifiers, someSizeOf, someAlign, someDSize, someNVSize, someNVAlign, someEnumId, someEnumType, SomeScoped, someEnumerators, someEnumComplete, someEnumOpaque, someEnumMin, someEnumMax, someWhenOdrUsed, someHardwareAddresses, someValue, someExtensionsGlobal, someId, someThreadStatus, someMutexes, someGLocks, someThreadId, someFinalComputation, someThreadLocal, someErrorCell, initializingTu, someOptions, someMalloced, someATexit, someQuickExit, someVALists, someJmpBufs, someOpenFiles, someFID, someURI, somePos, someMode, someNextByte, someReadBuffer, someWriteBuffer, fullBuf, bufSiz, someSendingList, someDoneLog, someFError, noLastOp, someInput, someOutput, someStrerrorCache, someSigHandlingState, X, T, Base, noInit, currentTu, restExternalDefs, restExternalTypes
+variables: someMem, someReferences, someFunctions, someGoToMap, someMainTu, someOdrDefs, someLinkings, someFunctionsTus, someExternalDecls, someExternalDeclsLoc, someExternalUses, someLinkingDeps, someExternalDefsLoc, someOdrDecls, someOdrUses, someTags, someUnnamedLocs, someDynamicInit, someConstExprSymbase, someTuId, someGEnv, someRGEnv, someGTypes, someHasRestrict, someLocalStatics, someExternals, someInternals, someUses, someGEnums, someTemplates, someNextUnnamed, someIncompleteTags, someGlobalNamespace, someNEnv, someNTypes, someNestedNamespaces, someNEnums, someIsInline, someNUsingNamespaces, someInlineNamespaces, someClassId, someClassType, someIsAggregated, someBaseClasses, someVirtualBases, someCEnv, someCTypes, someCEnums, someInitializers, someNonStaticDataMembers, someFunctionMembers, someVariantMembers, someConversionFunctions, someAccess, someBaseAccess, someAccessSpecifiers, someSizeOf, someAlign, someDSize, someNVSize, someNVAlign, someEnumId, someEnumType, SomeScoped, someEnumerators, someEnumComplete, someEnumOpaque, someEnumMin, someEnumMax, someWhenOdrUsed, someHardwareAddresses, someValue, someExtensionsGlobal, someId, someThreadStatus, someMutexes, someGLocks, someThreadId, someFinalComputation, someThreadLocal, someErrorCell, initializingTu, someOptions, someMalloced, someATexit, someQuickExit, someVALists, someJmpBufs, someOpenFiles, someFID, someURI, somePos, someMode, someNextByte, someReadBuffer, someWriteBuffer, fullBuf, bufSiz, someSendingList, someDoneLog, someFError, noLastOp, someInput, someOutput, someStrerrorCache, someSigHandlingState, X, Typ, Base, noInit, currentTu, restExternalDefs, restExternalTypes
 symbols: global, mem, references, functions, gotomap, maintu, globalstate, externaltypes, externaldefs, odrdefs, linkings, functiontus, linkingstate, externaldecls, externaldeclsloc, externaluses, linkingdeps, externaldefsloc, odrdecls, odruses, tags, unnamedlocs, dynamicinit, constexprsymbase, translationunits, tu, tuid, genv, rgenv, gtypes, hasrestrict, localstatics, tulinkingstate, externals, internals, uses, genums, templates, nextunnamed, incompletetags, namespaces, ns, nsid, nenv, ntypes, nestednamespaces, nenums, isinline, nusingnamespaces, inlinenamespaces, classes, class, classid, classtype, isaggregate, baseclasses, virtualbases, cenv, ctypes, cenums, initializers, nonstaticdatamembers, functionmembers, variantmembers, conversionfunctions, access, baseaccess, accessspecifier, sizeof, align, dsize, nvsize, nvalign, cppenums, cppenum, enumid, enumtype, scoped, enumerators, enumcomplete, enumopaque, enummin, enummax, whenodrused, hardwareaddresses, resultvalue, top, T, exec, extensionsglobal, nextthreadid, compiletimeevaluation, threadinfo, threadstatus, mutexes, glocks, threads, thread, threadid, k, finalcomputation, threadlocal, errorcell, status, options, library, malloced, atexit, atquickexit, valists, jmpbufs, openfiles, files, file, fid, uri, pos, mode, nextbyte, readbuffer, writebuffer, buffermode, buffersize, sending, done, feof, ferror, lastop, input, output, strerrorcache, sighandlingstate, setlocale, localeconv, getenv, NullPointerConstant, true, false, zero, map,declareInternalVariable, map, mapitem, concreteT, concreteX
 problem:
 top(
@@ -12,7 +12,7 @@ top(
      globalstate(
           
           externaltypes(map(mapitem(X, Base), restExternalTypes)),
-          externaldefs(map(mapitem(X, T), restExternalDefs)),
+          externaldefs(map(mapitem(X, Typ), restExternalDefs)),
           odrdefs(someOdrDefs),
           linkings(someLinkings),
           functiontus(someFunctionsTus)
@@ -129,7 +129,7 @@ resultvalue(someValue)
           thread(
                threadid(someThreadId),
 
-               k(declareInternalVariable(X, T, noInit)),
+               k(declareInternalVariable(X, Typ, noInit)),
 
                finalcomputation(someFinalComputation),
                
@@ -199,7 +199,7 @@ top(
      globalstate(
           
           externaltypes(map(mapitem(X, Base), restExternalTypes)),
-          externaldefs(map(mapitem(X, T), restExternalDefs)),
+          externaldefs(map(mapitem(X, Typ), restExternalDefs)),
           odrdefs(someOdrDefs),
           linkings(someLinkings),
           functiontus(someFunctionsTus)
