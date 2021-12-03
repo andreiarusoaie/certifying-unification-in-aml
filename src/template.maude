@@ -38,12 +38,12 @@ rew in PRETTY : pretty(gen-proof2(
     TERM1,
     TERM2
     )) .
-rew in PRETTY : check(gen-proof1(
-    TERM1,
-    TERM2
-    )) .
-rew in PRETTY : check(gen-proof2(
-    TERM1,
-    TERM2
-    )) .
+*** rew in PRETTY : check(gen-proof1(
+***     TERM1,
+***     TERM2
+***     )) .
+*** rew in PRETTY : check(gen-proof2(
+***     TERM1,
+***     TERM2
+***     )) .
 q
