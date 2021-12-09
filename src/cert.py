@@ -115,8 +115,8 @@ def extract_maude(out, log):
     for proof in proofs:
         lastline = proof[0].strip().splitlines()[-1];
         ids.append((int) (get_proof_id(lastline)))
-        # print(u.BOLD + u.HEADER + "Proof of:" + u.OKBLUE, get_goal(lastline), u.ENDC)
-        # print(proof[0].strip())
+        print(u.BOLD + u.HEADER + "Proof of:" + u.OKBLUE, get_goal(lastline), u.ENDC)
+        print(proof[0].strip())
         # print(u.OKBLUE + "Checked:", u.ENDC, flagcolor(checks[i - 1][0]))
         i = i + 1
     return ids
@@ -155,7 +155,7 @@ def certify(args):
     if ex == 0:
         ids = extract_maude(out, log)
         # print(", ".join(map(str, ids)), ",", sum(ids), ",", vtime)
-        print(os.path.basename(input_filename) , ",", sum(ids), ",", vtime)
+        print("The proof generated for input:", os.path.basename(input_filename) , "has", sum(ids), "lines and took", vtime, "seconds.")
     else:
         u.err("cannot execute", MAUDE, "\nERROR")
 
