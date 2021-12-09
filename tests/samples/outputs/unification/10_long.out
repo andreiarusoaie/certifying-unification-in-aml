@@ -1,0 +1,75 @@
+[1m[95mProof of:[94m (f(g(b), h(a, x)) and f(g(z), h(c, y)) --> ff and f(g(b), h(a, x)))  [0m
+(1)((f(g(b), h(a, x)) === f(g(z), h(c, y))) --> (f(g(b), h(a, x)) === f(g(z), h(c, y)))) [tauto-imp-refl] ;
+
+(2)((f(g(b), h(a, x)) === f(g(z), h(c, y))) --> (g(b) === g(z)) and (h(a, x) === h(c, y))) [axiom-no-confusion-II] ;
+
+(3)((f(g(b), h(a, x)) === f(g(z), h(c, y))) --> (g(b) === g(z)) and (h(a, x) === h(c, y))) [tauto-imp-tranz,1,2] ;
+
+(4)((g(b) === g(z)) --> (b === z)) [axiom-no-confusion-II] ;
+
+(5)((g(b) === g(z)) and (h(a, x) === h(c, y)) --> (b === z) and (h(a, x) === h(c, y))) [tauto-context,4] ;
+
+(6)((f(g(b), h(a, x)) === f(g(z), h(c, y))) --> (b === z) and (h(a, x) === h(c, y))) [tauto-imp-tranz,3,5] ;
+
+(7)((h(a, x) === h(c, y)) --> (a === c) and (x === y)) [axiom-no-confusion-II] ;
+
+(8)((b === z) and (h(a, x) === h(c, y)) --> (a === c) and (b === z) and (x === y)) [tauto-context,7] ;
+
+(9)((f(g(b), h(a, x)) === f(g(z), h(c, y))) --> (a === c) and (b === z) and (x === y)) [tauto-imp-tranz,6,8] ;
+
+(10)((b === z) --> (z === b)) [equality-symmetry] ;
+
+(11)((a === c) and (b === z) and (x === y) --> (a === c) and (x === y) and (z === b)) [tauto-context,10] ;
+
+(12)((f(g(b), h(a, x)) === f(g(z), h(c, y))) --> (a === c) and (x === y) and (z === b)) [tauto-imp-tranz,9,11] ;
+
+(13)((a === c) --> ff) [axiom-no-confusion-I] ;
+
+(14)((a === c) and (x === y) and (z === b) --> ff and (x === y) and (z === b)) [tauto-context,13] ;
+
+(15)(ff and (x === y) and (z === b) --> ff) [tauto-and-bot] ;
+
+(16)((a === c) and (x === y) and (z === b) --> ff) [tauto-imp-tranz,14,15] ;
+
+(17)((f(g(b), h(a, x)) === f(g(z), h(c, y))) --> ff) [tauto-imp-tranz,12,16] ;
+
+(18)(f(g(b), h(a, x)) and (f(g(b), h(a, x)) === f(g(z), h(c, y))) --> ff and f(g(b), h(a, x))) [tauto-context,17] ;
+
+(19)(f(g(b), h(a, x)) and f(g(z), h(c, y)) --> f(g(b), h(a, x)) and (f(g(b), h(a, x)) === f(g(z), h(c, y)))) [axiom-term-eq-intro] ;
+
+(20)(f(g(b), h(a, x)) and f(g(z), h(c, y)) --> ff and f(g(b), h(a, x))) [tauto-imp-tranz,19,18] ;
+[1m[95mProof of:[94m (ff and f(g(b), h(a, x)) --> f(g(b), h(a, x)) and f(g(z), h(c, y)))  [0m
+(1)(ff --> ff) [tauto-imp-refl] ;
+
+(2)(ff --> (a === c) and (x === y) and (z === b)) [tauto-bot-elim] ;
+
+(3)(ff --> (a === c) and (x === y) and (z === b)) [tauto-imp-tranz,1,2] ;
+
+(4)((z === b) --> (b === z)) [equality-symmetry] ;
+
+(5)((a === c) and (x === y) and (z === b) --> (a === c) and (b === z) and (x === y)) [tauto-context,4] ;
+
+(6)(ff --> (a === c) and (b === z) and (x === y)) [tauto-imp-tranz,3,5] ;
+
+(7)((a === c) and (x === y) --> (h(a, x) === h(c, y))) [axiom-functional] ;
+
+(8)((a === c) and (b === z) and (x === y) --> (b === z) and (h(a, x) === h(c, y))) [tauto-context,7] ;
+
+(9)(ff --> (b === z) and (h(a, x) === h(c, y))) [tauto-imp-tranz,6,8] ;
+
+(10)((b === z) --> (g(b) === g(z))) [axiom-functional] ;
+
+(11)((b === z) and (h(a, x) === h(c, y)) --> (g(b) === g(z)) and (h(a, x) === h(c, y))) [tauto-context,10] ;
+
+(12)(ff --> (g(b) === g(z)) and (h(a, x) === h(c, y))) [tauto-imp-tranz,9,11] ;
+
+(13)((g(b) === g(z)) and (h(a, x) === h(c, y)) --> (f(g(b), h(a, x)) === f(g(z), h(c, y)))) [axiom-functional] ;
+
+(14)(ff --> (f(g(b), h(a, x)) === f(g(z), h(c, y)))) [tauto-imp-tranz,12,13] ;
+
+(15)(ff and f(g(b), h(a, x)) --> f(g(b), h(a, x)) and (f(g(b), h(a, x)) === f(g(z), h(c, y)))) [tauto-context,14] ;
+
+(16)(f(g(b), h(a, x)) and (f(g(b), h(a, x)) === f(g(z), h(c, y))) --> f(g(b), h(a, x)) and f(g(z), h(c, y))) [axiom-term-eq-elim] ;
+
+(17)(ff and f(g(b), h(a, x)) --> f(g(b), h(a, x)) and f(g(z), h(c, y))) [tauto-imp-tranz,15,16] ;
+The proof generated for input: 10_long.in has 37 lines and took 0.042 seconds.

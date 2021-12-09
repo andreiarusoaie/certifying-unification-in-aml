@@ -1,0 +1,25 @@
+[1m[95mProof of:[94m (f(x) and g(x) --> ff and g(x))  [0m
+(1)((g(x) === f(x)) --> (g(x) === f(x))) [tauto-imp-refl] ;
+
+(2)((g(x) === f(x)) --> ff) [axiom-no-confusion-I] ;
+
+(3)((g(x) === f(x)) --> ff) [tauto-imp-tranz,1,2] ;
+
+(4)(g(x) and (g(x) === f(x)) --> ff and g(x)) [tauto-context,3] ;
+
+(5)(f(x) and g(x) --> g(x) and (g(x) === f(x))) [axiom-term-eq-intro] ;
+
+(6)(f(x) and g(x) --> ff and g(x)) [tauto-imp-tranz,5,4] ;
+[1m[95mProof of:[94m (ff and g(x) --> f(x) and g(x))  [0m
+(1)(ff --> ff) [tauto-imp-refl] ;
+
+(2)(ff --> (g(x) === f(x))) [tauto-bot-elim] ;
+
+(3)(ff --> (g(x) === f(x))) [tauto-imp-tranz,1,2] ;
+
+(4)(ff and g(x) --> g(x) and (g(x) === f(x))) [tauto-context,3] ;
+
+(5)(g(x) and (g(x) === f(x)) --> f(x) and g(x)) [axiom-term-eq-elim] ;
+
+(6)(ff and g(x) --> f(x) and g(x)) [tauto-imp-tranz,4,5] ;
+The proof generated for input: 2_conflict.in has 12 lines and took 0.039 seconds.

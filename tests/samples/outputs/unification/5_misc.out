@@ -1,0 +1,49 @@
+[1m[95mProof of:[94m (c(a, c(z, x)) and c(x, y) --> c(x, y) and (x === a) and (y === c(z, a)))  [0m
+(1)((c(x, y) === c(a, c(z, x))) --> (c(x, y) === c(a, c(z, x)))) [tauto-imp-refl] ;
+
+(2)((c(x, y) === c(a, c(z, x))) --> (x === a) and (y === c(z, x))) [axiom-no-confusion-II] ;
+
+(3)((c(x, y) === c(a, c(z, x))) --> (x === a) and (y === c(z, x))) [tauto-imp-tranz,1,2] ;
+
+(4)((x === a) and (y === c(z, x)) --> (y === c(z, a))) [equality-elimination] ;
+
+(5)((x === a) and (x === a) and (y === c(z, x)) --> (x === a) and (y === c(z, a))) [tauto-context,4] ;
+
+(6)((x === a) --> (x === a) and (x === a)) [tauto-and-expand] ;
+
+(7)((x === a) and (y === c(z, x)) --> (x === a) and (x === a) and (y === c(z, x))) [tauto-context,6] ;
+
+(8)((x === a) and (y === c(z, x)) --> (x === a) and (y === c(z, a))) [tauto-imp-tranz,7,5] ;
+
+(9)((c(x, y) === c(a, c(z, x))) --> (x === a) and (y === c(z, a))) [tauto-imp-tranz,3,8] ;
+
+(10)(c(x, y) and (c(x, y) === c(a, c(z, x))) --> c(x, y) and (x === a) and (y === c(z, a))) [tauto-context,9] ;
+
+(11)(c(a, c(z, x)) and c(x, y) --> c(x, y) and (c(x, y) === c(a, c(z, x)))) [axiom-term-eq-intro] ;
+
+(12)(c(a, c(z, x)) and c(x, y) --> c(x, y) and (x === a) and (y === c(z, a))) [tauto-imp-tranz,11,10] ;
+[1m[95mProof of:[94m (c(x, y) and (x === a) and (y === c(z, a)) --> c(a, c(z, x)) and c(x, y))  [0m
+(1)((x === a) and (y === c(z, a)) --> (x === a) and (y === c(z, a))) [tauto-imp-refl] ;
+
+(2)((y === c(z, a)) --> (x === a) and (y === c(z, x))) [equality-introduction1] ;
+
+(3)((x === a) and (y === c(z, a)) --> (x === a) and (x === a) and (y === c(z, x))) [tauto-context,2] ;
+
+(4)((x === a) and (x === a) --> (x === a)) [tauto-and-simpl] ;
+
+(5)((x === a) and (x === a) and (y === c(z, x)) --> (x === a) and (y === c(z, x))) [tauto-context,4] ;
+
+(6)((x === a) and (y === c(z, a)) --> (x === a) and (y === c(z, x))) [tauto-imp-tranz,3,5] ;
+
+(7)((x === a) and (y === c(z, a)) --> (x === a) and (y === c(z, x))) [tauto-imp-tranz,1,6] ;
+
+(8)((x === a) and (y === c(z, x)) --> (c(x, y) === c(a, c(z, x)))) [axiom-functional] ;
+
+(9)((x === a) and (y === c(z, a)) --> (c(x, y) === c(a, c(z, x)))) [tauto-imp-tranz,7,8] ;
+
+(10)(c(x, y) and (x === a) and (y === c(z, a)) --> c(x, y) and (c(x, y) === c(a, c(z, x)))) [tauto-context,9] ;
+
+(11)(c(x, y) and (c(x, y) === c(a, c(z, x))) --> c(a, c(z, x)) and c(x, y)) [axiom-term-eq-elim] ;
+
+(12)(c(x, y) and (x === a) and (y === c(z, a)) --> c(a, c(z, x)) and c(x, y)) [tauto-imp-tranz,10,11] ;
+The proof generated for input: 5_misc.in has 24 lines and took 0.041 seconds.

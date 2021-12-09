@@ -1,0 +1,57 @@
+[1m[95mProof of:[94m (f(x, g(u, t)) and f(x, g(z, x)) --> f(x, g(z, x)) and (x === t) and (z === u))  [0m
+(1)((f(x, g(z, x)) === f(x, g(u, t))) --> (f(x, g(z, x)) === f(x, g(u, t)))) [tauto-imp-refl] ;
+
+(2)((f(x, g(z, x)) === f(x, g(u, t))) --> (x === x) and (g(z, x) === g(u, t))) [axiom-no-confusion-II] ;
+
+(3)((f(x, g(z, x)) === f(x, g(u, t))) --> (x === x) and (g(z, x) === g(u, t))) [tauto-imp-tranz,1,2] ;
+
+(4)((g(z, x) === g(u, t)) --> (x === t) and (z === u)) [axiom-no-confusion-II] ;
+
+(5)((x === x) and (g(z, x) === g(u, t)) --> (x === t) and (x === x) and (z === u)) [tauto-context,4] ;
+
+(6)((f(x, g(z, x)) === f(x, g(u, t))) --> (x === t) and (x === x) and (z === u)) [tauto-imp-tranz,3,5] ;
+
+(7)((x === x) --> (ff --> ff)) [tauto-equality-id] ;
+
+(8)((x === t) and (x === x) and (z === u) --> (ff --> ff) and (x === t) and (z === u)) [tauto-context,7] ;
+
+(9)((ff --> ff) and (x === t) and (z === u) --> (x === t) and (z === u)) [tauto-and-unit] ;
+
+(10)((x === t) and (x === x) and (z === u) --> (x === t) and (z === u)) [tauto-imp-tranz,8,9] ;
+
+(11)((f(x, g(z, x)) === f(x, g(u, t))) --> (x === t) and (z === u)) [tauto-imp-tranz,6,10] ;
+
+(12)(f(x, g(z, x)) and (f(x, g(z, x)) === f(x, g(u, t))) --> f(x, g(z, x)) and (x === t) and (z === u)) [tauto-context,11] ;
+
+(13)(f(x, g(u, t)) and f(x, g(z, x)) --> f(x, g(z, x)) and (f(x, g(z, x)) === f(x, g(u, t)))) [axiom-term-eq-intro] ;
+
+(14)(f(x, g(u, t)) and f(x, g(z, x)) --> f(x, g(z, x)) and (x === t) and (z === u)) [tauto-imp-tranz,13,12] ;
+[1m[95mProof of:[94m (f(x, g(z, x)) and (x === t) and (z === u) --> f(x, g(u, t)) and f(x, g(z, x)))  [0m
+(1)((x === t) and (z === u) --> (x === t) and (z === u)) [tauto-imp-refl] ;
+
+(2)((ff --> ff) --> (x === x)) [tauto-equality-refl] ;
+
+(3)((ff --> ff) and (x === t) and (z === u) --> (x === t) and (x === x) and (z === u)) [tauto-context,2] ;
+
+(4)((x === t) and (z === u) --> (ff --> ff) and (x === t) and (z === u)) [tauto-and-exp-unit] ;
+
+(5)((x === t) and (z === u) --> (x === t) and (x === x) and (z === u)) [tauto-imp-tranz,4,3] ;
+
+(6)((x === t) and (z === u) --> (x === t) and (x === x) and (z === u)) [tauto-imp-tranz,1,5] ;
+
+(7)((x === t) and (z === u) --> (g(z, x) === g(u, t))) [axiom-functional] ;
+
+(8)((x === t) and (x === x) and (z === u) --> (x === x) and (g(z, x) === g(u, t))) [tauto-context,7] ;
+
+(9)((x === t) and (z === u) --> (x === x) and (g(z, x) === g(u, t))) [tauto-imp-tranz,6,8] ;
+
+(10)((x === x) and (g(z, x) === g(u, t)) --> (f(x, g(z, x)) === f(x, g(u, t)))) [axiom-functional] ;
+
+(11)((x === t) and (z === u) --> (f(x, g(z, x)) === f(x, g(u, t)))) [tauto-imp-tranz,9,10] ;
+
+(12)(f(x, g(z, x)) and (x === t) and (z === u) --> f(x, g(z, x)) and (f(x, g(z, x)) === f(x, g(u, t)))) [tauto-context,11] ;
+
+(13)(f(x, g(z, x)) and (f(x, g(z, x)) === f(x, g(u, t))) --> f(x, g(u, t)) and f(x, g(z, x))) [axiom-term-eq-elim] ;
+
+(14)(f(x, g(z, x)) and (x === t) and (z === u) --> f(x, g(u, t)) and f(x, g(z, x))) [tauto-imp-tranz,12,13] ;
+The proof generated for input: 1_dec.in has 28 lines and took 0.041 seconds.

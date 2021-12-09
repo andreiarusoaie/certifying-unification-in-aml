@@ -1,0 +1,51 @@
+[1m[95mProof of:[94m (f(z, h(c, y)) and f(h(a, x), b) --> ff and f(h(a, x), b))  [0m
+(1)((f(h(a, x), b) === f(z, h(c, y))) --> (f(h(a, x), b) === f(z, h(c, y)))) [tauto-imp-refl] ;
+
+(2)((f(h(a, x), b) === f(z, h(c, y))) --> (b === h(c, y)) and (h(a, x) === z)) [axiom-no-confusion-II] ;
+
+(3)((f(h(a, x), b) === f(z, h(c, y))) --> (b === h(c, y)) and (h(a, x) === z)) [tauto-imp-tranz,1,2] ;
+
+(4)((h(a, x) === z) --> (z === h(a, x))) [equality-symmetry] ;
+
+(5)((b === h(c, y)) and (h(a, x) === z) --> (b === h(c, y)) and (z === h(a, x))) [tauto-context,4] ;
+
+(6)((f(h(a, x), b) === f(z, h(c, y))) --> (b === h(c, y)) and (z === h(a, x))) [tauto-imp-tranz,3,5] ;
+
+(7)((b === h(c, y)) --> ff) [axiom-no-confusion-I] ;
+
+(8)((b === h(c, y)) and (z === h(a, x)) --> ff and (z === h(a, x))) [tauto-context,7] ;
+
+(9)(ff and (z === h(a, x)) --> ff) [tauto-and-bot] ;
+
+(10)((b === h(c, y)) and (z === h(a, x)) --> ff) [tauto-imp-tranz,8,9] ;
+
+(11)((f(h(a, x), b) === f(z, h(c, y))) --> ff) [tauto-imp-tranz,6,10] ;
+
+(12)(f(h(a, x), b) and (f(h(a, x), b) === f(z, h(c, y))) --> ff and f(h(a, x), b)) [tauto-context,11] ;
+
+(13)(f(z, h(c, y)) and f(h(a, x), b) --> f(h(a, x), b) and (f(h(a, x), b) === f(z, h(c, y)))) [axiom-term-eq-intro] ;
+
+(14)(f(z, h(c, y)) and f(h(a, x), b) --> ff and f(h(a, x), b)) [tauto-imp-tranz,13,12] ;
+[1m[95mProof of:[94m (ff and f(h(a, x), b) --> f(z, h(c, y)) and f(h(a, x), b))  [0m
+(1)(ff --> ff) [tauto-imp-refl] ;
+
+(2)(ff --> (b === h(c, y)) and (z === h(a, x))) [tauto-bot-elim] ;
+
+(3)(ff --> (b === h(c, y)) and (z === h(a, x))) [tauto-imp-tranz,1,2] ;
+
+(4)((z === h(a, x)) --> (h(a, x) === z)) [equality-symmetry] ;
+
+(5)((b === h(c, y)) and (z === h(a, x)) --> (b === h(c, y)) and (h(a, x) === z)) [tauto-context,4] ;
+
+(6)(ff --> (b === h(c, y)) and (h(a, x) === z)) [tauto-imp-tranz,3,5] ;
+
+(7)((b === h(c, y)) and (h(a, x) === z) --> (f(h(a, x), b) === f(z, h(c, y)))) [axiom-functional] ;
+
+(8)(ff --> (f(h(a, x), b) === f(z, h(c, y)))) [tauto-imp-tranz,6,7] ;
+
+(9)(ff and f(h(a, x), b) --> f(h(a, x), b) and (f(h(a, x), b) === f(z, h(c, y)))) [tauto-context,8] ;
+
+(10)(f(h(a, x), b) and (f(h(a, x), b) === f(z, h(c, y))) --> f(z, h(c, y)) and f(h(a, x), b)) [axiom-term-eq-elim] ;
+
+(11)(ff and f(h(a, x), b) --> f(z, h(c, y)) and f(h(a, x), b)) [tauto-imp-tranz,9,10] ;
+The proof generated for input: 9_dec_rev.in has 25 lines and took 0.04 seconds.

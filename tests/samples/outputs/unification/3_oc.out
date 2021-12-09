@@ -1,0 +1,25 @@
+[1m[95mProof of:[94m (x and f(x) --> x and ff)  [0m
+(1)((x === f(x)) --> (x === f(x))) [tauto-imp-refl] ;
+
+(2)((x === f(x)) --> ff) [occurs-check] ;
+
+(3)((x === f(x)) --> ff) [tauto-imp-tranz,1,2] ;
+
+(4)(x and (x === f(x)) --> x and ff) [tauto-context,3] ;
+
+(5)(x and f(x) --> x and (x === f(x))) [axiom-term-eq-intro] ;
+
+(6)(x and f(x) --> x and ff) [tauto-imp-tranz,5,4] ;
+[1m[95mProof of:[94m (x and ff --> x and f(x))  [0m
+(1)(ff --> ff) [tauto-imp-refl] ;
+
+(2)(ff --> (x === f(x))) [tauto-bot-elim] ;
+
+(3)(ff --> (x === f(x))) [tauto-imp-tranz,1,2] ;
+
+(4)(x and ff --> x and (x === f(x))) [tauto-context,3] ;
+
+(5)(x and (x === f(x)) --> x and f(x)) [axiom-term-eq-elim] ;
+
+(6)(x and ff --> x and f(x)) [tauto-imp-tranz,4,5] ;
+The proof generated for input: 3_oc.in has 12 lines and took 0.039 seconds.

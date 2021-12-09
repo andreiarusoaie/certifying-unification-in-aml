@@ -1,0 +1,37 @@
+[1m[95mProof of:[94m (cons(a, z) and cons(x, a) --> cons(x, a) and (x === a) and (z === a))  [0m
+(1)((cons(x, a) === cons(a, z)) --> (cons(x, a) === cons(a, z))) [tauto-imp-refl] ;
+
+(2)((cons(x, a) === cons(a, z)) --> (a === z) and (x === a)) [axiom-no-confusion-II] ;
+
+(3)((cons(x, a) === cons(a, z)) --> (a === z) and (x === a)) [tauto-imp-tranz,1,2] ;
+
+(4)((a === z) --> (z === a)) [equality-symmetry] ;
+
+(5)((a === z) and (x === a) --> (x === a) and (z === a)) [tauto-context,4] ;
+
+(6)((cons(x, a) === cons(a, z)) --> (x === a) and (z === a)) [tauto-imp-tranz,3,5] ;
+
+(7)(cons(x, a) and (cons(x, a) === cons(a, z)) --> cons(x, a) and (x === a) and (z === a)) [tauto-context,6] ;
+
+(8)(cons(a, z) and cons(x, a) --> cons(x, a) and (cons(x, a) === cons(a, z))) [axiom-term-eq-intro] ;
+
+(9)(cons(a, z) and cons(x, a) --> cons(x, a) and (x === a) and (z === a)) [tauto-imp-tranz,8,7] ;
+[1m[95mProof of:[94m (cons(x, a) and (x === a) and (z === a) --> cons(a, z) and cons(x, a))  [0m
+(1)((x === a) and (z === a) --> (x === a) and (z === a)) [tauto-imp-refl] ;
+
+(2)((z === a) --> (a === z)) [equality-symmetry] ;
+
+(3)((x === a) and (z === a) --> (a === z) and (x === a)) [tauto-context,2] ;
+
+(4)((x === a) and (z === a) --> (a === z) and (x === a)) [tauto-imp-tranz,1,3] ;
+
+(5)((a === z) and (x === a) --> (cons(x, a) === cons(a, z))) [axiom-functional] ;
+
+(6)((x === a) and (z === a) --> (cons(x, a) === cons(a, z))) [tauto-imp-tranz,4,5] ;
+
+(7)(cons(x, a) and (x === a) and (z === a) --> cons(x, a) and (cons(x, a) === cons(a, z))) [tauto-context,6] ;
+
+(8)(cons(x, a) and (cons(x, a) === cons(a, z)) --> cons(a, z) and cons(x, a)) [axiom-term-eq-elim] ;
+
+(9)(cons(x, a) and (x === a) and (z === a) --> cons(a, z) and cons(x, a)) [tauto-imp-tranz,7,8] ;
+The proof generated for input: 12_paper_cons.in has 18 lines and took 0.04 seconds.
