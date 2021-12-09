@@ -1,0 +1,25 @@
+[1m[95mProof of:[94m (f(x) or g(x) <--> ∃ v(3) . v(3) and ((v(3) === f(x)) or (v(3) === g(x))))  [0m
+(1)(∃ v(3) . (g(x) <--> v(3) and (v(3) === g(x)))) [e-subst] ;
+
+(2)((g(x) <--> ∃ v(3) . v(3) and (v(3) === g(x))) <--> ∃ v(3) . (g(x) <--> v(3) and (v(3) === g(x)))) [e-scope] ;
+
+(3)(g(x) <--> ∃ v(3) . v(3) and (v(3) === g(x))) [modus-ponens(1, 2)] ;
+
+(4)(∃ v(3) . (f(x) <--> v(3) and (v(3) === f(x)))) [e-subst] ;
+
+(5)((f(x) <--> ∃ v(3) . v(3) and (v(3) === f(x))) <--> ∃ v(3) . (f(x) <--> v(3) and (v(3) === f(x)))) [e-scope] ;
+
+(6)(f(x) <--> ∃ v(3) . v(3) and (v(3) === f(x))) [modus-ponens(4, 5)] ;
+
+(7)(f(x) or g(x) <--> (∃ v(3) . v(3) and (v(3) === f(x))) or (∃ v(3) . v(3) and (v(3) === g(x)))) [eqv-or(3, 6)] ;
+
+(8)((∃ v(3) . v(3) and (v(3) === f(x))) or (∃ v(3) . v(3) and (v(3) === g(x))) <--> ∃ v(3) . v(3) and (v(3) === f(x)) or v(3) and (v(3) === g(x))) [e-collapse] ;
+
+(9)(v(3) and ((v(3) === f(x)) or (v(3) === g(x))) <--> v(3) and (v(3) === f(x)) or v(3) and (v(3) === g(x))) [and-or-distr] ;
+
+(10)((∃ v(3) . v(3) and ((v(3) === f(x)) or (v(3) === g(x)))) <--> ∃ v(3) . v(3) and (v(3) === f(x)) or v(3) and (v(3) === g(x))) [e-context(9)] ;
+
+(11)(f(x) or g(x) <--> ∃ v(3) . v(3) and (v(3) === f(x)) or v(3) and (v(3) === g(x))) [eqv-tranz(7, 8)] ;
+
+(12)(f(x) or g(x) <--> ∃ v(3) . v(3) and ((v(3) === f(x)) or (v(3) === g(x)))) [eqv-tranz(11, 10)] ;
+The proof generated for input: 2_conflict.in has 12 lines and generation took 0.041 seconds.

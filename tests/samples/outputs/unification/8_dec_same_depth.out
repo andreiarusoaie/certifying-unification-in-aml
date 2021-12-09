@@ -1,0 +1,39 @@
+[1m[95mProof of:[94m (f(g(z), h(c, y)) and f(h(a, x), g(b)) --> ff and f(h(a, x), g(b)))  [0m
+(1)((f(h(a, x), g(b)) === f(g(z), h(c, y))) --> (f(h(a, x), g(b)) === f(g(z), h(c, y)))) [tauto-imp-refl] ;
+
+(2)((f(h(a, x), g(b)) === f(g(z), h(c, y))) --> (g(b) === h(c, y)) and (h(a, x) === g(z))) [axiom-no-confusion-II] ;
+
+(3)((f(h(a, x), g(b)) === f(g(z), h(c, y))) --> (g(b) === h(c, y)) and (h(a, x) === g(z))) [tauto-imp-tranz,1,2] ;
+
+(4)((g(b) === h(c, y)) --> ff) [axiom-no-confusion-I] ;
+
+(5)((g(b) === h(c, y)) and (h(a, x) === g(z)) --> ff and (h(a, x) === g(z))) [tauto-context,4] ;
+
+(6)(ff and (h(a, x) === g(z)) --> ff) [tauto-and-bot] ;
+
+(7)((g(b) === h(c, y)) and (h(a, x) === g(z)) --> ff) [tauto-imp-tranz,5,6] ;
+
+(8)((f(h(a, x), g(b)) === f(g(z), h(c, y))) --> ff) [tauto-imp-tranz,3,7] ;
+
+(9)(f(h(a, x), g(b)) and (f(h(a, x), g(b)) === f(g(z), h(c, y))) --> ff and f(h(a, x), g(b))) [tauto-context,8] ;
+
+(10)(f(g(z), h(c, y)) and f(h(a, x), g(b)) --> f(h(a, x), g(b)) and (f(h(a, x), g(b)) === f(g(z), h(c, y)))) [axiom-term-eq-intro] ;
+
+(11)(f(g(z), h(c, y)) and f(h(a, x), g(b)) --> ff and f(h(a, x), g(b))) [tauto-imp-tranz,10,9] ;
+[1m[95mProof of:[94m (ff and f(h(a, x), g(b)) --> f(g(z), h(c, y)) and f(h(a, x), g(b)))  [0m
+(1)(ff --> ff) [tauto-imp-refl] ;
+
+(2)(ff --> (g(b) === h(c, y)) and (h(a, x) === g(z))) [tauto-bot-elim] ;
+
+(3)(ff --> (g(b) === h(c, y)) and (h(a, x) === g(z))) [tauto-imp-tranz,1,2] ;
+
+(4)((g(b) === h(c, y)) and (h(a, x) === g(z)) --> (f(h(a, x), g(b)) === f(g(z), h(c, y)))) [axiom-functional] ;
+
+(5)(ff --> (f(h(a, x), g(b)) === f(g(z), h(c, y)))) [tauto-imp-tranz,3,4] ;
+
+(6)(ff and f(h(a, x), g(b)) --> f(h(a, x), g(b)) and (f(h(a, x), g(b)) === f(g(z), h(c, y)))) [tauto-context,5] ;
+
+(7)(f(h(a, x), g(b)) and (f(h(a, x), g(b)) === f(g(z), h(c, y))) --> f(g(z), h(c, y)) and f(h(a, x), g(b))) [axiom-term-eq-elim] ;
+
+(8)(ff and f(h(a, x), g(b)) --> f(g(z), h(c, y)) and f(h(a, x), g(b))) [tauto-imp-tranz,6,7] ;
+The proof generated for input: 8_dec_same_depth.in has 19 lines and took 0.04 seconds.

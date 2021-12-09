@@ -47,8 +47,8 @@ rew in PRETTY : pretty(gen-proof(
     TERM1,
     TERM2
     )) .
-rew in PRETTY : check(gen-proof(
-    TERM1,
-    TERM2
-    )) .
+*** rew in PRETTY : check(gen-proof(
+***     TERM1,
+***     TERM2
+***     )) .
 q

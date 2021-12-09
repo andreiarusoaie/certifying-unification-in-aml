@@ -1,0 +1,253 @@
+[1m[95mProof of:[94m (t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))) and t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) --> t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v))  [0m
+(1)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))))) [tauto-imp-refl] ;
+
+(2)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))) === threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) and (store(map(i, v)) === store(map(concrete-i, concrete-v)))) [axiom-no-confusion-II] ;
+
+(3)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))) === threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) and (store(map(i, v)) === store(map(concrete-i, concrete-v)))) [tauto-imp-tranz,1,2] ;
+
+(4)((threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))) === threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) --> (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [axiom-no-confusion-II] ;
+
+(5)((threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))) === threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) and (store(map(i, v)) === store(map(concrete-i, concrete-v))) --> (store(map(i, v)) === store(map(concrete-i, concrete-v))) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-context,4] ;
+
+(6)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (store(map(i, v)) === store(map(concrete-i, concrete-v))) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-imp-tranz,3,5] ;
+
+(7)((store(map(i, v)) === store(map(concrete-i, concrete-v))) --> (map(i, v) === map(concrete-i, concrete-v))) [axiom-no-confusion-II] ;
+
+(8)((store(map(i, v)) === store(map(concrete-i, concrete-v))) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))) --> (map(i, v) === map(concrete-i, concrete-v)) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-context,7] ;
+
+(9)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (map(i, v) === map(concrete-i, concrete-v)) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-imp-tranz,6,8] ;
+
+(10)((map(i, v) === map(concrete-i, concrete-v)) --> (i === concrete-i) and (v === concrete-v)) [axiom-no-confusion-II] ;
+
+(11)((map(i, v) === map(concrete-i, concrete-v)) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))) --> (i === concrete-i) and (v === concrete-v) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-context,10] ;
+
+(12)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (i === concrete-i) and (v === concrete-v) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-imp-tranz,9,11] ;
+
+(13)((thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))) --> (k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n))) [axiom-no-confusion-II] ;
+
+(14)((i === concrete-i) and (v === concrete-v) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))) --> (i === concrete-i) and (v === concrete-v) and (k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n))) [tauto-context,13] ;
+
+(15)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (i === concrete-i) and (v === concrete-v) and (k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n))) [tauto-imp-tranz,12,14] ;
+
+(16)((k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) --> (seq(x, rest) === seq(concrete-x, concrete-rest))) [axiom-no-confusion-II] ;
+
+(17)((i === concrete-i) and (v === concrete-v) and (k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) --> (i === concrete-i) and (v === concrete-v) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest))) [tauto-context,16] ;
+
+(18)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (i === concrete-i) and (v === concrete-v) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest))) [tauto-imp-tranz,15,17] ;
+
+(19)((env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) --> (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [axiom-no-confusion-II] ;
+
+(20)((i === concrete-i) and (v === concrete-v) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest)) --> (i === concrete-i) and (v === concrete-v) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-context,19] ;
+
+(21)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (i === concrete-i) and (v === concrete-v) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-imp-tranz,18,20] ;
+
+(22)((id(n) === id(n)) --> (n === n)) [axiom-no-confusion-II] ;
+
+(23)((i === concrete-i) and (v === concrete-v) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap)) --> (i === concrete-i) and (n === n) and (v === concrete-v) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-context,22] ;
+
+(24)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (i === concrete-i) and (n === n) and (v === concrete-v) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-imp-tranz,21,23] ;
+
+(25)((seq(x, rest) === seq(concrete-x, concrete-rest)) --> (x === concrete-x) and (rest === concrete-rest)) [axiom-no-confusion-II] ;
+
+(26)((i === concrete-i) and (n === n) and (v === concrete-v) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap)) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (n === n) and (v === concrete-v) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-context,25] ;
+
+(27)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (n === n) and (v === concrete-v) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-imp-tranz,24,26] ;
+
+(28)((map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap)) --> (restmap === concrete-restmap) and (mapitem(x, i) === mapitem(concrete-x, concrete-i))) [axiom-no-confusion-II] ;
+
+(29)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (n === n) and (v === concrete-v) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap)) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) and (mapitem(x, i) === mapitem(concrete-x, concrete-i))) [tauto-context,28] ;
+
+(30)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) and (mapitem(x, i) === mapitem(concrete-x, concrete-i))) [tauto-imp-tranz,27,29] ;
+
+(31)((mapitem(x, i) === mapitem(concrete-x, concrete-i)) --> (x === concrete-x) and (i === concrete-i)) [axiom-no-confusion-II] ;
+
+(32)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) and (mapitem(x, i) === mapitem(concrete-x, concrete-i)) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v)) [tauto-context,31] ;
+
+(33)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v)) [tauto-imp-tranz,30,32] ;
+
+(34)((n === n) --> (ff --> ff)) [tauto-equality-id] ;
+
+(35)((x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) --> (ff --> ff) and (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,34] ;
+
+(36)((ff --> ff) and (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-and-unit] ;
+
+(37)((x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,35,36] ;
+
+(38)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,33,37] ;
+
+(39)((x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [equality-elimination] ;
+
+(40)((x === concrete-x) and (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,39] ;
+
+(41)((x === concrete-x) --> (x === concrete-x) and (x === concrete-x)) [tauto-and-expand] ;
+
+(42)((x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,41] ;
+
+(43)((x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,42,40] ;
+
+(44)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,38,43] ;
+
+(45)((concrete-x === concrete-x) --> (ff --> ff)) [tauto-equality-id] ;
+
+(46)((concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (ff --> ff) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,45] ;
+
+(47)((ff --> ff) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-and-unit] ;
+
+(48)((concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,46,47] ;
+
+(49)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,44,48] ;
+
+(50)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (restmap === concrete-restmap) and (v === concrete-v)) [equality-elimination] ;
+
+(51)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,50] ;
+
+(52)((i === concrete-i) --> (i === concrete-i) and (i === concrete-i)) [tauto-and-expand] ;
+
+(53)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,52] ;
+
+(54)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,53,51] ;
+
+(55)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,49,54] ;
+
+(56)((concrete-i === concrete-i) --> (ff --> ff)) [tauto-equality-id] ;
+
+(57)((concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (ff --> ff) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,56] ;
+
+(58)((ff --> ff) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-and-unit] ;
+
+(59)((concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,57,58] ;
+
+(60)((t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,55,59] ;
+
+(61)(t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,60] ;
+
+(62)(t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))) and t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) --> t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))))) [axiom-term-eq-intro] ;
+
+(63)(t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))) and t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) --> t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,62,61] ;
+[1m[95mProof of:[94m (t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))) and t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))))  [0m
+(1)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-refl] ;
+
+(2)((ff --> ff) --> (concrete-i === concrete-i)) [tauto-equality-refl] ;
+
+(3)((ff --> ff) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,2] ;
+
+(4)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (ff --> ff) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-and-exp-unit] ;
+
+(5)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,4,3] ;
+
+(6)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,1,5] ;
+
+(7)((concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [equality-introduction1] ;
+
+(8)((concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,7] ;
+
+(9)((i === concrete-i) and (i === concrete-i) --> (i === concrete-i)) [tauto-and-simpl] ;
+
+(10)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,9] ;
+
+(11)((concrete-i === concrete-i) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,8,10] ;
+
+(12)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,6,11] ;
+
+(13)((ff --> ff) --> (concrete-x === concrete-x)) [tauto-equality-refl] ;
+
+(14)((ff --> ff) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,13] ;
+
+(15)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (ff --> ff) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-and-exp-unit] ;
+
+(16)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,15,14] ;
+
+(17)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,12,16] ;
+
+(18)((concrete-x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [equality-introduction1] ;
+
+(19)((concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,18] ;
+
+(20)((x === concrete-x) and (x === concrete-x) --> (x === concrete-x)) [tauto-and-simpl] ;
+
+(21)((x === concrete-x) and (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-context,20] ;
+
+(22)((concrete-x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,19,21] ;
+
+(23)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-imp-tranz,17,22] ;
+
+(24)((ff --> ff) --> (n === n)) [tauto-equality-refl] ;
+
+(25)((ff --> ff) and (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v)) [tauto-context,24] ;
+
+(26)((x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (ff --> ff) and (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v)) [tauto-and-exp-unit] ;
+
+(27)((x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v)) [tauto-imp-tranz,26,25] ;
+
+(28)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v)) [tauto-imp-tranz,23,27] ;
+
+(29)((x === concrete-x) and (i === concrete-i) --> (mapitem(x, i) === mapitem(concrete-x, concrete-i))) [axiom-functional] ;
+
+(30)((x === concrete-x) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) and (mapitem(x, i) === mapitem(concrete-x, concrete-i))) [tauto-context,29] ;
+
+(31)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) and (mapitem(x, i) === mapitem(concrete-x, concrete-i))) [tauto-imp-tranz,28,30] ;
+
+(32)((restmap === concrete-restmap) and (mapitem(x, i) === mapitem(concrete-x, concrete-i)) --> (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [axiom-functional] ;
+
+(33)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (n === n) and (v === concrete-v) and (mapitem(x, i) === mapitem(concrete-x, concrete-i)) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (n === n) and (v === concrete-v) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-context,32] ;
+
+(34)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (n === n) and (v === concrete-v) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-imp-tranz,31,33] ;
+
+(35)((x === concrete-x) and (rest === concrete-rest) --> (seq(x, rest) === seq(concrete-x, concrete-rest))) [axiom-functional] ;
+
+(36)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (n === n) and (v === concrete-v) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap)) --> (i === concrete-i) and (n === n) and (v === concrete-v) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-context,35] ;
+
+(37)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (i === concrete-i) and (n === n) and (v === concrete-v) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-imp-tranz,34,36] ;
+
+(38)((n === n) --> (id(n) === id(n))) [axiom-functional] ;
+
+(39)((i === concrete-i) and (n === n) and (v === concrete-v) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap)) --> (i === concrete-i) and (v === concrete-v) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-context,38] ;
+
+(40)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (i === concrete-i) and (v === concrete-v) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap))) [tauto-imp-tranz,37,39] ;
+
+(41)((map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap)) --> (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap)))) [axiom-functional] ;
+
+(42)((i === concrete-i) and (v === concrete-v) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest)) and (map(mapitem(x, i), restmap) === map(mapitem(concrete-x, concrete-i), concrete-restmap)) --> (i === concrete-i) and (v === concrete-v) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest))) [tauto-context,41] ;
+
+(43)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (i === concrete-i) and (v === concrete-v) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest))) [tauto-imp-tranz,40,42] ;
+
+(44)((seq(x, rest) === seq(concrete-x, concrete-rest)) --> (k(seq(x, rest)) === k(seq(concrete-x, concrete-rest)))) [axiom-functional] ;
+
+(45)((i === concrete-i) and (v === concrete-v) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) and (seq(x, rest) === seq(concrete-x, concrete-rest)) --> (i === concrete-i) and (v === concrete-v) and (k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n))) [tauto-context,44] ;
+
+(46)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (i === concrete-i) and (v === concrete-v) and (k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n))) [tauto-imp-tranz,43,45] ;
+
+(47)((k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) --> (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [axiom-functional] ;
+
+(48)((i === concrete-i) and (v === concrete-v) and (k(seq(x, rest)) === k(seq(concrete-x, concrete-rest))) and (env(map(mapitem(x, i), restmap)) === env(map(mapitem(concrete-x, concrete-i), concrete-restmap))) and (id(n) === id(n)) --> (i === concrete-i) and (v === concrete-v) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-context,47] ;
+
+(49)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (i === concrete-i) and (v === concrete-v) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-imp-tranz,46,48] ;
+
+(50)((i === concrete-i) and (v === concrete-v) --> (map(i, v) === map(concrete-i, concrete-v))) [axiom-functional] ;
+
+(51)((i === concrete-i) and (v === concrete-v) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))) --> (map(i, v) === map(concrete-i, concrete-v)) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-context,50] ;
+
+(52)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (map(i, v) === map(concrete-i, concrete-v)) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-imp-tranz,49,51] ;
+
+(53)((map(i, v) === map(concrete-i, concrete-v)) --> (store(map(i, v)) === store(map(concrete-i, concrete-v)))) [axiom-functional] ;
+
+(54)((map(i, v) === map(concrete-i, concrete-v)) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))) --> (store(map(i, v)) === store(map(concrete-i, concrete-v))) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-context,53] ;
+
+(55)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (store(map(i, v)) === store(map(concrete-i, concrete-v))) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) [tauto-imp-tranz,52,54] ;
+
+(56)((thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))) --> (threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))) === threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))))) [axiom-functional] ;
+
+(57)((store(map(i, v)) === store(map(concrete-i, concrete-v))) and (thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n)) === thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))) --> (threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))) === threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) and (store(map(i, v)) === store(map(concrete-i, concrete-v)))) [tauto-context,56] ;
+
+(58)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))) === threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) and (store(map(i, v)) === store(map(concrete-i, concrete-v)))) [tauto-imp-tranz,55,57] ;
+
+(59)((threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))) === threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n)))) and (store(map(i, v)) === store(map(concrete-i, concrete-v))) --> (t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))))) [axiom-functional] ;
+
+(60)((x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> (t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))))) [tauto-imp-tranz,58,59] ;
+
+(61)(t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))))) [tauto-context,60] ;
+
+(62)(t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) === t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v)))) --> t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))) and t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v)))) [axiom-term-eq-elim] ;
+
+(63)(t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v))) and (x === concrete-x) and (rest === concrete-rest) and (i === concrete-i) and (restmap === concrete-restmap) and (v === concrete-v) --> t(threads(thread(k(seq(concrete-x, concrete-rest)), env(map(mapitem(concrete-x, concrete-i), concrete-restmap)), id(n))), store(map(concrete-i, concrete-v))) and t(threads(thread(k(seq(x, rest)), env(map(mapitem(x, i), restmap)), id(n))), store(map(i, v)))) [tauto-imp-tranz,61,62] ;
+The proof generated for input: 14_imp_with_threads_lookup.in has 126 lines and took 0.059 seconds.

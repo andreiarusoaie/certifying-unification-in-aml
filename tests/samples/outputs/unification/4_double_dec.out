@@ -1,0 +1,39 @@
+[1m[95mProof of:[94m (f(g(a)) and f(g(y)) --> f(g(a)) and (y === a))  [0m
+(1)((f(g(a)) === f(g(y))) --> (f(g(a)) === f(g(y)))) [tauto-imp-refl] ;
+
+(2)((f(g(a)) === f(g(y))) --> (g(a) === g(y))) [axiom-no-confusion-II] ;
+
+(3)((f(g(a)) === f(g(y))) --> (g(a) === g(y))) [tauto-imp-tranz,1,2] ;
+
+(4)((g(a) === g(y)) --> (a === y)) [axiom-no-confusion-II] ;
+
+(5)((f(g(a)) === f(g(y))) --> (a === y)) [tauto-imp-tranz,3,4] ;
+
+(6)((a === y) --> (y === a)) [equality-symmetry] ;
+
+(7)((f(g(a)) === f(g(y))) --> (y === a)) [tauto-imp-tranz,5,6] ;
+
+(8)(f(g(a)) and (f(g(a)) === f(g(y))) --> f(g(a)) and (y === a)) [tauto-context,7] ;
+
+(9)(f(g(a)) and f(g(y)) --> f(g(a)) and (f(g(a)) === f(g(y)))) [axiom-term-eq-intro] ;
+
+(10)(f(g(a)) and f(g(y)) --> f(g(a)) and (y === a)) [tauto-imp-tranz,9,8] ;
+[1m[95mProof of:[94m (f(g(a)) and (y === a) --> f(g(a)) and f(g(y)))  [0m
+(1)((y === a) --> (y === a)) [tauto-imp-refl] ;
+
+(2)((y === a) --> (a === y)) [equality-symmetry] ;
+
+(3)((a === y) --> (g(a) === g(y))) [axiom-functional] ;
+
+(4)((y === a) --> (g(a) === g(y))) [tauto-imp-tranz,2,3] ;
+
+(5)((g(a) === g(y)) --> (f(g(a)) === f(g(y)))) [axiom-functional] ;
+
+(6)((y === a) --> (f(g(a)) === f(g(y)))) [tauto-imp-tranz,4,5] ;
+
+(7)(f(g(a)) and (y === a) --> f(g(a)) and (f(g(a)) === f(g(y)))) [tauto-context,6] ;
+
+(8)(f(g(a)) and (f(g(a)) === f(g(y))) --> f(g(a)) and f(g(y))) [axiom-term-eq-elim] ;
+
+(9)(f(g(a)) and (y === a) --> f(g(a)) and f(g(y))) [tauto-imp-tranz,7,8] ;
+The proof generated for input: 4_double_dec.in has 19 lines and took 0.039 seconds.
