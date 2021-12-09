@@ -84,4 +84,4 @@
 (19)(cons(succ(x1), cons(zero, l1)) and (cons(succ(x1), cons(zero, l1)) === cons(x2, cons(succ(x2), l2))) --> cons(x2, cons(succ(x2), l2)) and cons(succ(x1), cons(zero, l1))) [axiom-term-eq-elim] ;
 
 (20)(ff and cons(succ(x1), cons(zero, l1)) --> cons(x2, cons(succ(x2), l2)) and cons(succ(x1), cons(zero, l1))) [tauto-imp-tranz,18,19] ;
-The proof generated for input: 13_paper_cons_succ.in has 43 lines and took 0.042 seconds.
+The proof generated for input: 13_paper_cons_succ.in has 43 lines and took 0.052 seconds.

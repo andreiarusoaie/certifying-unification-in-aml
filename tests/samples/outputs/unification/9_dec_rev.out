@@ -48,4 +48,4 @@
 (10)(f(h(a, x), b) and (f(h(a, x), b) === f(z, h(c, y))) --> f(z, h(c, y)) and f(h(a, x), b)) [axiom-term-eq-elim] ;
 
 (11)(ff and f(h(a, x), b) --> f(z, h(c, y)) and f(h(a, x), b)) [tauto-imp-tranz,9,10] ;
-The proof generated for input: 9_dec_rev.in has 25 lines and took 0.04 seconds.
+The proof generated for input: 9_dec_rev.in has 25 lines and took 0.041 seconds.

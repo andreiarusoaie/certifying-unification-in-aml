@@ -310,4 +310,4 @@
 (155)((∃ v(11) ; v(12) . ((v(11) === c) and (v(12) === h(a)) or (v(11) === z) and (v(12) === h(x))) and f(g(v(12)), g(v(11)))) <--> ∃ v(11) ; v(13) . ((v(11) === c) and (v(13) === a) or (v(11) === z) and (v(13) === x)) and f(g(h(v(13))), g(v(11)))) [eqv-tranz(152, 154)] ;
 
 (156)(f(g(h(a)), g(c)) or f(g(h(x)), g(z)) <--> ∃ v(11) ; v(13) . ((v(11) === c) and (v(13) === a) or (v(11) === z) and (v(13) === x)) and f(g(h(v(13))), g(v(11)))) [eqv-tranz(120, 155)] ;
-The proof generated for input: 11_multiple_levels.in has 156 lines and generation took 0.048 seconds.
+The proof generated for input: 11_multiple_levels.in has 156 lines and generation took 0.049 seconds.

@@ -72,4 +72,4 @@
 (16)(f(g(b), h(a, x)) and (f(g(b), h(a, x)) === f(g(z), h(c, y))) --> f(g(b), h(a, x)) and f(g(z), h(c, y))) [axiom-term-eq-elim] ;
 
 (17)(ff and f(g(b), h(a, x)) --> f(g(b), h(a, x)) and f(g(z), h(c, y))) [tauto-imp-tranz,15,16] ;
-The proof generated for input: 10_long.in has 37 lines and took 0.042 seconds.
+The proof generated for input: 10_long.in has 37 lines and took 0.04 seconds.

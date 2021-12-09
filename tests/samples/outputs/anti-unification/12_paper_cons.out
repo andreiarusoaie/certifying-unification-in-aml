@@ -94,4 +94,4 @@
 (47)((∃ v(5) . v(5) and ((v(5) === cons(a, z)) or (v(5) === cons(x, a)))) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) [eqv-tranz(44, 46)] ;
 
 (48)(cons(a, z) or cons(x, a) <--> ∃ v(8) ; v(9) . ((v(8) === a) and (v(9) === z) or (v(8) === x) and (v(9) === a)) and cons(v(8), v(9))) [eqv-tranz(12, 47)] ;
-The proof generated for input: 12_paper_cons.in has 48 lines and generation took 0.042 seconds.
+The proof generated for input: 12_paper_cons.in has 48 lines and generation took 0.043 seconds.

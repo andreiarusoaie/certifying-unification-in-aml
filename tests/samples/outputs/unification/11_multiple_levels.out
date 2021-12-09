@@ -58,4 +58,4 @@
 (14)(f(g(h(x)), g(z)) and (f(g(h(x)), g(z)) === f(g(h(a)), g(c))) --> f(g(h(a)), g(c)) and f(g(h(x)), g(z))) [axiom-term-eq-elim] ;
 
 (15)(f(g(h(x)), g(z)) and (x === a) and (z === c) --> f(g(h(a)), g(c)) and f(g(h(x)), g(z))) [tauto-imp-tranz,13,14] ;
-The proof generated for input: 11_multiple_levels.in has 30 lines and took 0.041 seconds.
+The proof generated for input: 11_multiple_levels.in has 30 lines and took 0.043 seconds.

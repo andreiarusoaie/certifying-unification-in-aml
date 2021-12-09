@@ -238,4 +238,4 @@
 (119)((∃ v(14) ; v(15) . ((v(14) === h(a, x)) and (v(15) === b) or (v(14) === h(c, y)) and (v(15) === z)) and f(g(v(15)), v(14))) <--> ∃ v(15) ; v(16) ; v(17) . ((v(15) === b) and (v(16) === a) and (v(17) === x) or (v(15) === z) and (v(16) === c) and (v(17) === y)) and f(g(v(15)), h(v(16), v(17)))) [eqv-tranz(116, 118)] ;
 
 (120)(f(g(b), h(a, x)) or f(g(z), h(c, y)) <--> ∃ v(15) ; v(16) ; v(17) . ((v(15) === b) and (v(16) === a) and (v(17) === x) or (v(15) === z) and (v(16) === c) and (v(17) === y)) and f(g(v(15)), h(v(16), v(17)))) [eqv-tranz(84, 119)] ;
-The proof generated for input: 10_long.in has 120 lines and generation took 0.047 seconds.
+The proof generated for input: 10_long.in has 120 lines and generation took 0.046 seconds.

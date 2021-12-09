@@ -54,4 +54,4 @@
 (13)(f(x, g(z, x)) and (f(x, g(z, x)) === f(x, g(u, t))) --> f(x, g(u, t)) and f(x, g(z, x))) [axiom-term-eq-elim] ;
 
 (14)(f(x, g(z, x)) and (x === t) and (z === u) --> f(x, g(u, t)) and f(x, g(z, x))) [tauto-imp-tranz,12,13] ;
-The proof generated for input: 1_dec.in has 28 lines and took 0.041 seconds.
+The proof generated for input: 1_dec.in has 28 lines and took 0.046 seconds.

@@ -34,4 +34,4 @@
 (8)(f(x, a) and (f(x, a) === f(a, z)) --> f(a, z) and f(x, a)) [axiom-term-eq-elim] ;
 
 (9)(f(x, a) and (x === a) and (z === a) --> f(a, z) and f(x, a)) [tauto-imp-tranz,7,8] ;
-The proof generated for input: 7_dec_simpl.in has 18 lines and took 0.04 seconds.
+The proof generated for input: 7_dec_simpl.in has 18 lines and took 0.039 seconds.

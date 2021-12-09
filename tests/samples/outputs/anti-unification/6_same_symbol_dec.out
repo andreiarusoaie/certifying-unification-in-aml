@@ -166,4 +166,4 @@
 (83)((∃ v(7) ; v(8) . ((v(7) === x) and (v(8) === g(u, t)) or (v(7) === x) and (v(8) === g(z, x))) and g(v(7), v(8))) <--> ∃ v(7) ; v(9) ; v(10) . ((v(7) === x) and (v(9) === u) and (v(10) === t) or (v(7) === x) and (v(9) === z) and (v(10) === x)) and g(v(7), g(v(9), v(10)))) [eqv-tranz(80, 82)] ;
 
 (84)(g(x, g(u, t)) or g(x, g(z, x)) <--> ∃ v(7) ; v(9) ; v(10) . ((v(7) === x) and (v(9) === u) and (v(10) === t) or (v(7) === x) and (v(9) === z) and (v(10) === x)) and g(v(7), g(v(9), v(10)))) [eqv-tranz(48, 83)] ;
-The proof generated for input: 6_same_symbol_dec.in has 84 lines and generation took 0.043 seconds.
+The proof generated for input: 6_same_symbol_dec.in has 84 lines and generation took 0.045 seconds.

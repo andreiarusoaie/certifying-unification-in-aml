@@ -36,4 +36,4 @@
 (8)(f(g(a)) and (f(g(a)) === f(g(y))) --> f(g(a)) and f(g(y))) [axiom-term-eq-elim] ;
 
 (9)(f(g(a)) and (y === a) --> f(g(a)) and f(g(y))) [tauto-imp-tranz,7,8] ;
-The proof generated for input: 4_double_dec.in has 19 lines and took 0.041 seconds.
+The proof generated for input: 4_double_dec.in has 19 lines and took 0.039 seconds.

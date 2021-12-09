@@ -22,4 +22,4 @@
 (5)(x and (x === f(x)) --> x and f(x)) [axiom-term-eq-elim] ;
 
 (6)(x and ff --> x and f(x)) [tauto-imp-tranz,4,5] ;
-The proof generated for input: 3_oc.in has 12 lines and took 0.039 seconds.
+The proof generated for input: 3_oc.in has 12 lines and took 0.038 seconds.

@@ -94,4 +94,4 @@
 (47)((∃ v(6) . v(6) and ((v(6) === c(a, c(z, x))) or (v(6) === c(x, y)))) <--> ∃ v(9) ; v(10) . ((v(9) === a) and (v(10) === c(z, x)) or (v(9) === x) and (v(10) === y)) and c(v(9), v(10))) [eqv-tranz(44, 46)] ;
 
 (48)(c(a, c(z, x)) or c(x, y) <--> ∃ v(9) ; v(10) . ((v(9) === a) and (v(10) === c(z, x)) or (v(9) === x) and (v(10) === y)) and c(v(9), v(10))) [eqv-tranz(12, 47)] ;
-The proof generated for input: 5_misc.in has 48 lines and generation took 0.042 seconds.
+The proof generated for input: 5_misc.in has 48 lines and generation took 0.041 seconds.

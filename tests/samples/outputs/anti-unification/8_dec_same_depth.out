@@ -94,4 +94,4 @@
 (47)((∃ v(10) . v(10) and ((v(10) === f(g(z), h(c, y))) or (v(10) === f(h(a, x), g(b))))) <--> ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and f(v(13), v(14))) [eqv-tranz(44, 46)] ;
 
 (48)(f(g(z), h(c, y)) or f(h(a, x), g(b)) <--> ∃ v(13) ; v(14) . ((v(13) === g(z)) and (v(14) === h(c, y)) or (v(13) === h(a, x)) and (v(14) === g(b))) and f(v(13), v(14))) [eqv-tranz(12, 47)] ;
-The proof generated for input: 8_dec_same_depth.in has 48 lines and generation took 0.041 seconds.
+The proof generated for input: 8_dec_same_depth.in has 48 lines and generation took 0.043 seconds.
