@@ -15,11 +15,11 @@ Since our proof-object generation depends on the number of steps performed by th
 
 | Lang | File name  | File size (kb) | Unification (proof size) | Antiunification (proof size) | 
 |--------------|------------|----------------|-------------|-----------------|
-| list of nats | `13_paper_cons_succ.in` | 0.122 | 43 | 84 |
-| [SIMPLE](https://github.com/kframework/k/tree/master/k-distribution/pl-tutorial/2_languages/1_simple) | `16_simple_untyped_lookup.in` | 1.3 | 312 | 804 |
-| [SIMPLE](https://github.com/kframework/k/tree/master/k-distribution/pl-tutorial/2_languages/1_simple) | `17_simple_untyped_release_lock.in` | 1.3 | 272  | 768 |
-| [C](https://github.com/kframework/c-semantics) | **`18_c_declare_local.in`** | 14 | 2006 | 5052 |
-| [Java](https://github.com/kframework/java-semantics) | **`19_java_method_invoke.in`** | 6 | 933 | 2352 |
+| list of nats | [`13_paper_cons_succ.in`](https://github.com/andreiarusoaie/certifying-unification-in-aml/blob/master/tests/samples/13_paper_cons_succ.in) | 0.122 | 43 | 84 |
+| [SIMPLE](https://github.com/kframework/k/tree/master/k-distribution/pl-tutorial/2_languages/1_simple) | [`16_simple_untyped_lookup.in`](https://github.com/andreiarusoaie/certifying-unification-in-aml/blob/master/tests/samples/16_simple_untyped_lookup.in) | 1.3 | 312 | 804 |
+| [SIMPLE](https://github.com/kframework/k/tree/master/k-distribution/pl-tutorial/2_languages/1_simple) | [`17_simple_untyped_release_lock.in`](https://github.com/andreiarusoaie/certifying-unification-in-aml/blob/master/tests/samples/17_simple_untyped_release_lock.in) | 1.3 | 272  | 768 |
+| [C](https://github.com/kframework/c-semantics) | [**`18_c_declare_local.in`**](https://github.com/andreiarusoaie/certifying-unification-in-aml/blob/master/tests/samples/18_c_declare_local.in) | 14 | 2006 | 5052 |
+| [Java](https://github.com/kframework/java-semantics) | [**`19_java_method_invoke.in`**](https://github.com/andreiarusoaie/certifying-unification-in-aml/blob/master/tests/samples/19_java_method_invoke.in) | 6 | 933 | 2352 |
 
 The size of the inputs which are inspired by the C and Java configurations (i.e., the inputs are actually symbolic K configurations from the C and Java semantics) are big compared to the usual configuration size for languages defined in K (e.g., SIMPLE: `16_simple_untyped_lookup.in`, `17_simple_untyped_release_lock.in`). The former are pushing to the limits our approach on generating proof-objects. 
 We can see that the size of the proof-object generated for **`18_c_declare_local.in`** is almost twice when compared with the proof-object generated for **`19_java_method_invoke.in`**. This is because the K configuration of the C language is at least two times larger than the K configuration of the Java language.
