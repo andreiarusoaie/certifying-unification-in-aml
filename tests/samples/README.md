@@ -13,7 +13,7 @@ The table below shows the results that correspond to some of our most interestin
 On each line we find the input file name and its size, the proof-object size (expressed as the number of proof lines) for both unification and anti-unification. 
 Since our proof-object generation depends on the number of steps performed by the algorithms, we expects the size of the proof-objects to be linear (w.r.t. to these steps). Also, we use the file size (in kb) to give a measure of how big are the term patterns in that particular test.
 
-| File name  | File size (kb) | Unification | Antiunification | 
+| File name  | File size (kb) | Unification (proof size) | Antiunification (proof size) | 
 |------------|----------------|-------------|-----------------|
 | `13_paper_cons_succ.in` | 0.122 | 43 | 84 |
 | `16_simple_untyped_lookup.in` | 1.3 | 312 | 804 |
