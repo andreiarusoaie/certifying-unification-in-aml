@@ -17,7 +17,7 @@ This page contains several details about the code in this repo.
 
 > Literature
   * [Unification in Matching Logic](https://link.springer.com/chapter/10.1007/978-3-030-30942-8_30)
-  * [Applicative Matching Logic](http://fsl.cs.illinois.edu/index.php/Applicative_Matching_Logic)
+  * [Matching Logic](http://www.matching-logic.org/)
 
 
 ### Repo Organisation
