@@ -135,6 +135,8 @@ def certify(args):
     check_variables(variables, t1, t2)
     check_symbols(symbols, t1, t2)
     if verbose:
+        print("Size of t1:", t1.size(), "height of t1:", t1.height())
+        print("Size of t2:", t2.size(), "height of t2:", t2.height())
         print("Parsing finished.")
     
     dir = os.path.dirname(os.path.realpath(__file__))

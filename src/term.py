@@ -19,3 +19,16 @@ class Term:
     def isVar(self):
         return self.is_var
 
+    def size(self):
+        if self.is_var:
+            return 1
+        if self.subterms:
+            return 1 + sum(list(map(lambda x : x.size(),self.subterms)))
+        return 1
+
+    def height(self):
+        if self.is_var:
+            return 1
+        if self.subterms:
+            return 1 + max(list(map(lambda x : x.height(),self.subterms)))
+        return 1
